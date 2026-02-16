@@ -161,7 +161,13 @@ def score_job(job):
     Job dict'e skor bilgilerini ekler ve dondurur.
     Kisitli ilanlar icin 'restricted' = True set edilir.
     """
-    full_text = f"{job.get('title', '')} {job.get('summary', '')}"
+    # Tum mevcut bilgileri birlestir (scraper'dan gelen location dahil)
+    full_text = " ".join(filter(None, [
+        job.get("title", ""),
+        job.get("summary", ""),
+        job.get("location", ""),
+        job.get("company", ""),
+    ]))
 
     # Ulke/vize kisitlamasi kontrol
     restricted = is_restricted(full_text)

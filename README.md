@@ -1,303 +1,218 @@
-# Job Radar – RSS + Skor + Google Sheets Pipeline
+# Job Radar v0.4
 
-Bu proje, yazılım / game development odaklı iş ilanlarını RSS kaynaklarından çekerek
-önceliklendiren, skorlayan ve Google Sheets’e otomatik ekleyen bir sistemdir.
+Yazılım / GameDev odaklı iş ilanlarını **4 kaynaktan** otomatik toplayıp skorlayan, Google Sheets'e yazan ve başvuru sürecini hızlandıran bir pipeline.
 
-Amaç:
-- Sabah tek komut çalıştırmak
-- Yeni ilanları otomatik toplamak
-- Ankara / Remote öncelikli filtrelemek
-- GameDev ağırlıklı skorlamak
-- Tek bir Sheet üzerinden karar vermek
+## 🎯 Hedef
 
----
+- Ankara / Remote iş bulmak
+- GameDev öncelikli (Unity, Unreal, C#, C++)
+- Türkçe + İngilizce ilanları birlikte değerlendirmek
+- Günlük iş arama süresini **15 dakikaya** düşürmek
 
-# 🎯 Hedef
+## 📡 Veri Kaynakları
 
-- Ankara veya Remote iş bulmak
-- GameDev öncelikli
-- Alternatif olarak C#, Python, Java, Mobile, CV
-- İngilizce ve Türkçe ilanları birlikte değerlendirmek
-- Manuel iş arama süresini 1 saate değil 10-15 dakikaya düşürmek
+| Kaynak | Yöntem | API Kullanımı | Tipik Sonuç |
+|--------|--------|---------------|-------------|
+| **LinkedIn** | Playwright scraping | ❌ Ücretsiz | ~170 ilan |
+| **JSearch** | REST API (RapidAPI) | ✅ 5 call/tarama | ~40 ilan |
+| **RSS** | WeWorkRemotely, Himalayas | ❌ Ücretsiz | ~125 ilan |
+| **Kariyer.net** | Playwright + Stealth | ❌ Ücretsiz | WAF engelli |
 
----
-
-# 🏗 Sistem Mimarisi
-
-RSS Kaynakları
-        ↓
-İlan Parse (Başlık + Açıklama)
-        ↓
-Alan Tespiti (Keyword)
-        ↓
-Lokasyon Analizi
-        ↓
-Level Analizi
-        ↓
-Skor Hesaplama
-        ↓
-Duplicate Kontrol
-        ↓
-Google Sheets’e Ekle
-
-Script her sabah manuel çalıştırılır.
-
----
-
-# 📂 Proje Yapısı
+## 📂 Proje Yapısı
 
 ```
 job-radar/
-│
-├── main.py
-├── config.py
-├── scorer.py
-├── rss_sources.py
-├── sheets_client.py
-├── requirements.txt
+├── main.py              # İnteraktif menü + pipeline
+├── config.py            # Tüm ayarlar (skorlar, keyword'ler, API key)
+├── scorer.py            # Alan/Lokasyon/Level tespiti + skor hesaplama
+├── linkedin_scraper.py  # LinkedIn public job search (Playwright)
+├── kariyer_scraper.py   # Kariyer.net scraper (Playwright + Stealth)
+├── jsearch_client.py    # JSearch API client
+├── rss_sources.py       # WeWorkRemotely + Himalayas RSS
+├── sheets_client.py     # Google Sheets CRUD + tablo düzeltme
+├── requirements.txt     # Python bağımlılıkları
 └── README.md
 ```
 
----
+## 🖥 Kurulum
 
-# 📡 RSS Kaynakları
-
-İlk versiyon için:
-
-- Indeed
-- WeWorkRemotely
-- Hitmarker
-- Remotive
-
-Sadece RSS kullandığımız için:
-- Ban riski yok
-- Scraping yapılmaz
-- Stabil çalışır
-
----
-
-# 📊 Google Sheets Yapısı
-
-Kolonlar:
-
-| Tarih | Firma | Pozisyon | Şehir | Remote | Kaynak | Link | Alan | Level | Alan Skoru | Lokasyon Skoru | Level Skoru | Toplam Skor | Başvuru | DM | Not |
-
----
-
-# 🧠 Skor Sistemi
-
-## 1️⃣ Alan Skoru (Ağırlık %50)
-
-| Alan | Puan |
-|------|------|
-| gamedev | 5 |
-| c# | 4 |
-| python | 3 |
-| mobile | 3 |
-| java | 2 |
-| cv | 2 |
-| diğer | 1 |
-
----
-
-## 2️⃣ Lokasyon Skoru (Ağırlık %30)
-
-| Durum | Puan |
-|--------|------|
-| Ankara | 5 |
-| Remote | 5 |
-| Hybrid Ankara | 4 |
-| Türkiye | 3 |
-| İstanbul | 1 |
-| Diğer | 0 |
-
----
-
-## 3️⃣ Level Skoru (Ağırlık %20)
-
-| Seviye | Puan |
-|--------|------|
-| Junior | 5 |
-| Entry | 5 |
-| Mid | 3 |
-| Senior | -5 |
-| Lead | -10 |
-
----
-
-## 🎯 Final Formül
-
-```
-Toplam Skor = (Alan*0.5 + Lokasyon*0.3 + Level*0.2)
-```
-
----
-
-# 🌍 Türkçe + İngilizce Desteği
-
-Keyword listeleri çift dillidir.
-
-Örnek:
-
-GameDev:
-- unity
-- unreal
-- game
-- oyun
-- gameplay
-- mobile game
-
-Junior:
-- junior
-- entry
-- yeni mezun
-- 0-2 yıl
-
-Remote:
-- remote
-- uzaktan
-
-Ankara:
-- ankara
-
-Bu sayede TR ve EN ilanlar birlikte değerlendirilir.
-
----
-
-# 🔍 Alan Tespiti Mantığı
-
-İlan başlığı + açıklaması lowercase yapılır.
-Keyword eşleşmesine göre alan belirlenir.
-
-Öncelik sırası:
-1. gamedev
-2. c#
-3. python
-4. mobile
-5. java
-6. cv
-7. diğer
-
----
-
-# 🔁 Duplicate Önleme
-
-Google Sheet’e eklemeden önce:
-
-- Aynı link var mı?
-- Aynı firma + pozisyon var mı?
-
-Kontrol edilir.
-
----
-
-# 🖥 Kurulum (Windows)
-
-## 1️⃣ Sanal ortam oluştur
-
-```
+```bash
+# 1. Sanal ortam
 python -m venv venv
 venv\Scripts\activate
+
+# 2. Paketler
+pip install -r requirements.txt
+
+# 3. Playwright tarayıcı
+playwright install chromium
 ```
 
-## 2️⃣ Paketleri yükle
+### Gereksinimler
+- Python 3.10+
+- Google Cloud Service Account (Sheets API)
+- JSearch API key (RapidAPI, ücretsiz tier)
 
-```
-pip install feedparser
-pip install gspread
-pip install google-auth
-pip install pandas
-```
+### Ayarlar (`config.py`)
+- `CREDENTIALS_FILE` → Google Service Account JSON
+- `SPREADSHEET_ID` → Hedef Google Sheet ID
+- `JSEARCH_API_KEY` → RapidAPI key
 
-requirements.txt oluşturulabilir.
+## ▶️ Kullanım
 
----
-
-# 🔐 Google Sheets API Kurulumu
-
-1. Google Cloud Console → yeni proje
-2. Service Account oluştur
-3. JSON key indir
-4. Sheet’i service account maili ile paylaş
-5. JSON dosyasını proje içine koy
-
----
-
-# ▶️ Çalıştırma
-
-```
+```bash
 python main.py
 ```
 
-Script:
-- RSS’leri çeker
-- Filtreler
-- Skorlar
-- Yeni ilanları Sheet’e ekler
-
----
-
-# 🧪 Gelecek Upgrade Planı
-
-Bu MVP sürümdür.
-
-İleride eklenecekler:
-
-- LinkedIn email parse
-- Kariyer.net email parse
-- TF-IDF skorlama
-- NLP benzerlik analizi
-- Otomatik DM önerisi
-- Mini dashboard
-
----
-
-# 🚀 Günlük Kullanım Akışı
-
-Sabah:
-
-1. python main.py
-2. Google Sheet aç
-3. Skora göre sırala
-4. 3.5 üstü ilanlara başvur
-5. HR bul → yarı otomatik DM gönder
-
-Toplam süre: 15-20 dakika
-
----
-
-# 💡 Stratejik Not
-
-Amaç çok ilana başvurmak değil,
-yüksek eşleşmeli ilanlara hızlı ve düzenli başvurmaktır.
-
-Bu sistem:
-- Duygusal başvuru yapmayı engeller
-- Ankara + Remote önceliğini korur
-- GameDev odağını kaybetmez
-- Global ilanları kaçırmaz
-
----
-
-# 📌 Proje Durumu
-
-Versiyon: v0.1 (RSS + Rule-Based Skor)
+İnteraktif menü:
 
 ```
-Durum: MVP
-Ban Riski: Yok
-Otomasyon Seviyesi: Yarı Otomatik
-Karar Kontrolü: Manuel
+1. Tam calistir (tum kaynaklar)           → LinkedIn + JSearch + RSS + Kariyer.net
+2. Temiz calistir (SIL + tum kaynaklar)   → Mevcut veriyi sil, sıfırdan çek
+3. API'siz calistir (LinkedIn + RSS)      → JSearch kullanmaz, API harcamaz ✨
+4. Sadece API (JSearch)                   → Sadece 5 API call kullanır
+5. Dry Run (konsola yazdir)               → Sheet'e yazmaz, test amaçlı
+6. Tabloyu Duzelt (baslik/sutun/tarih)    → Mevcut veriyi düzeltir + yeniden skorlar
+7. Cikis
+```
+
+> 💡 **Günlük kullanım için Menü 3 önerilir** — API harcamadan LinkedIn + RSS'ten ~300 ilan çeker. JSearch'e ihtiyaç duyulursa Menü 4 ile sadece 5 call harcanır.
+
+## 📊 Skor Sistemi
+
+```
+Toplam = (Alan × 0.3) + (Lokasyon × 0.4) + (Level × 0.3)
+```
+
+| Alan | Puan | | Lokasyon | Puan | | Level | Puan |
+|------|------|-|----------|------|-|-------|------|
+| gamedev | 5 | | ankara | 5 | | junior | 5 |
+| c# | 4 | | remote | 5 | | entry | 5 |
+| c++ | 4 | | hybrid_ankara | 5 | | mid | 2 |
+| python | 4 | | türkiye | 3 | | senior | -10 |
+| mobile | 3 | | istanbul | 3 | | lead | -15 |
+| java | 3 | | izmir | 2 | | bilinmiyor | 0 |
+| cv | 2 | | bursa | 2 | | | |
+| yazılım | 2 | | avrupa | 1 | | | |
+| diğer | 1 | | abd | 0 | | | |
+| | | | diğer | 0 | | | |
+
+### Skor Örnekleri
+
+| İlan | Alan | Lokasyon | Level | Skor |
+|------|------|----------|-------|------|
+| Junior Unity Dev @ Ankara | gamedev(5) | ankara(5) | junior(5) | **5,0** |
+| Game Dev @ Remote | gamedev(5) | remote(5) | ?(0) | 3,5 |
+| Python Dev @ Turkey | python(4) | türkiye(3) | mid(2) | **2,8** |
+| Senior Java Dev @ Remote | java(3) | remote(5) | senior(-10) | 0,9 |
+| Random Job @ Unknown | diğer(1) | diğer(0) | ?(0) | 0,3 |
+
+### Skoru Özelleştirme
+
+1. `config.py`'de ağırlıkları, alan/lokasyon/level puanlarını veya keyword'leri değiştir
+2. **Menüden 6** seç → Tüm ilanlar yeniden skorlanır (API call gerektirmez)
+
+## 🔧 Tabloyu Düzelt (Menü 6)
+
+Her çalıştırmada detaylı log gösterir:
+
+```
+--- Degisiklik Ozeti ---
+Alan    : 15 hucre
+Lokasyon: 23 hucre
+Level   : 8 hucre
+Skor    : 110 hucre
+Tarih   : 124 hucre
+TOPLAM  : 280 hucre degisti
 ```
 
 ---
 
-# 🔥 Nihai Amaç
+## 🗺 Geliştirme Yol Haritası (Roadmap)
 
-Ankara’da yaşayabilecek maaş sağlayan
-PC mühendisliği ile alakalı
-GameDev veya yazılım işi bulmak.
+### v0.4 — Akıllı Başvuru Hızlandırma *(Sonraki)*
 
-Remote opsiyonu her zaman açık.
+| Özellik | Açıklama | Zorluk |
+|---------|----------|--------|
+| **Quick-Apply Link Generator** | Skor ≥ 3.0 ilanların "Başvur" linklerini otomatik topla, tek tıkla aç | ⭐ |
+| **CV Auto-Fill (Playwright)** | LinkedIn Easy Apply ve benzeri tek tıklalı başvuru formlarını otomatik doldur | ⭐⭐⭐ |
+| **Cover Letter Generator** | Her ilana özel, ilan text'i + kendi profilinden otomatik ön yazı üret (LLM) | ⭐⭐ |
+| **Başvuru Takip Sütunu** | Sheet'e "Başvuruldu / Görüşme / Red" durumu ekle | ⭐ |
 
-Bu sistem o hedefe sistematik yaklaşmak için tasarlanmıştır.
+### v0.5 — Otomasyon & Zamanlama
+
+| Özellik | Açıklama | Zorluk |
+|---------|----------|--------|
+| **Cron / Task Scheduler** | Günlük otomatik tarama (sabah 09:00) | ⭐ |
+| **Telegram / Discord Bot** | Yeni yüksek skorlu ilanları anında bildirim | ⭐⭐ |
+| **Duplicate Akıllı Tespit** | Aynı ilanın farklı kaynaklarda olduğunu algıla | ⭐⭐ |
+| **Dashboard (Streamlit)** | Basit web arayüzü: skorlar, grafikler, kaynaklar | ⭐⭐ |
+
+### v0.6 — Yapay Zeka Entegrasyonu
+
+| Özellik | Açıklama | Zorluk |
+|---------|----------|--------|
+| **NLP Skor** | İlan açıklamasını LLM ile analiz et, daha akıllı skor | ⭐⭐⭐ |
+| **Profil Eşleştirme** | CV'ni parse et ve ilanla uyum yüzdesi hesapla | ⭐⭐⭐ |
+| **Otomatik Portfolio Match** | İlan gereksinimlerini projelerinle eşleştir | ⭐⭐⭐ |
+
+### v1.0 — Tam Otonom İş Arama Asistanı
+
+| Özellik | Açıklama | Zorluk |
+|---------|----------|--------|
+| **End-to-End Pipeline** | Tara → Skorla → Başvur → Takip et → Bildir | ⭐⭐⭐ |
+| **A/B Test Cover Letters** | Farklı ön yazı stilleri dene, hangisi daha çok yanıt alıyor? | ⭐⭐⭐ |
+| **Interview Prep** | İlanın gereksinimlerine göre mülakat soruları üret | ⭐⭐ |
+
+---
+
+## 🚀 Hızlı ve Otomatik Başvuru Stratejisi
+
+İlanları çekmek ilk adım — asıl zaman kazancı **başvuru sürecini otomasyona** almakta.
+
+### Strateji 1: Quick-Apply Linkleri (En Kolay — Hemen Yapılabilir)
+```
+Skor >= 3.0 olan ilanlar → Link sütunundan URL'leri topla → Hepsini tarayıcıda aç
+```
+Bir Python scripti ile yüksek skorlu ilanların linklerini tek seferde açabilirsin. Gözle 5 saniyede karar ver, başvur veya kapat.
+
+### Strateji 2: LinkedIn Easy Apply Bot (Orta Zorluk)
+LinkedIn'deki "Easy Apply" butonlu ilanlar için Playwright ile:
+1. Profil bilgilerini `config.py`'ye yaz (isim, email, CV path)
+2. Bot otomatik formu doldurur ve gönderir
+3. Başvurulan ilanları Sheet'te "Başvuruldu" olarak işaretler
+
+> ⚠️ **Risk:** LinkedIn hesabınız kısıtlanabilir. Günlük max 25 başvuru ve rastgele gecikmeler önerilir.
+
+### Strateji 3: AI Cover Letter + Toplu Başvuru (En Etkili)
+1. **Gemini/OpenAI API** ile ilan başlığı + açıklamasına özel cover letter üret
+2. CV + cover letter'ı otomatik mail gönder (SMTP) veya form doldur
+3. Her başvuruyu Sheet'te logla
+
+### Strateji 4: Türk Platformları İçin Form Bot
+Kariyer.net, Yenibiris.com gibi siteler için:
+1. Profil bilgilerini bir kez kaydet
+2. Playwright ile başvuru formlarını otomatik doldur
+3. CAPTCHA varsa manual, yoksa tam otomatik
+
+### Önerilen Başlangıç Sırası
+```
+1. Quick-Apply Links    → 30 dakikada yapılır, hemen verim alırsın
+2. Başvuru Takip Sütunu → Sheet'e "Durum" sütunu ekle, el ile takip et
+3. LinkedIn Easy Apply  → Playwright bot, en çok zaman kazandırır
+4. AI Cover Letter      → Kaliteli ve kişiselleştirilmiş başvurular
+```
+
+---
+
+## 📌 Proje Durumu
+
+```
+Versiyon  : v0.4
+Kaynaklar : LinkedIn + JSearch + RSS (+ Kariyer.net hazır)
+Skor      : Rule-based (keyword matching, 8 alan + 10 lokasyon + 6 level)
+Keyword   : 200+ keyword (gamedev, yazılım, remote, şehirler, seviyeler)
+Türkçe    : Tam destek (virgüllü skor, Türkçe header'lar)
+Menü      : 7 seçenek (API'li / API'siz / dry run / düzeltme)
+Otomasyon : Yarı-otomatik (günlük çalıştır)
+```

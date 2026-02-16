@@ -45,25 +45,35 @@ def show_menu():
     print("  Job Radar v0.3 - Interaktif Menu")
     print("=" * 50)
     print()
-    print("  1. Normal calistir (mevcut verilere ekle)")
-    print("  2. Temiz calistir (eski verileri SIL + yeni yaz)")
-    print("  3. Dry Run (sadece konsola yazdir, Sheet'e yazma)")
-    print("  4. Tabloyu Duzelt (baslik/sutun/tarih duzeltme)")
-    print("  5. Cikis")
+    print("  1. Tam calistir (tum kaynaklar)")
+    print("  2. Temiz calistir (SIL + tum kaynaklar)")
+    print("  3. API'siz calistir (LinkedIn + RSS, JSearch yok)")
+    print("  4. Sadece API (JSearch)")
+    print("  5. Dry Run (konsola yazdir, Sheet'e yazma)")
+    print("  6. Tabloyu Duzelt (baslik/sutun/tarih/skor)")
+    print("  7. Cikis")
     print()
 
     while True:
-        choice = input("  Seciminiz (1-5): ").strip()
-        if choice in ("1", "2", "3", "4", "5"):
+        choice = input("  Seciminiz (1-7): ").strip()
+        if choice in ("1", "2", "3", "4", "5", "6", "7"):
             return choice
         print("  Gecersiz secim, tekrar deneyin.")
 
 
-def run(dry_run=False, clear=False):
-    """Ana pipeline: fetch -> score -> filter -> deduplicate -> write."""
+def run(dry_run=False, clear=False, sources=None):
+    """
+    Ana pipeline: fetch -> score -> filter -> deduplicate -> write.
+    sources: hangi kaynaklarin kullanilacagi.
+             None = hepsi, veya {"linkedin", "kariyer", "jsearch", "rss"} alt kumesi.
+    """
+    if sources is None:
+        sources = {"linkedin", "kariyer", "jsearch", "rss"}
+
     print()
     print("=" * 60)
     print("  Job Radar v0.3 - Cok Kaynakli Skor Pipeline")
+    print(f"  Kaynaklar: {', '.join(sorted(sources))}")
     print("=" * 60)
 
     # -- 0. Sheet temizleme (istege bagli) --
@@ -71,24 +81,24 @@ def run(dry_run=False, clear=False):
         print("\n[INFO] Eski veriler temizleniyor...\n")
         clear_sheet()
 
-    # -- 1. Tum kaynaklardan ilanlari cek --
+    # -- 1. Secilen kaynaklardan ilanlari cek --
     all_jobs = []
 
-    # LinkedIn (Turkiye ilanlari – Playwright)
-    linkedin_jobs = fetch_all_linkedin_jobs()
-    all_jobs.extend(linkedin_jobs)
+    if "linkedin" in sources:
+        linkedin_jobs = fetch_all_linkedin_jobs()
+        all_jobs.extend(linkedin_jobs)
 
-    # Kariyer.net (Turkiye ilanlari)
-    kariyer_jobs = fetch_all_kariyer_jobs()
-    all_jobs.extend(kariyer_jobs)
+    if "kariyer" in sources:
+        kariyer_jobs = fetch_all_kariyer_jobs()
+        all_jobs.extend(kariyer_jobs)
 
-    # JSearch API (Remote gamedev + yazilim)
-    jsearch_jobs = fetch_all_jsearch_jobs()
-    all_jobs.extend(jsearch_jobs)
+    if "jsearch" in sources:
+        jsearch_jobs = fetch_all_jsearch_jobs()
+        all_jobs.extend(jsearch_jobs)
 
-    # RSS (Global remote)
-    rss_jobs = fetch_rss_jobs()
-    all_jobs.extend(rss_jobs)
+    if "rss" in sources:
+        rss_jobs = fetch_rss_jobs()
+        all_jobs.extend(rss_jobs)
 
     if not all_jobs:
         print("[HATA] Hic ilan bulunamadi.")
@@ -161,10 +171,14 @@ if __name__ == "__main__":
     elif choice == "2":
         run(dry_run=False, clear=True)
     elif choice == "3":
-        run(dry_run=True, clear=False)
+        run(dry_run=False, sources={"linkedin", "kariyer", "rss"})
     elif choice == "4":
+        run(dry_run=False, sources={"jsearch"})
+    elif choice == "5":
+        run(dry_run=True, clear=False)
+    elif choice == "6":
         print("\n[INFO] Tablo duzeltiliyor...\n")
         fix_sheet()
         print("\n[BITTI] Tamamlandi!\n")
-    elif choice == "5":
+    elif choice == "7":
         print("\nCikis yapiliyor...\n")
