@@ -144,11 +144,11 @@ Görevler zorluk derecelerine göre puanlanmıştır (1=Kolay, 5=Çok Zor).
 ## 📌 Proje Durumu
 
 ```
-Versiyon  : v0.5
+Versiyon  : v0.5.1
 Kaynaklar : LinkedIn + JSearch + RSS (+ Kariyer.net hazır)
-Skor      : Rule-based (keyword matching, 8 alan + 10 lokasyon + 6 level)
+Skor      : NLP (TF-IDF + N-grams) + Hibrit Regex
 Sheet     : Akıllı Çip (Dropdown) + Otomatik Formatlama
-Keyword   : 200+ keyword
+Keyword   : 200+ keyword + Zengin Corpus
 Menü      : 7 seçenek (API'li / API'siz / dry run / düzeltme)
 Otomasyon : Yarı-otomatik (günlük çalıştır)
 ```

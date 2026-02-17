@@ -159,6 +159,10 @@ def run(dry_run=False, clear=False, sources=None):
         print("\n[INFO] Google Sheets'e yaziliyor...\n")
         added, duplicates = append_jobs(valid_jobs)
         print(f"\n  [OK] Eklenen: {added} | [DUP] Duplicate: {duplicates}")
+        
+        # -- 8. Otomatik Tablo Duzeltme --
+        print("\n[INFO] Tablo otomatik duzeltiliyor (Format/Smart Chips)...\n")
+        fix_sheet()
 
     print("\n[BITTI] Tamamlandi!\n")
 
