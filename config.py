@@ -335,7 +335,7 @@ LOCATION_KEYWORDS = {
         "berlin", "amsterdam", "london", "paris", "dublin",
     ],
     "abd": [
-        "united states", "usa", "us",
+        "united states", "usa",
         "new york", "san francisco", "seattle", "austin",
         "california", "texas", "americas",
     ],
@@ -347,11 +347,12 @@ LOCATION_SCORES = {
     "hybrid_ankara": 5,
     "türkiye": 3,
     "istanbul": 3,
-    "izmir": 2,
-    "bursa": 2,
+    "izmir": 3,
+    "bursa": 3,
     "avrupa": 1,
     "abd": 0,
     "diğer": 0,
+    "dead": -10,  # Yanlis lokasyon / Dil uyusmazligi
 }
 
 # ──────────────────────────────────────────────

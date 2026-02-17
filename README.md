@@ -144,11 +144,29 @@ Görevler zorluk derecelerine göre puanlanmıştır (1=Kolay, 5=Çok Zor).
 ## 📌 Proje Durumu
 
 ```
-Versiyon  : v0.5.1
+Versiyon  : v0.5.2
 Kaynaklar : LinkedIn + JSearch + RSS (+ Kariyer.net hazır)
-Skor      : NLP (TF-IDF + N-grams) + Hibrit Regex
+Skor      : NLP (TF-IDF + N-grams) + Hibrit Regex + Dil Filtresi (TR/EN)
+Yetenek   : Ankara, Game Developer ve Junior ilanlarını önceliklendirme
 Sheet     : Akıllı Çip (Dropdown) + Otomatik Formatlama
 Keyword   : 200+ keyword + Zengin Corpus
 Menü      : 7 seçenek (API'li / API'siz / dry run / düzeltme)
-Otomasyon : Yarı-otomatik (günlük çalıştır)
+Otomasyon : Yarı-otomatik (günlük + her işlem sonrası otomatik tablo düzeltme)
 ```
+
+### 🧠 Yeni: Akıllı Filtreleme (v0.5.2)
+
+1.  **Dil Bariyeri:** Sistem İngilizce (`en`) ve Türkçe (`tr`) harici dillerdeki ilanları (örn: İspanyolca, Almanca, Fransızca) otomatik tespit eder.
+    *   Bu ilanların lokasyonu **"dead"** olarak işaretlenir.
+    *   Skoru direkt **-10 puan** düşürülür ve listenin en altına atılır.
+    *   Örnek: "Desarrollador Java" (İspanyolca) -> DEAD.
+
+2.  **Öncelik Kuralları (Hard Rules):**
+    *   **Ankara:** İlan metninde "Ankara" geçiyorsa, Remote olsa bile **Ankara** kabul edilir (+5 Puan).
+    *   **Game Developer:** "Unity", "Unreal", "Game Dev" kelimeleri varsa, TF-IDF skoru düşük olsa bile kategori **GameDev** yapılır.
+    *   **Junior Fırsatı:** "Entry Level", "Yeni Mezun", "Stajyer", "No Experience" ifadeleri varsa, tecrübe yılına bakılmaksızın **Junior** (+5 Puan) kabul edilir.
+
+3.  **Otomasyon:**
+    *   İlanlar çekilip tabloya yazıldıktan hemen sonra **Tabloyu Düzelt** fonksiyonu otomatik çalışır.
+    *   Tarihler `YYYY-MM-DD` formatına çevrilir.
+    *   Durum sütununa Dropdown (Smart Chip) eklenir.

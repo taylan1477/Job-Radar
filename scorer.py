@@ -147,19 +147,33 @@ def detect_field_tfidf(text):
 
 def detect_field(text, use_tfidf=True):
     """
-    Hibrit Alan Tespiti:
-    1. TF-IDF ile dene (daha akilli).
-    2. Sonuc guvensizse veya sklearn yoksa Klasik Keyword sayimina don.
+    Hibrit Alan Tespiti (Öncelikli + TF-IDF + Keyword):
+    1. [YENİ] Kritik Keyword Kontrolü (GameDev vb. için kesin eşleşme).
+    2. TF-IDF ile dene.
+    3. Keyword Hit Count ile dene.
     """
     text = _normalize(text)
 
-    # 1. Yontem: TF-IDF
+    # --- 1. Kritik Oncelikli Keywordler (Override) ---
+    # GameDev kaciyorsa, burasi yakalar.
+    if re.search(r'\b(game dev|game design|game program|unity|unreal|godot|oyun gelis|oyun tasarim)\w*', text):
+        return "gamedev"
+    
+    # Diger kesinlesmis alanlar
+    if "flutter" in text or "react native" in text or "ios developer" in text or "android developer" in text:
+        return "mobile"
+    if "frontend" in text or "front-end" in text:
+        return "frontend"
+    if "backend" in text or "back-end" in text:
+        return "backend"
+
+    # --- 2. Yontem: TF-IDF ---
     if use_tfidf and SKLEARN_AVAILABLE:
         detected = detect_field_tfidf(text)
         if detected:
             return detected
 
-    # 2. Yontem: Keyword Hit Count (Yedek)
+    # --- 3. Yontem: Keyword Hit Count (Yedek) ---
     best_field = "diğer"
     best_hits = 0
     best_priority = len(FIELD_PRIORITY) + 1
@@ -168,13 +182,11 @@ def detect_field(text, use_tfidf=True):
         keywords = FIELD_KEYWORDS.get(field, [])
         hits = _count_keyword_hits(text, keywords)
         
-        # Kurallar: Daha cok hit alan kazanir. Esitse oncelik sirasi.
         if hits > best_hits or (hits == best_hits and hits > 0 and i < best_priority):
             best_hits = hits
             best_field = field
             best_priority = i
 
-    # Eger hicbir ozel alan bulunamadiysa, genel yazilim kontrolu yap
     if best_field == "diğer":
         sw_hits = _count_keyword_hits(text, SOFTWARE_KEYWORDS)
         if sw_hits > 0:
@@ -186,40 +198,30 @@ def detect_field(text, use_tfidf=True):
 def detect_location(text):
     """
     Metin icinde lokasyon tespiti yapar.
-    Hibrit/Remote ayrimi icin keyword + context bakar.
+    Ankara oncelikli.
     """
     text = _normalize(text)
     
-    # 1. Hibrit Ankara Kontrolu
+    # 1. Hibrit Ankara (En net)
     if re.search(r'(hybrid|hibrit|karma)\s+.*ankara|ankara\s+.*(hybrid|hibrit|karma)', text):
         return "hybrid_ankara"
         
-    # 2. Ankara Kontrolu
-    # Sadece "Ankara" gecmesi yetmez, "Remote" ile karisabilir.
-    # Eger "Ankara" geciyor VE "Remote" gecmiyorsa -> Ankara
-    # Eger hem Ankara hem Remote geciyorsa -> Genelde Remote (ama merkez ankara)
-    
-    has_ankara = "ankara" in text
-    
-    # Remote kontrolu
+    # 2. Ankara Varligi (Baskın)
+    # Eger metinde Ankara geciyorsa, Remote bile olsa "Ankara" olarak isaretle.
+    # Cunku kullanici Ankara istiyor. Remote olmasi eksi degil arti.
+    # Ayrica "Remote in Ankara" gibi ifadeler de Ankara puani almali (5 puan).
+    # "Remote" (5 puan) ile "Ankara" (5 puan) arasinda fark yok skorda ama
+    # kategorik olarak Ankara demek daha dogru (cunku ofis orada).
+    if "ankara" in text:
+        return "ankara"
+
+    # 3. Klasik Remote
     is_remote = False
     for kw in LOCATION_KEYWORDS["remote"]:
         if kw in text:
-            is_remote = True
-            break
-            
-    if has_ankara and not is_remote:
-        return "ankara"
-        
-    if is_remote:
-        return "remote"
-        
-    if has_ankara: # Remote da olsa Ankara tercih sebebi
-        return "ankara" # veya 'hybrid_ankara' varsayabiliriz? Simdilik Ankara
+            return "remote"
 
-    # Diger sehirler / Ulkeler
-    best_location = "diğer"
-    # Istanbul, Izmir vs.
+    # 4. Diger sehirler
     for location, keywords in LOCATION_KEYWORDS.items():
         if location in ["ankara", "remote", "hybrid_ankara"]: continue
         for kw in keywords:
@@ -232,42 +234,55 @@ def detect_location(text):
 def detect_level(text):
     """
     Metin icinde seviye tespiti yapar.
-    Unvan eslesmesi + Yil bazli tahmin ve 'Senior' vurgusu.
+    Junior/Entry level oncelikli (Junior, Yeni Mezun, Stajyer, <2 yil).
     """
     text = _normalize(text)
+    
+    # 1. Junior/Entry "Guclu" Sinyaller (Override)
+    # Eger bunlardan biri varsa direk Junior/Entry don.
+    # Senior kelimesi gecse bile "Junior to Senior" olabilir, ama genelde baslikta "Junior" varsa Junior'dur.
+    junior_signals = [
+        r'\bjunior\b', r'\bjr\b', r'\bentry level\b', r'\bentry-level\b',
+        r'yeni mezun', r'stajyer', r'intern\b', r'yetistir', r'ogrenci', r'student',
+        r'no experience', r'experience not required', r'0-2 year', r'0-1 year'
+    ]
+    for pattern in junior_signals:
+        if re.search(pattern, text):
+            return "junior" # veya "entry" (Score: 5)
 
-    # 1. Acik Unvan Eslesmesi (En guclu)
-    # Lead -> Senior -> Mid -> Junior siralamasi onemli
+    # 2. Unvan Eslesmesi (Sirali)
+    # Lead -> Senior -> Mid -> Junior (Junior yukarida bulunduysa zaten dondu)
     priority_order = ["lead", "senior", "mid", "junior", "entry"] 
     for level in priority_order:
         keywords = LEVEL_KEYWORDS.get(level, [])
         for kw in keywords:
-            # Word boundary ile ara (junior developer, not juniorn)
             if re.search(r'\b' + re.escape(kw) + r'\b', text):
                 return level
 
-    # 2. Yil Bazli Tahmin (Regex)
-    # Örnek: "5+ years", "3-5 yil", "minimum 2 years", "at least 4 years"
+    # 3. Yil Bazli Tahmin (Regex)
     year_match = re.search(r'(\d+)\s*\+?\s*(?:-|to)?\s*(\d+)?\s*(?:years?|yıl|yil)', text)
-    
     if year_match:
         try:
             min_year = int(year_match.group(1))
-            # Basit mantik
             if min_year >= 5:
-                # 5 yil ise Senior ihtimali yuksek ama Mid de olabilir.
                 return "senior" 
             elif min_year >= 2:
                 return "mid"
-            elif min_year == 0 or min_year == 1:
+            elif min_year < 2: # 0, 1
                 return "junior"
         except:
             pass
             
-    # 3. Dolayli Ifadeler
-    if "experienced" in text or "tecrübeli" in text:
-        return "mid"
-    
+    # 4. Keyword Destekli Tahmin
+    if "senior" not in text and "mid" not in text and "lead" not in text:
+        # Eger hicbir level gecmiyor ama "Developer" geciyorsa
+        # ve deneyim yili da yoksa...
+        # "Junior" varsaymak riskli mi? Evet. Ama "Bilinmiyor" (0 puan) yerine
+        # eger "experience" kelimesi hic gecmiyorsa belki Entry olabilir?
+        # Simdilik bilinmiyor kalsin ama "learning", "enthusiastic" vb varsa Junior yapalim.
+        if "learning" in text or "willing to learn" in text or "passion" in text:
+             pass # Simdilik pas gecelim, cok aggressive olmasin.
+
     return "bilinmiyor"
 
 
@@ -311,14 +326,47 @@ def score_job(job):
         job.get("company", ""),
     ]))
 
+    # --- 0. Dil Kontrolu ve Kisitlamalar ---
+    # Once keyword blacklist check
     restricted = is_restricted(full_text)
+    
+    # Himalayas veya diger siteler icin Dil Kontrolu (YENI)
+    try:
+        from langdetect import detect
+        # Kisa metinlerde hata verebilir, birlestirilmis metni kullan
+        if len(full_text) > 20: 
+            lang = detect(full_text)
+            # print(f"  [DEBUG] Lang: {lang} | Len: {len(full_text)}")
+            
+            if lang not in ["en", "tr"]:
+                try:
+                    # Kullanici gorsun diye sadece DEAD olanlari yazdiralim
+                    print(f"  [DİL TESPİTİ] {lang} -> DEAD: {job.get('title', '').encode('utf-8', 'ignore').decode('utf-8')}")
+                except:
+                    pass
+                    
+                restricted = True
+                job["restricted_reason"] = f"Language: {lang}"
+                location = "dead"
+    
+    except ImportError:
+        pass 
+    except Exception as e:
+        pass
 
+    # --- 1. Alan, Lokasyon, Level Tespiti ---
+    # Bu degerler her durumda lazim (raporda gostermek icin)
     field = detect_field(full_text)
     location = detect_location(full_text)
     level = detect_level(full_text)
-
+    
+    # --- 2. Dil Kontrolu Sonrasi Skorlama ---
+    # print(f"  [DEBUG] Check restricted before final block: {restricted}")
     if restricted:
-        total_score = 0.0
+        total_score = -10.0 # Dil uyusmazligi veya restricted keyword varsa negatif bas
+        # Dil yuzunden restrict edildiyse, location'i dead yap (yukarida detect_location ezmis olabilir)
+        if job.get("restricted_reason", "").startswith("Language:"):
+             location = "dead"
     else:
         total_score = calculate_score(field, location, level)
 
