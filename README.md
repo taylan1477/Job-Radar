@@ -1,4 +1,4 @@
-# Job Radar v0.4
+# Job Radar v0.5
 
 Yazılım / GameDev odaklı iş ilanlarını **4 kaynaktan** otomatik toplayıp skorlayan, Google Sheets'e yazan ve başvuru sürecini hızlandıran bir pipeline.
 
@@ -29,7 +29,7 @@ job-radar/
 ├── kariyer_scraper.py   # Kariyer.net scraper (Playwright + Stealth)
 ├── jsearch_client.py    # JSearch API client
 ├── rss_sources.py       # WeWorkRemotely + Himalayas RSS
-├── sheets_client.py     # Google Sheets CRUD + tablo düzeltme
+├── sheets_client.py     # Google Sheets CRUD + fix + smart chips
 ├── requirements.txt     # Python bağımlılıkları
 └── README.md
 ```
@@ -53,11 +53,6 @@ playwright install chromium
 - Google Cloud Service Account (Sheets API)
 - JSearch API key (RapidAPI, ücretsiz tier)
 
-### Ayarlar (`config.py`)
-- `CREDENTIALS_FILE` → Google Service Account JSON
-- `SPREADSHEET_ID` → Hedef Google Sheet ID
-- `JSEARCH_API_KEY` → RapidAPI key
-
 ## ▶️ Kullanım
 
 ```bash
@@ -72,7 +67,7 @@ python main.py
 3. API'siz calistir (LinkedIn + RSS)      → JSearch kullanmaz, API harcamaz ✨
 4. Sadece API (JSearch)                   → Sadece 5 API call kullanır
 5. Dry Run (konsola yazdir)               → Sheet'e yazmaz, test amaçlı
-6. Tabloyu Duzelt (baslik/sutun/tarih)    → Mevcut veriyi düzeltir + yeniden skorlar
+6. Tabloyu Duzelt (baslik/sutun/tarih)    → Tabloyu onarır, Dropdown ekler
 7. Cikis
 ```
 
@@ -97,122 +92,63 @@ Toplam = (Alan × 0.3) + (Lokasyon × 0.4) + (Level × 0.3)
 | diğer | 1 | | abd | 0 | | | |
 | | | | diğer | 0 | | | |
 
-### Skor Örnekleri
-
-| İlan | Alan | Lokasyon | Level | Skor |
-|------|------|----------|-------|------|
-| Junior Unity Dev @ Ankara | gamedev(5) | ankara(5) | junior(5) | **5,0** |
-| Game Dev @ Remote | gamedev(5) | remote(5) | ?(0) | 3,5 |
-| Python Dev @ Turkey | python(4) | türkiye(3) | mid(2) | **2,8** |
-| Senior Java Dev @ Remote | java(3) | remote(5) | senior(-10) | 0,9 |
-| Random Job @ Unknown | diğer(1) | diğer(0) | ?(0) | 0,3 |
-
-### Skoru Özelleştirme
-
-1. `config.py`'de ağırlıkları, alan/lokasyon/level puanlarını veya keyword'leri değiştir
-2. **Menüden 6** seç → Tüm ilanlar yeniden skorlanır (API call gerektirmez)
-
 ## 🔧 Tabloyu Düzelt (Menü 6)
 
-Her çalıştırmada detaylı log gösterir:
-
-```
---- Degisiklik Ozeti ---
-Alan    : 15 hucre
-Lokasyon: 23 hucre
-Level   : 8 hucre
-Skor    : 110 hucre
-Tarih   : 124 hucre
-TOPLAM  : 280 hucre degisti
-```
+Sheet'te yapısal sorunlar veya format bozuklukları olduğunda çalıştırılır:
+1.  **Format Düzeltme:** Tarihleri `YYYY-MM-DD` yapar, skorları sayıya çevirir.
+2.  **Hyperlink Onarımı:** Türkçe Excel formül yapısına `;` uygun hale getirir.
+3.  **Akıllı Çip Ekleme:** "Durum" sütununa `Favori, Başvuruldu, Reddedildi, Görüşmede` seçeneklerini ekler.
+4.  **Sütun Temizliği:** Gereksiz "Kaynak" sütununu kaldırır.
 
 ---
 
 ## 🗺 Geliştirme Yol Haritası (Roadmap)
 
-### v0.4 — Akıllı Başvuru Hızlandırma *(Sonraki)*
+Görevler zorluk derecelerine göre puanlanmıştır (1=Kolay, 5=Çok Zor).
 
-| Özellik | Açıklama | Zorluk |
-|---------|----------|--------|
-| **Quick-Apply Link Generator** | Skor ≥ 3.0 ilanların "Başvur" linklerini otomatik topla, tek tıkla aç | ⭐ |
-| **CV Auto-Fill (Playwright)** | LinkedIn Easy Apply ve benzeri tek tıklalı başvuru formlarını otomatik doldur | ⭐⭐⭐ |
-| **Cover Letter Generator** | Her ilana özel, ilan text'i + kendi profilinden otomatik ön yazı üret (LLM) | ⭐⭐ |
-| **Başvuru Takip Sütunu** | Sheet'e "Başvuruldu / Görüşme / Red" durumu ekle | ⭐ |
+### v0.5 — Otomasyon & Akıllı Takip *(Şu Anki Hedef)*
 
-### v0.5 — Otomasyon & Zamanlama
+| Özellik | Açıklama | Zorluk | Öncelik |
+|---------|----------|--------|---------|
+| **Quick-Apply Link Generator** | Yüksek skorlu ilanların linklerini topluca açan script | ⭐ (1/5) | Yüksek |
+| **Discord Bildirim Botu** | Yeni ≥3.5 puanlı ilan düşünce Discord'a mesaj at | ⭐⭐ (2/5) | Orta |
+| **Cron / Task Scheduler** | Scripti her sabah 09:00'da otomatik çalıştır | ⭐ (1/5) | Orta |
+| **Duplicate Akıllı Tespit** | Farklı kaynaklardaki aynı ilanı (başlık+firma) yakala | ⭐⭐ (2/5) | Düşük |
 
-| Özellik | Açıklama | Zorluk |
-|---------|----------|--------|
-| **Cron / Task Scheduler** | Günlük otomatik tarama (sabah 09:00) | ⭐ |
-| **Telegram / Discord Bot** | Yeni yüksek skorlu ilanları anında bildirim | ⭐⭐ |
-| **Duplicate Akıllı Tespit** | Aynı ilanın farklı kaynaklarda olduğunu algıla | ⭐⭐ |
-| **Dashboard (Streamlit)** | Basit web arayüzü: skorlar, grafikler, kaynaklar | ⭐⭐ |
+### v0.6 — Başvuru Hızlandırıcılar
 
-### v0.6 — Yapay Zeka Entegrasyonu
+| Özellik | Açıklama | Zorluk | Öncelik |
+|---------|----------|--------|---------|
+| **CV Auto-Fill (Playwright)** | LinkedIn Easy Apply formlarını otomatik doldur | ⭐⭐⭐⭐ (4/5) | Yüksek |
+| **Cover Letter Generator** | İlan metnine özel ChatGPT tabanlı ön yazı oluştur | ⭐⭐⭐ (3/5) | Orta |
+| **Cold DM Generator** | İlan sahibi recruiter için LinkedIn mesaj taslağı hazırla | ⭐⭐ (2/5) | Düşük |
 
-| Özellik | Açıklama | Zorluk |
-|---------|----------|--------|
-| **NLP Skor** | İlan açıklamasını LLM ile analiz et, daha akıllı skor | ⭐⭐⭐ |
-| **Profil Eşleştirme** | CV'ni parse et ve ilanla uyum yüzdesi hesapla | ⭐⭐⭐ |
-| **Otomatik Portfolio Match** | İlan gereksinimlerini projelerinle eşleştir | ⭐⭐⭐ |
+### v0.7 — Analiz & Görselleştirme
 
-### v1.0 — Tam Otonom İş Arama Asistanı
+| Özellik | Açıklama | Zorluk | Öncelik |
+|---------|----------|--------|---------|
+| **Streamlit Dashboard** | Skor dağılımı, günlük ilan sayısı grafikleri | ⭐⭐ (2/5) | Düşük |
+| **Maaş Tahmini** | Benzer ilanlardan maaş aralığı tahmini (Regresyon) | ⭐⭐⭐ (3/5) | Düşük |
+| **Şirket Kara/Beyaz Liste** | İstenmeyen şirketleri blacklist'e ekle, puan düşür | ⭐ (1/5) | Orta |
 
-| Özellik | Açıklama | Zorluk |
-|---------|----------|--------|
-| **End-to-End Pipeline** | Tara → Skorla → Başvur → Takip et → Bildir | ⭐⭐⭐ |
-| **A/B Test Cover Letters** | Farklı ön yazı stilleri dene, hangisi daha çok yanıt alıyor? | ⭐⭐⭐ |
-| **Interview Prep** | İlanın gereksinimlerine göre mülakat soruları üret | ⭐⭐ |
+### v1.0 — Tam Otonom Asistan
 
----
-
-## 🚀 Hızlı ve Otomatik Başvuru Stratejisi
-
-İlanları çekmek ilk adım — asıl zaman kazancı **başvuru sürecini otomasyona** almakta.
-
-### Strateji 1: Quick-Apply Linkleri (En Kolay — Hemen Yapılabilir)
-```
-Skor >= 3.0 olan ilanlar → Link sütunundan URL'leri topla → Hepsini tarayıcıda aç
-```
-Bir Python scripti ile yüksek skorlu ilanların linklerini tek seferde açabilirsin. Gözle 5 saniyede karar ver, başvur veya kapat.
-
-### Strateji 2: LinkedIn Easy Apply Bot (Orta Zorluk)
-LinkedIn'deki "Easy Apply" butonlu ilanlar için Playwright ile:
-1. Profil bilgilerini `config.py`'ye yaz (isim, email, CV path)
-2. Bot otomatik formu doldurur ve gönderir
-3. Başvurulan ilanları Sheet'te "Başvuruldu" olarak işaretler
-
-> ⚠️ **Risk:** LinkedIn hesabınız kısıtlanabilir. Günlük max 25 başvuru ve rastgele gecikmeler önerilir.
-
-### Strateji 3: AI Cover Letter + Toplu Başvuru (En Etkili)
-1. **Gemini/OpenAI API** ile ilan başlığı + açıklamasına özel cover letter üret
-2. CV + cover letter'ı otomatik mail gönder (SMTP) veya form doldur
-3. Her başvuruyu Sheet'te logla
-
-### Strateji 4: Türk Platformları İçin Form Bot
-Kariyer.net, Yenibiris.com gibi siteler için:
-1. Profil bilgilerini bir kez kaydet
-2. Playwright ile başvuru formlarını otomatik doldur
-3. CAPTCHA varsa manual, yoksa tam otomatik
-
-### Önerilen Başlangıç Sırası
-```
-1. Quick-Apply Links    → 30 dakikada yapılır, hemen verim alırsın
-2. Başvuru Takip Sütunu → Sheet'e "Durum" sütunu ekle, el ile takip et
-3. LinkedIn Easy Apply  → Playwright bot, en çok zaman kazandırır
-4. AI Cover Letter      → Kaliteli ve kişiselleştirilmiş başvurular
-```
+| Özellik | Açıklama | Zorluk | Öncelik |
+|---------|----------|--------|---------|
+| **End-to-End Pipeline** | Tara → Skorla → Başvur → Takip et → Bildir | ⭐⭐⭐⭐⭐ (5/5) | Uzun vade |
+| **A/B Test Cover Letters** | Hangi ön yazı daha çok dönüş alıyor analizi | ⭐⭐⭐ (3/5) | Uzun vade |
+| **Mülakat Hazırlığı** | İlan requirementlarına göre teknik mülakat sorusu üret | ⭐⭐ (2/5) | Uzun vade |
 
 ---
 
 ## 📌 Proje Durumu
 
 ```
-Versiyon  : v0.4
+Versiyon  : v0.5
 Kaynaklar : LinkedIn + JSearch + RSS (+ Kariyer.net hazır)
 Skor      : Rule-based (keyword matching, 8 alan + 10 lokasyon + 6 level)
-Keyword   : 200+ keyword (gamedev, yazılım, remote, şehirler, seviyeler)
-Türkçe    : Tam destek (virgüllü skor, Türkçe header'lar)
+Sheet     : Akıllı Çip (Dropdown) + Otomatik Formatlama
+Keyword   : 200+ keyword
 Menü      : 7 seçenek (API'li / API'siz / dry run / düzeltme)
 Otomasyon : Yarı-otomatik (günlük çalıştır)
 ```
