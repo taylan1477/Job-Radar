@@ -1,4 +1,4 @@
-# main.py – Job Radar v0.3: Interaktif Cok Kaynakli Skor Pipeline
+# main.py – Job Radar v0.6.5: Interaktif Cok Kaynakli Skor Pipeline
 
 import sys
 import io
@@ -11,8 +11,14 @@ from sheets_client import append_jobs, clear_sheet, fix_sheet
 
 # Windows konsol encoding fix
 if sys.platform == "win32":
-    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8", errors="replace")
-    sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding="utf-8", errors="replace")
+    try:
+        sys.stdout.reconfigure(encoding='utf-8')
+        sys.stderr.reconfigure(encoding='utf-8')
+    except AttributeError:
+        # Fallback for older Python versions (<3.7)
+        import io
+        sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8", errors="replace")
+        sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding="utf-8", errors="replace")
 
 
 def print_job_summary(job):
@@ -174,7 +180,7 @@ if __name__ == "__main__":
         run(dry_run=False, clear=False)
     elif choice == "2":
         run(dry_run=False, clear=True)
-    elif choice == "3":
+    elif choice == "3": 
         run(dry_run=False, sources={"linkedin", "kariyer", "rss"})
     elif choice == "4":
         run(dry_run=False, sources={"jsearch"})

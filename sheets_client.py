@@ -1,5 +1,7 @@
 # sheets_client.py – Google Sheets entegrasyonu
 
+import sys
+import io
 import re
 import gspread
 from datetime import datetime
@@ -8,6 +10,16 @@ from gspread_formatting import format_cell_range, cellFormat, textFormat, number
 from gspread.utils import rowcol_to_a1
 
 from config import CREDENTIALS_FILE, SPREADSHEET_ID
+
+# Windows konsol encoding fix
+if sys.platform == "win32":
+    try:
+        sys.stdout.reconfigure(encoding='utf-8')
+        sys.stderr.reconfigure(encoding='utf-8')
+    except AttributeError:
+        # Fallback for older Python versions (<3.7)
+        sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8", errors="replace")
+        sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding="utf-8", errors="replace")
 
 SCOPES = [
     "https://www.googleapis.com/auth/spreadsheets",
@@ -43,6 +55,8 @@ STATUS_OPTIONS = [
     "Görüşmede",
     "Mülakat",
     "İşe Alındı",
+    "Süre Bitti",
+    "Ulaşılamaz",
 ]
 
 
@@ -261,8 +275,95 @@ def format_columns(worksheet, num_rows):
         # Validation for Status (I column, index 8)
         set_status_validation(worksheet, num_rows)
         
+        # Row coloring based on Status (Conditional Formatting)
+        apply_conditional_formatting(worksheet, num_rows)
+        
     except Exception as e:
         print(f"  [UYARI] Formatlama hatasi: {e}")
+
+
+def apply_conditional_formatting(worksheet, num_rows):
+    """Satirlari durum degerine gore renklendirir."""
+    if num_rows < 2:
+        return
+
+    try:
+        # Renk Tanimlari (RGB 0.0 - 1.0)
+        # Daha profesyonel, göz yormayan pastel tonlar
+        # Soft Rose / Muted Red: Daha açık ama doymuş bir ton.
+        # Okunabilirliği artırır, "alarm" gibi parlamaz.
+        color_red = {"red": 0.35, "green": 0.15, "blue": 0.15}
+        # Sage Green: Griye yakın, çok yumuşak bir yeşil.
+        # Uzun süre bakıldığında gözü en az yoran tondur.
+        color_pale_green = {"red": 0.22, "green": 0.32, "blue": 0.25}
+        # Muted Amber: Turuncuya kaçmayan, saman rengi bir sarı.
+        color_yellow = {"red": 0.35, "green": 0.30, "blue": 0.15}
+
+        # Emerald Forest: Biraz daha derinliği olan, güven veren bir yeşil.
+        color_bright_green = {"red": 0.12, "green": 0.28, "blue": 0.20}
+        # Durum Gecerlilik Listesi (Spelling kontrolu)
+        # Red: "Reddedildi", "Ulaşılamaz", "Süre Bitti"
+        # Pale Green: "Başvuruldu"
+        # Yellow: "Favori"
+        # Bright Green: "İşe Alındı", "Mülakat", "Görüşmede"
+
+        requests = []
+        
+        # Onceki kurallari temizle (Batch update ile her seferinde sifirdan eklemek yerine)
+        # Gspread-formatting'in boyle bir yetenegi var mi bakilmali ama manuel batchUpdate daha kesin.
+        
+        # Kosullu bicimlendirmeleri silmek icin (ilgili sheet'teki tum kurallari sil)
+        # Bu biraz karmasik (index bilmek lazim). 
+        # Simdilik sadece ekleyelim, cok birikirse temizlik gerekir.
+
+        def add_single_rule(status, color):
+            # En basit kural: =$I2="Durum"
+            # Locale bagimliligi ihtimaline karsi en sade hali
+            formula = f'=$I2="{status}"'
+            return {
+                "addConditionalFormatRule": {
+                    "rule": {
+                        "ranges": [{
+                            "sheetId": worksheet.id,
+                            "startRowIndex": 1,
+                            "endRowIndex": num_rows,
+                            "startColumnIndex": 0,
+                            "endColumnIndex": 9
+                        }],
+                        "booleanRule": {
+                            "condition": {
+                                "type": "CUSTOM_FORMULA",
+                                "values": [{"userEnteredValue": formula}]
+                            },
+                            "format": {
+                                "backgroundColor": color
+                            }
+                        }
+                    },
+                    "index": 0
+                }
+            }
+
+        # Kurallari sirayla ekle (Index: 0 her seferinde en uste ekler)
+        # Kirmizi Grup
+        for s in ["Reddedildi", "Ulaşılamaz", "Süre Bitti"]:
+            requests.append(add_single_rule(s, color_red))
+        
+        # Basvuruldu
+        requests.append(add_single_rule("Başvuruldu", color_pale_green))
+        
+        # Favori
+        requests.append(add_single_rule("Favori", color_yellow))
+        
+        # Yesil Grup
+        for s in ["İşe Alındı", "Mülakat", "Görüşmede"]:
+            requests.append(add_single_rule(s, color_bright_green))
+
+        worksheet.spreadsheet.batch_update({"requests": requests})
+        print(f"  [INFO] Satir renklendirme kurallari (Individual Rules) uygulandi.")
+
+    except Exception as e:
+        print(f"  [UYARI] Renklendirme hatasi: {e}")
 
 
 def set_status_validation(worksheet, num_rows):

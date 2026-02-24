@@ -1,6 +1,6 @@
-# Job Radar v0.5
+# Job Radar v0.6.5 (UX & Stability Update)
 
-Yazılım / GameDev odaklı iş ilanlarını **4 kaynaktan** otomatik toplayıp skorlayan, Google Sheets'e yazan ve başvuru sürecini hızlandıran bir pipeline.
+Yazılım / GameDev odaklı iş ilanlarını **4 kaynaktan** otomatik toplayıp skorlayan, Google Sheets'e yazan ve başvuru sürecini hızlandıran bir pipeline. Bu versiyon, Fintech ve kurumsal standartlara uygun **Clean Code Showcase** modülünün yanı sıra, gelişmiş görselleştirme ve stabilite güncellemelerini içerir.
 
 ## 🎯 Hedef
 
@@ -12,11 +12,20 @@ Yazılım / GameDev odaklı iş ilanlarını **4 kaynaktan** otomatik toplayıp 
 ## 📡 Veri Kaynakları
 
 | Kaynak | Yöntem | API Kullanımı | Tipik Sonuç |
-|--------|--------|---------------|-------------|
-| **LinkedIn** | Playwright scraping | ❌ Ücretsiz | ~170 ilan |
-| **JSearch** | REST API (RapidAPI) | ✅ 5 call/tarama | ~40 ilan |
-| **RSS** | WeWorkRemotely, Himalayas | ❌ Ücretsiz | ~125 ilan |
-| **Kariyer.net** | Playwright + Stealth | ❌ Ücretsiz | WAF engelli |
+|--------|--------|----------|-------------|
+| **LinkedIn** | Playwright scraping | Ücretsiz | ~170 ilan |
+| **JSearch** | REST API (RapidAPI) | 5 call/tarama | ~40 ilan |
+| **RSS** | WeWorkRemotely, Himalayas | Ücretsiz | ~125 ilan |
+| **Kariyer.net** | Playwright + Stealth | Ücretsiz | WAF engelli |
+
+## 🌟 Yenilikler (v0.6.5)
+
+Bu versiyonda kullanıcı deneyimi (UX) ve sistem kararlılığına odaklanıldı:
+
+- **Gelişmiş Görselleştirme:** Google Sheets'teki "Durum" sütununa göre tüm satırı otomatik renklendiren **Koşullu Biçimlendirme** sistemi eklendi (Kırmızı, Yeşil, Sarı, Emerald tonları).
+- **NLP Refaktörü:** Metin işleme ve dil tespiti mantığı `nlp_processor.py` ve `corpus.py` modülleriyle profesyonel düzeye taşındı.
+- **Genişletilmiş Durumlar:** "Süre Bitti" ve "Ulaşılmaz" (Vatandaşlık vb.) seçenekleriyle başvuru takibi hassaslaştırıldı.
+- **Windows Stabilite Fix:** Konsoldaki Türkçe karakter (`UnicodeEncodeError`) ve I/O çakışmaları modern `reconfigure` yöntemiyle çözüldü.
 
 ## 📂 Proje Yapısı
 
@@ -24,13 +33,13 @@ Yazılım / GameDev odaklı iş ilanlarını **4 kaynaktan** otomatik toplayıp 
 job-radar/
 ├── main.py              # İnteraktif menü + pipeline
 ├── config.py            # Tüm ayarlar (skorlar, keyword'ler, API key)
-├── scorer.py            # Alan/Lokasyon/Level tespiti + skor hesaplama
-├── linkedin_scraper.py  # LinkedIn public job search (Playwright)
-├── kariyer_scraper.py   # Kariyer.net scraper (Playwright + Stealth)
-├── jsearch_client.py    # JSearch API client
-├── rss_sources.py       # WeWorkRemotely + Himalayas RSS
-├── sheets_client.py     # Google Sheets CRUD + fix + smart chips
-├── requirements.txt     # Python bağımlılıkları
+├── nlp_processor.py     # NLP Motoru: Dil tespiti, Normalizasyon, TF-IDF [YENİ]
+├── corpus.py            # NLP Veri Havuzu: Expanded Corpus [YENİ]
+├── sheets_client.py     # Google Sheets CRUD + Renklendirme + Smart Chips
+├── scorer.py            # Puanlama mantığı (NLP entegreli)
+├── models.py            # Pydantic veri modelleri & Enumlar (Showcase)
+├── scoring_service.py   # Refaktör edilmiş kurumsal Scoring servisi (Showcase)
+├── tests/               # Pytest birim testleri (Showcase)
 └── README.md
 ```
 
@@ -43,15 +52,11 @@ venv\Scripts\activate
 
 # 2. Paketler
 pip install -r requirements.txt
+pip install pydantic pytest pytest-mock gspread-formatting  # Ek gereksinimler
 
 # 3. Playwright tarayıcı
 playwright install chromium
 ```
-
-### Gereksinimler
-- Python 3.10+
-- Google Cloud Service Account (Sheets API)
-- JSearch API key (RapidAPI, ücretsiz tier)
 
 ## ▶️ Kullanım
 
@@ -67,7 +72,7 @@ python main.py
 3. API'siz calistir (LinkedIn + RSS)      → JSearch kullanmaz, API harcamaz ✨
 4. Sadece API (JSearch)                   → Sadece 5 API call kullanır
 5. Dry Run (konsola yazdir)               → Sheet'e yazmaz, test amaçlı
-6. Tabloyu Duzelt (baslik/sutun/tarih)    → Tabloyu onarır, Dropdown ekler
+6. Tabloyu Duzelt (Format/Renk/Sutun)     → Tabloyu onarır, Renklendirmeyi uygular
 7. Cikis
 ```
 
@@ -92,81 +97,64 @@ Toplam = (Alan × 0.3) + (Lokasyon × 0.4) + (Level × 0.3)
 | diğer | 1 | | abd | 0 | | | |
 | | | | diğer | 0 | | | |
 
-## 🔧 Tabloyu Düzelt (Menü 6)
+## 🔧 Tablo Otomasyonu (Menü 6)
 
 Sheet'te yapısal sorunlar veya format bozuklukları olduğunda çalıştırılır:
 1.  **Format Düzeltme:** Tarihleri `YYYY-MM-DD` yapar, skorları sayıya çevirir.
-2.  **Hyperlink Onarımı:** Türkçe Excel formül yapısına `;` uygun hale getirir.
-3.  **Akıllı Çip Ekleme:** "Durum" sütununa `Favori, Başvuruldu, Reddedildi, Görüşmede` seçeneklerini ekler.
-4.  **Sütun Temizliği:** Gereksiz "Kaynak" sütununu kaldırır.
+2.  **Otomatik Renklendirme:** Duruma göre satırları (Reddedildi=Kırmızı, Favori=Sarı vb.) boyar.
+3.  **Akıllı Çip Ekleme:** "Durum" sütununa `Favori, Başvuruldu, Reddedildi, Görüşmede, Süre Bitti, Ulaşılmaz` seçeneklerini ekler.
 
 ---
 
 ## 🗺 Geliştirme Yol Haritası (Roadmap)
 
-Görevler zorluk derecelerine göre puanlanmıştır (1=Kolay, 5=Çok Zor).
-
-### v0.5 — Otomasyon & Akıllı Takip *(Şu Anki Hedef)*
+### v0.7 — Başvuru Hızlandırıcılar (Aktif Geliştirme)
 
 | Özellik | Açıklama | Zorluk | Öncelik |
 |---------|----------|--------|---------|
-| **Quick-Apply Link Generator** | Yüksek skorlu ilanların linklerini topluca açan script | ⭐ (1/5) | Yüksek |
-| **Discord Bildirim Botu** | Yeni ≥3.5 puanlı ilan düşünce Discord'a mesaj at | ⭐⭐ (2/5) | Orta |
-| **Cron / Task Scheduler** | Scripti her sabah 09:00'da otomatik çalıştır | ⭐ (1/5) | Orta |
-| **Duplicate Akıllı Tespit** | Farklı kaynaklardaki aynı ilanı (başlık+firma) yakala | ⭐⭐ (2/5) | Düşük |
+| **Quick-Apply Link** | İlanın direkt başvuru sayfasına giden akıllı link üretimi | ⭐⭐ (2/5) | Orta |
+| **Discord Bot** | Yüksek skorlu (>4.0) ilanlar için anlık bildirim sistemi | ⭐⭐⭐ (3/5) | Orta |
+| **Cover Letter Gen** | İlan metnine özel ChatGPT tabanlı ön yazı oluşturma | ⭐⭐⭐ (3/5) | Yüksek |
+| **Cold DM Gen** | İlgili recruiter için LinkedIn DM taslağı hazırlama | ⭐⭐ (2/5) | Yüksek |
 
-### v0.6 — Başvuru Hızlandırıcılar
-
-| Özellik | Açıklama | Zorluk | Öncelik |
-|---------|----------|--------|---------|
-| **CV Auto-Fill (Playwright)** | LinkedIn Easy Apply formlarını otomatik doldur | ⭐⭐⭐⭐ (4/5) | Yüksek |
-| **Cover Letter Generator** | İlan metnine özel ChatGPT tabanlı ön yazı oluştur | ⭐⭐⭐ (3/5) | Orta |
-| **Cold DM Generator** | İlan sahibi recruiter için LinkedIn mesaj taslağı hazırla | ⭐⭐ (2/5) | Düşük |
-
-### v0.7 — Analiz & Görselleştirme
+### v0.8 — Analiz & Gelişmiş Filtreleme
 
 | Özellik | Açıklama | Zorluk | Öncelik |
 |---------|----------|--------|---------|
-| **Streamlit Dashboard** | Skor dağılımı, günlük ilan sayısı grafikleri | ⭐⭐ (2/5) | Düşük |
-| **Maaş Tahmini** | Benzer ilanlardan maaş aralığı tahmini (Regresyon) | ⭐⭐⭐ (3/5) | Düşük |
-| **Şirket Kara/Beyaz Liste** | İstenmeyen şirketleri blacklist'e ekle, puan düşür | ⭐ (1/5) | Orta |
+| **Şirket Kara Liste** | Belirli şirketlerin ilanlarını otomatik gizleme/puan kırma | ⭐ (1/5) | Orta |
+| **Duplicate Tespit** | Farklı platformlardaki aynı ilanları akıllıca gruplama | ⭐⭐⭐ (3/5) | Düşük |
+| **Skill Gap Analizi** | Mevcut CV ile ilan arasındaki eksik yetenekleri listeleme | ⭐⭐⭐⭐ (4/5) | Yüksek |
+| **Streamlit Dashboard** | Başvuru süreçlerini izlemek için görsel arayüz | ⭐⭐⭐ (3/5) | Düşük |
+
+### v0.9 — Mülakat Hazırlığı & Market Analizi
+| Özellik | Açıklama | Zorluk | Öncelik |
+|---------|----------|--------|---------|
+| **Interview Prep** | İlan requirementlarına göre teknik mülakat sorusu üretimi | ⭐⭐ (2/5) | Orta |
+| **Easy Apply Helper** | LinkedIn Easy Apply için CV auto-fill asistanı | ⭐⭐⭐⭐ (4/5) | Düşük |
+| **Maaş Tahmini** | İlan metninden veya benzer ilanlardan maaş skalası tahmini | ⭐⭐⭐ (3/5) | Orta |
+| **Market Analytics** | Sektörel trend raporları (Hangi tech daha popüler vb.) | ⭐⭐⭐ (3/5) | Düşük |
 
 ### v1.0 — Tam Otonom Asistan
 
 | Özellik | Açıklama | Zorluk | Öncelik |
 |---------|----------|--------|---------|
-| **End-to-End Pipeline** | Tara → Skorla → Başvur → Takip et → Bildir | ⭐⭐⭐⭐⭐ (5/5) | Uzun vade |
-| **A/B Test Cover Letters** | Hangi ön yazı daha çok dönüş alıyor analizi | ⭐⭐⭐ (3/5) | Uzun vade |
-| **Mülakat Hazırlığı** | İlan requirementlarına göre teknik mülakat sorusu üret | ⭐⭐ (2/5) | Uzun vade |
+| **End-to-End Pipe** | Tara → Skorla → Başvur → Takip et → Bildir (Tam Otonom) | ⭐⭐⭐⭐⭐ (5/5) | Kritik |
+| **A/B Test Engine** | Hangi ön yazı/başvuru metodunun daha çok dönüt aldığı analizi | ⭐⭐⭐ (3/5) | Düşük |
+| **Multi-User / DB** | Yerel dosyadan PostgreSQL/Cloud veritabanına geçiş | ⭐⭐⭐⭐ (4/5) | Düşük |
 
 ---
 
 ## 📌 Proje Durumu
 
 ```
-Versiyon  : v0.5.2
+Versiyon  : v0.6.5
 Kaynaklar : LinkedIn + JSearch + RSS (+ Kariyer.net hazır)
-Skor      : NLP (TF-IDF + N-grams) + Hibrit Regex + Dil Filtresi (TR/EN)
-Yetenek   : Ankara, Game Developer ve Junior ilanlarını önceliklendirme
-Sheet     : Akıllı Çip (Dropdown) + Otomatik Formatlama
-Keyword   : 200+ keyword + Zengin Corpus
-Menü      : 7 seçenek (API'li / API'siz / dry run / düzeltme)
-Otomasyon : Yarı-otomatik (günlük + her işlem sonrası otomatik tablo düzeltme)
+Skor      : NLP (TF-IDF) + Hybrid Regex + Pydantic Validation
+Yetenek   : Junior / Game Dev pozisyonları için optimize edildi
 ```
 
-### 🧠 Yeni: Akıllı Filtreleme (v0.5.2)
+### 🧠 Akıllı Filtreleme Detayları
 
-1.  **Dil Bariyeri:** Sistem İngilizce (`en`) ve Türkçe (`tr`) harici dillerdeki ilanları (örn: İspanyolca, Almanca, Fransızca) otomatik tespit eder.
-    *   Bu ilanların lokasyonu **"dead"** olarak işaretlenir.
-    *   Skoru direkt **-10 puan** düşürülür ve listenin en altına atılır.
-    *   Örnek: "Desarrollador Java" (İspanyolca) -> DEAD.
-
-2.  **Öncelik Kuralları (Hard Rules):**
-    *   **Ankara:** İlan metninde "Ankara" geçiyorsa, Remote olsa bile **Ankara** kabul edilir (+5 Puan).
-    *   **Game Developer:** "Unity", "Unreal", "Game Dev" kelimeleri varsa, TF-IDF skoru düşük olsa bile kategori **GameDev** yapılır.
-    *   **Junior Fırsatı:** "Entry Level", "Yeni Mezun", "Stajyer", "No Experience" ifadeleri varsa, tecrübe yılına bakılmaksızın **Junior** (+5 Puan) kabul edilir.
-
-3.  **Otomasyon:**
-    *   İlanlar çekilip tabloya yazıldıktan hemen sonra **Tabloyu Düzelt** fonksiyonu otomatik çalışır.
-    *   Tarihler `YYYY-MM-DD` formatına çevrilir.
-    *   Durum sütununa Dropdown (Smart Chip) eklenir.
+1.  **Dil Bariyeri:** Sistem İngilizce (`en`) ve Türkçe (`tr`) harici dillerdeki ilanları otomatik tespit eder ve lokasyonu **"dead"** yapar (-10 Puan).
+2.  **Öncelik Kuralları:** Ankara, GameDev ve Junior fırsatları için özel regex + TF-IDF takviyesi ile puanlama yapılır.
+3.  **Otomasyon:** İlanlar çekilip tabloya yazıldıktan hemen sonra **Tabloyu Düzelt** fonksiyonu otomatik çalışır.

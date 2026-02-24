@@ -1,0 +1,30 @@
+# Job Başvurusu Sunum Rehberi (Sezzle & Fintech)
+
+Hazırladığımız "Clean Code Showcase" modülünü başvurunda şu şekillerde sunabilirsin:
+
+### 1. GitHub Bağlantısı (En Profesyonel Yöntem)
+Eğer projen GitHub'da ise, README.md'yi güncellediğimiz için direkt repo linkini verebilirsin. İnceleyen kişi v0.6 yeniliklerini ve professional yapıyı görecektir.
+
+### 2. PDF / DOC / DOCX Formatında Sunum
+Kodlarını bir döküman olarak göndermen gerekirse:
+- **Syntax Highlighting:** Kodları düz metin olarak değil, renkli (syntax highlighting) şekilde yapıştır. VS Code kullanıyorsan "Copy as HTML" yapıp Word'e yapıştırabilirsin veya kod dökümanını direkt PDF olarak yazdırabilirsin.
+- **Hangi Dosyaları Göstermelisin?** 
+  1. `scoring_service.py`: Ana iş mantığın ve "Clean Code" örneğin.
+  2. `models.py`: Veri modelleme ve validasyon yeteneğin.
+  3. `tests/test_scoring_service.py`: "Ben test yazan bir mühendisim" mesajı vermek için çok kritik.
+
+### 3. "Mühendislik Kararları" Notu (Bonus)
+Dökümanın başına kısa bir "Design Choices" (Tasarım Kararları) bölümü ekle:
+- "Veri tutarlılığı ve runtime validation için **Pydantic** tercih ettim."
+- "İş mantığını kapsüllemek ve test edilebilirliği artırmak için **Service-Oriented** mimari kullandım."
+- "Regresyonları önlemek için **Pytest** ile unit test coverage sağladım."
+
+### 4. TXT / RTF Formatı
+Eğer sistem sadece düz metin kabul ediyorsa, `scoring_service.py` dosyasının içeriğini başına "File: scoring_service.py" yazarak yapıştırabilirsin. Ancak Sezzle gibi bir teknoloji şirketi kesinlikle GitHub veya PDF tercih edecektir.
+
+---
+Özetle Ne Yaptık?
+1. **Refaktör:** Dağınık script mantığını profesyonel bir Servis yapısına çektik.
+2. **Tip Güvenliği:** Python'un esnekliğini Pydantic ile disipline ettik (Fintech'te veri hatası kabul edilmez!).
+3. **Otomasyon & Test:** Sadece çalışan değil, doğruluğu kanıtlanmış bir kod tabanı oluşturduk.
+4. **Dokümantasyon:** Projenin vizyonunu ve teknik derinliğini README'ye yansıttık.
