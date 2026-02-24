@@ -1,7 +1,7 @@
 # jsearch_client.py – JSearch API (RapidAPI) Client
 
 import requests
-from config import JSEARCH_API_KEY, JSEARCH_QUERIES
+from src.utils.config import JSEARCH_API_KEY, JSEARCH_QUERIES
 
 API_URL = "https://jsearch.p.rapidapi.com/search"
 

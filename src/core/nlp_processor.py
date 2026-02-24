@@ -2,7 +2,7 @@
 import re
 import warnings
 import numpy as np
-from corpus import EXPANDED_FIELD_CORPUS
+from src.utils.corpus import EXPANDED_FIELD_CORPUS
 
 # sklearn import (yoksa graceful fallback)
 try:

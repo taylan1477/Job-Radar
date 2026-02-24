@@ -4,7 +4,7 @@ import time
 import random
 from datetime import datetime
 
-from config import LINKEDIN_SEARCHES
+from src.utils.config import LINKEDIN_SEARCHES
 
 
 def _build_search_url(keyword, location=""):

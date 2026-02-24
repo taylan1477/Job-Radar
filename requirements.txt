@@ -2,10 +2,13 @@ feedparser
 gspread
 gspread-formatting
 google-auth
-beautifulsoup4
 requests
 playwright
 playwright-stealth
 scikit-learn
+numpy
 pandas
 langdetect
+pydantic
+pytest
+pytest-mock

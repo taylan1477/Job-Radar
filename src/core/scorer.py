@@ -1,14 +1,14 @@
 # scorer.py – Ilan Skorlama Modulu v0.6 (Refactored)
 
 import re
-from config import (
+from src.utils.config import (
     FIELD_KEYWORDS, FIELD_SCORES, FIELD_PRIORITY,
     LOCATION_KEYWORDS, LOCATION_SCORES,
     LEVEL_KEYWORDS, LEVEL_SCORES,
     FIELD_WEIGHT, LOCATION_WEIGHT, LEVEL_WEIGHT,
     NEGATIVE_KEYWORDS, SOFTWARE_KEYWORDS
 )
-from nlp_processor import normalize_text, detect_language, FieldDetector
+from src.core.nlp_processor import normalize_text, detect_language, FieldDetector
 
 def is_restricted(text):
     """

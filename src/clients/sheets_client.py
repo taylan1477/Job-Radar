@@ -9,7 +9,7 @@ from google.oauth2.service_account import Credentials
 from gspread_formatting import format_cell_range, cellFormat, textFormat, numberFormat
 from gspread.utils import rowcol_to_a1
 
-from config import CREDENTIALS_FILE, SPREADSHEET_ID
+from src.utils.config import CREDENTIALS_FILE, SPREADSHEET_ID
 
 # Windows konsol encoding fix
 if sys.platform == "win32":
@@ -415,7 +415,7 @@ def fix_sheet():
     4. Linkleri duzeltir.
     5. Durum sutununu korur ve Dropdown ekler.
     """
-    from scorer import detect_field, detect_location, detect_level, calculate_score
+    from src.core.scorer import detect_field, detect_location, detect_level, calculate_score
 
     worksheet = _get_sheet()
     if not worksheet:

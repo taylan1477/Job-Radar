@@ -2,9 +2,9 @@ import re
 import logging
 from typing import Optional, Tuple
 
-from models import Job, ScoredJob, JobField, JobLocation, JobLevel
-from nlp_processor import normalize_text, detect_language, FieldDetector
-import config
+from src.core.models import Job, ScoredJob, JobField, JobLocation, JobLevel
+from src.core.nlp_processor import normalize_text, detect_language, FieldDetector
+import src.utils.config as config
 
 logger = logging.getLogger(__name__)
 

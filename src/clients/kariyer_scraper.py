@@ -6,7 +6,7 @@ import random
 from datetime import datetime
 from urllib.parse import quote
 
-from config import KARIYER_SEARCHES, RELEVANCE_KEYWORDS
+from src.utils.config import KARIYER_SEARCHES, RELEVANCE_KEYWORDS
 
 BASE_URL = "https://www.kariyer.net"
 SEARCH_URL = "https://www.kariyer.net/is-ilanlari"

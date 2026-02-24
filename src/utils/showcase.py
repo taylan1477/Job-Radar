@@ -11,8 +11,8 @@ This module demonstrates:
 
 import sys
 import io
-from models import Job
-from scoring_service import ScoringService
+from src.core.models import Job
+from src.core.scoring_service import ScoringService
 
 # Fix Windows console encoding if needed
 if sys.platform == "win32":

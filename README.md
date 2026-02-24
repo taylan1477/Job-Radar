@@ -47,15 +47,28 @@ Bu versiyonda kullanıcı deneyimi (UX) ve sistem kararlılığına odaklanıld�
 
 ```
 job-radar/
-├── main.py              # İnteraktif menü + pipeline
-├── config.py            # Tüm ayarlar (skorlar, keyword'ler, API key)
-├── nlp_processor.py     # NLP Motoru: Dil tespiti, Normalizasyon, TF-IDF [YENİ]
-├── corpus.py            # NLP Veri Havuzu: Expanded Corpus [YENİ]
-├── sheets_client.py     # Google Sheets CRUD + Renklendirme + Smart Chips
-├── scorer.py            # Puanlama mantığı (NLP entegreli)
-├── models.py            # Pydantic veri modelleri & Enumlar (Showcase)
-├── scoring_service.py   # Refaktör edilmiş kurumsal Scoring servisi (Showcase)
-├── tests/               # Pytest birim testleri (Showcase)
+├── src/
+│   ├── core/               # Ana İş Mantığı ve Modeller
+│   │   ├── models.py       # Pydantic veri modelleri ve Enum tanımları
+│   │   ├── nlp_processor.py # Metin temizleme, dil tespiti ve TF-IDF işlemleri
+│   │   ├── scorer.py       # İlan puanlama algoritması (Regex + NLP)
+│   │   └── scoring_service.py # Puanlama mantığının servis katmanı (Showcase)
+│   ├── clients/            # Dış Entegrasyonlar ve Botlar
+│   │   ├── jsearch_client.py # JSearch API istemcisi
+│   │   ├── kariyer_scraper.py # Kariyer.net için Playwright scraper
+│   │   ├── linkedin_scraper.py # LinkedIn için Playwright scraper
+│   │   ├── rss_sources.py  # RSS kaynakları (WWR, Himalayas)
+│   │   └── sheets_client.py # Google Sheets API ve tablo işlemleri
+│   └── utils/              # Yardımcı Araçlar ve Yapılandırma
+│       ├── config.py       # Puan ağırlıkları ve API ayarları
+│       ├── corpus.py       # NLP veri havuzu
+│       ├── logger.py       # Merkezi loglama sistemi
+│       ├── analyze_keywords.py # Kelime frekans analiz aracı
+│       └── showcase.py     # Clean Code sunum scripti
+├── tests/                  # Pytest birim testleri
+├── docs/                   # Proje sunum ve dokümantasyon dosyaları
+├── main.py                 # Uygulama giriş noktası
+├── requirements.txt        # Bağımlılıklar
 └── README.md
 ```
 
@@ -144,29 +157,53 @@ Proje, genişletilebilir ve bakımı kolay bir yapı için modüler bir mimari �
 
 ## 🗺 Geliştirme Yol Haritası (Roadmap)
 
-### 🟢 v0.7 — Başvuru Hızlandırıcılar
-- [ ] **Quick-Apply:** İlanın direkt başvuru sayfasına giden akıllı link üretimi.
-- [ ] **Discord Bot:** Yüksek skorlu (>4.0) ilanlar için anlık bildirim sistemi.
-- [ ] **Cover Letter Gen:** İlan metnine özel AI tabanlı ön yazı asistanı.
+### v0.7 — Başvuru Hızlandırıcılar (Aktif Geliştirme)
 
-### 🟡 v0.8 — Analiz & Gelişmiş Filtreleme
-- [ ] **Kara Liste:** Belirli şirketleri otomatik gizleme sistemi.
-- [ ] **Skill Gap Analizi:** CV ile ilan arasındaki eksik yeteneklerin listelenmesi.
-- [ ] **Duplicate Tespit:** Platformlar arası mükerrer ilan gruplama.
+| Özellik | Açıklama | Zorluk | Öncelik |
+|---------|----------|--------|---------|
+| **Quick-Apply Link** | İlanın direkt başvuru sayfasına giden akıllı link üretimi | ⭐⭐ (2/5) | Orta |
+| **Discord Bot** | Yüksek skorlu (>4.0) ilanlar için anlık bildirim sistemi | ⭐⭐⭐ (3/5) | Orta |
+| **Cover Letter Gen** | İlan metnine özel ChatGPT tabanlı ön yazı oluşturma | ⭐⭐⭐ (3/5) | Yüksek |
+| **Cold DM Gen** | İlgili recruiter için LinkedIn DM taslağı hazırlama | ⭐⭐ (2/5) | Yüksek |
 
-### 🔴 v1.0 — Tam Otonom Asistan
-- [ ] **End-to-End Automation:** Tara → Skorla → Başvur → Takip et.
-- [ ] **Market Analytics:** Sektörel trend ve maaş skalası raporları.
+### v0.8 — Analiz & Gelişmiş Filtreleme
+
+| Özellik | Açıklama | Zorluk | Öncelik |
+|---------|----------|--------|---------|
+| **Şirket Kara Liste** | Belirli şirketlerin ilanlarını otomatik gizleme/puan kırma | ⭐ (1/5) | Orta |
+| **Duplicate Tespit** | Farklı platformlardaki aynı ilanları akıllıca gruplama | ⭐⭐⭐ (3/5) | Düşük |
+| **Skill Gap Analizi** | Mevcut CV ile ilan arasındaki eksik yetenekleri listeleme | ⭐⭐⭐⭐ (4/5) | Yüksek |
+| **Streamlit Dashboard** | Başvuru süreçlerini izlemek için görsel arayüz | ⭐⭐⭐ (3/5) | Düşük |
+
+### v0.9 — Mülakat Hazırlığı & Market Analizi
+| Özellik | Açıklama | Zorluk | Öncelik |
+|---------|----------|--------|---------|
+| **Interview Prep** | İlan requirementlarına göre teknik mülakat sorusu üretimi | ⭐⭐ (2/5) | Orta |
+| **Easy Apply Helper** | LinkedIn Easy Apply için CV auto-fill asistanı | ⭐⭐⭐⭐ (4/5) | Düşük |
+| **Maaş Tahmini** | İlan metninden veya benzer ilanlardan maaş skalası tahmini | ⭐⭐⭐ (3/5) | Orta |
+| **Market Analytics** | Sektörel trend raporları (Hangi tech daha popüler vb.) | ⭐⭐⭐ (3/5) | Düşük |
+
+### v1.0 — Tam Otonom Asistan
+
+| Özellik | Açıklama | Zorluk | Öncelik |
+|---------|----------|--------|---------|
+| **End-to-End Pipe** | Tara → Skorla → Başvur → Takip et → Bildir (Tam Otonom) | ⭐⭐⭐⭐⭐ (5/5) | Kritik |
+| **A/B Test Engine** | Hangi ön yazı/başvuru metodunun daha çok dönüt aldığı analizi | ⭐⭐⭐ (3/5) | Düşük |
+| **Multi-User / DB** | Yerel dosyadan PostgreSQL/Cloud veritabanına geçiş | ⭐⭐⭐⭐ (4/5) | Düşük |
 
 ---
 
-## 🤝 Katkıda Bulunma
+## 📌 Proje Durumu
 
-Bu proje kişisel bir iş arama asistanı olarak başlamış olsa da, katkılarınıza açıktır. Bir hata bulursanız veya yeni bir özellik öneriniz varsa lütfen bir *Issue* oluşturun.
+```
+Versiyon  : v0.6.5
+Kaynaklar : LinkedIn + JSearch + RSS (+ Kariyer.net hazır)
+Skor      : NLP (TF-IDF) + Hybrid Regex + Pydantic Validation
+Yetenek   : Junior / Game Dev pozisyonları için optimize edildi
+```
 
-## 📄 Lisans
+### 🧠 Akıllı Filtreleme Detayları
 
-Bu proje **MIT Lisansı** altında lisanslanmıştır. Detaylar için [LICENSE](LICENSE) dosyasına bakabilirsiniz.
-
----
-*Bu proje, geliştiricinin iş arama sürecini optimize etmek ve teknik yeteneklerini sergilemek amacıyla hazırlanmıştır.*
+1.  **Dil Bariyeri:** Sistem İngilizce (`en`) ve Türkçe (`tr`) harici dillerdeki ilanları otomatik tespit eder ve lokasyonu **"dead"** yapar (-10 Puan).
+2.  **Öncelik Kuralları:** Ankara, GameDev ve Junior fırsatları için özel regex + TF-IDF takviyesi ile puanlama yapılır.
+3.  **Otomasyon:** İlanlar çekilip tabloya yazıldıktan hemen sonra **Tabloyu Düzelt** fonksiyonu otomatik çalışır.

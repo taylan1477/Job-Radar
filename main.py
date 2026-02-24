@@ -2,12 +2,12 @@
 
 import sys
 import io
-from rss_sources import fetch_all_jobs as fetch_rss_jobs
-from kariyer_scraper import fetch_all_kariyer_jobs
-from jsearch_client import fetch_all_jsearch_jobs
-from linkedin_scraper import fetch_all_linkedin_jobs
-from scorer import score_job
-from sheets_client import append_jobs, clear_sheet, fix_sheet
+from src.clients.rss_sources import fetch_all_jobs as fetch_rss_jobs
+from src.clients.kariyer_scraper import fetch_all_kariyer_jobs
+from src.clients.jsearch_client import fetch_all_jsearch_jobs
+from src.clients.linkedin_scraper import fetch_all_linkedin_jobs
+from src.core.scorer import score_job
+from src.clients.sheets_client import append_jobs, clear_sheet, fix_sheet
 
 # Windows konsol encoding fix
 if sys.platform == "win32":

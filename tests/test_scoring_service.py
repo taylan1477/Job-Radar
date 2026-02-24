@@ -1,6 +1,6 @@
 import pytest
-from models import Job, JobField, JobLocation, JobLevel, ScoredJob
-from scoring_service import ScoringService
+from src.core.models import Job, JobField, JobLocation, JobLevel, ScoredJob
+from src.core.scoring_service import ScoringService
 
 @pytest.fixture
 def service():

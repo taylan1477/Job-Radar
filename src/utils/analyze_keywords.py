@@ -6,8 +6,8 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.feature_extraction.text import ENGLISH_STOP_WORDS
 
 # Mevcut modullerden veri cekmek icin
-from rss_sources import fetch_all_jobs as fetch_rss_jobs
-from scorer import score_job
+from src.clients.rss_sources import fetch_all_jobs as fetch_rss_jobs
+from src.core.scorer import score_job
 
 def analyze_jobs():
     print("Veri cekiliyor (RSS kaynaklari - Ucretsiz)...")
