@@ -1,13 +1,29 @@
-# Job Radar v0.6.5 (UX & Stability Update)
+# 🎯 Job Radar v0.6.5
 
-Yazılım / GameDev odaklı iş ilanlarını **4 kaynaktan** otomatik toplayıp skorlayan, Google Sheets'e yazan ve başvuru sürecini hızlandıran bir pipeline. Bu versiyon, Fintech ve kurumsal standartlara uygun **Clean Code Showcase** modülünün yanı sıra, gelişmiş görselleştirme ve stabilite güncellemelerini içerir.
+[![Python](https://img.shields.io/badge/Python-3.10+-blue?logo=python&logoColor=white)](https://www.python.org/)
+[![Status](https://img.shields.io/badge/Status-Active-success)](https://github.com/taylan1477/Job-Radar)
+[![License](https://img.shields.io/badge/License-MIT-yellow)](LICENSE)
+[![Clean Code](https://img.shields.io/badge/Clean%20Code-Showcase-blueviolet)](showcase.py)
 
-## 🎯 Hedef
+**Job Radar**, yazılım ve GameDev odaklı iş ilanlarını **4 farklı kaynaktan** (LinkedIn, JSearch, RSS, Kariyer.net) otomatik olarak toplayan, NLP (Doğal Dil İşleme) tabanlı bir skorlama algoritmasıyla değerlendiren ve sonuçları dinamik bir Google Sheets tablosuna aktaran profesyonel bir iş arama otomasyonudur.
 
-- Ankara / Remote iş bulmak
-- GameDev öncelikli (Unity, Unreal, C#, C++)
-- Türkçe + İngilizce ilanları birlikte değerlendirmek
-- Günlük iş arama süresini **15 dakikaya** düşürmek
+> [!TIP]
+> Bu proje, sadece bir iş arama aracı değil, aynı zamanda **Clean Code**, **SOLID prensipleri** ve **Modern Mimari** yaklaşımlarını sergileyen bir portfolyo çalışmasıdır.
+
+## 🚀 Öne Çıkan Özellikler
+
+- **Multi-Source Aggregation:** LinkedIn (Scraping), JSearch (API), RSS ve Kariyer.net entegrasyonu.
+- **NLP Powered Scoring:** TF-IDF ve gelişmiş Regex kullanarak ilanları teknoloji, lokasyon ve seviyeye göre puanlar.
+- **Smart Google Sheets Entegrasyonu:** Koşullu biçimlendirme, dinamik sütunlar ve "Smart Chips" ile başvuru takibi.
+- **Clean Code Showcase:** Pydantic veri modelleri, servis tabanlı mimari ve kapsamlı birim testleri.
+- **Erişilebilirlik:** Windows Unicode ve I/O çakışmaları için optimize edilmiş kararlı çalışma.
+
+## 🎯 Hedef ve Kapsam
+
+Projeyi özellikle şu kriterlere odaklı ilanları bulmak için geliştirdim:
+- **Odak:** GameDev (Unity, Unreal, C#, C++) & Yazılım Geliştirme.
+- **Lokasyon:** Ankara, Remote veya Hibrit fırsatları.
+- **Verimlilik:** Günlük iş tarama ve takip süresini manuel süreçlerden **15 dakikaya** indirgemek.
 
 ## 📡 Veri Kaynakları
 
@@ -106,55 +122,51 @@ Sheet'te yapısal sorunlar veya format bozuklukları olduğunda çalıştırıl�
 
 ---
 
-## 🗺 Geliştirme Yol Haritası (Roadmap)
+## 🛠 Teknolojiler ve Araçlar
 
-### v0.7 — Başvuru Hızlandırıcılar (Aktif Geliştirme)
-
-| Özellik | Açıklama | Zorluk | Öncelik |
-|---------|----------|--------|---------|
-| **Quick-Apply Link** | İlanın direkt başvuru sayfasına giden akıllı link üretimi | ⭐⭐ (2/5) | Orta |
-| **Discord Bot** | Yüksek skorlu (>4.0) ilanlar için anlık bildirim sistemi | ⭐⭐⭐ (3/5) | Orta |
-| **Cover Letter Gen** | İlan metnine özel ChatGPT tabanlı ön yazı oluşturma | ⭐⭐⭐ (3/5) | Yüksek |
-| **Cold DM Gen** | İlgili recruiter için LinkedIn DM taslağı hazırlama | ⭐⭐ (2/5) | Yüksek |
-
-### v0.8 — Analiz & Gelişmiş Filtreleme
-
-| Özellik | Açıklama | Zorluk | Öncelik |
-|---------|----------|--------|---------|
-| **Şirket Kara Liste** | Belirli şirketlerin ilanlarını otomatik gizleme/puan kırma | ⭐ (1/5) | Orta |
-| **Duplicate Tespit** | Farklı platformlardaki aynı ilanları akıllıca gruplama | ⭐⭐⭐ (3/5) | Düşük |
-| **Skill Gap Analizi** | Mevcut CV ile ilan arasındaki eksik yetenekleri listeleme | ⭐⭐⭐⭐ (4/5) | Yüksek |
-| **Streamlit Dashboard** | Başvuru süreçlerini izlemek için görsel arayüz | ⭐⭐⭐ (3/5) | Düşük |
-
-### v0.9 — Mülakat Hazırlığı & Market Analizi
-| Özellik | Açıklama | Zorluk | Öncelik |
-|---------|----------|--------|---------|
-| **Interview Prep** | İlan requirementlarına göre teknik mülakat sorusu üretimi | ⭐⭐ (2/5) | Orta |
-| **Easy Apply Helper** | LinkedIn Easy Apply için CV auto-fill asistanı | ⭐⭐⭐⭐ (4/5) | Düşük |
-| **Maaş Tahmini** | İlan metninden veya benzer ilanlardan maaş skalası tahmini | ⭐⭐⭐ (3/5) | Orta |
-| **Market Analytics** | Sektörel trend raporları (Hangi tech daha popüler vb.) | ⭐⭐⭐ (3/5) | Düşük |
-
-### v1.0 — Tam Otonom Asistan
-
-| Özellik | Açıklama | Zorluk | Öncelik |
-|---------|----------|--------|---------|
-| **End-to-End Pipe** | Tara → Skorla → Başvur → Takip et → Bildir (Tam Otonom) | ⭐⭐⭐⭐⭐ (5/5) | Kritik |
-| **A/B Test Engine** | Hangi ön yazı/başvuru metodunun daha çok dönüt aldığı analizi | ⭐⭐⭐ (3/5) | Düşük |
-| **Multi-User / DB** | Yerel dosyadan PostgreSQL/Cloud veritabanına geçiş | ⭐⭐⭐⭐ (4/5) | Düşük |
+- **Backend:** Python 3.10+
+- **Veri Toplama:** Playwright (Web Scraping), BeautifulSoup4, REST APIs
+- **NLP & İşleme:** Scikit-learn (TF-IDF), Regex, Pandas
+- **Entegrasyon:** Google Sheets API, Gspread
+- **Kalite & Standart:** Pydantic (Validation), Pytest (Testing)
 
 ---
 
-## 📌 Proje Durumu
+## 🏗 Mimari ve Clean Code
 
-```
-Versiyon  : v0.6.5
-Kaynaklar : LinkedIn + JSearch + RSS (+ Kariyer.net hazır)
-Skor      : NLP (TF-IDF) + Hybrid Regex + Pydantic Validation
-Yetenek   : Junior / Game Dev pozisyonları için optimize edildi
-```
+Proje, genişletilebilir ve bakımı kolay bir yapı için modüler bir mimari üzerine kurulmuştur:
 
-### 🧠 Akıllı Filtreleme Detayları
+- **Showcase Modülü:** `scoring_service.py` ve `models.py` dosyaları, profesyonel yazılım geliştirme standartlarını (Type Hinting, Dependency Injection, Validation) temsil eder.
+- **NLP Motoru:** `nlp_processor.py`, ham metin verilerini normalize eder ve dil tespiti yaparak puanlamayı etkileyen anlamsal çıkarımlarda bulunur.
+- **Data Integrity:** `sheets_client.py`, Google Sheets ile senkronize çalışırken veri kaybını önleyen ve tabloyu otomatik biçimlendiren gelişmiş bir katmandır.
 
-1.  **Dil Bariyeri:** Sistem İngilizce (`en`) ve Türkçe (`tr`) harici dillerdeki ilanları otomatik tespit eder ve lokasyonu **"dead"** yapar (-10 Puan).
-2.  **Öncelik Kuralları:** Ankara, GameDev ve Junior fırsatları için özel regex + TF-IDF takviyesi ile puanlama yapılır.
-3.  **Otomasyon:** İlanlar çekilip tabloya yazıldıktan hemen sonra **Tabloyu Düzelt** fonksiyonu otomatik çalışır.
+---
+
+## 🗺 Geliştirme Yol Haritası (Roadmap)
+
+### 🟢 v0.7 — Başvuru Hızlandırıcılar
+- [ ] **Quick-Apply:** İlanın direkt başvuru sayfasına giden akıllı link üretimi.
+- [ ] **Discord Bot:** Yüksek skorlu (>4.0) ilanlar için anlık bildirim sistemi.
+- [ ] **Cover Letter Gen:** İlan metnine özel AI tabanlı ön yazı asistanı.
+
+### 🟡 v0.8 — Analiz & Gelişmiş Filtreleme
+- [ ] **Kara Liste:** Belirli şirketleri otomatik gizleme sistemi.
+- [ ] **Skill Gap Analizi:** CV ile ilan arasındaki eksik yeteneklerin listelenmesi.
+- [ ] **Duplicate Tespit:** Platformlar arası mükerrer ilan gruplama.
+
+### 🔴 v1.0 — Tam Otonom Asistan
+- [ ] **End-to-End Automation:** Tara → Skorla → Başvur → Takip et.
+- [ ] **Market Analytics:** Sektörel trend ve maaş skalası raporları.
+
+---
+
+## 🤝 Katkıda Bulunma
+
+Bu proje kişisel bir iş arama asistanı olarak başlamış olsa da, katkılarınıza açıktır. Bir hata bulursanız veya yeni bir özellik öneriniz varsa lütfen bir *Issue* oluşturun.
+
+## 📄 Lisans
+
+Bu proje **MIT Lisansı** altında lisanslanmıştır. Detaylar için [LICENSE](LICENSE) dosyasına bakabilirsiniz.
+
+---
+*Bu proje, geliştiricinin iş arama sürecini optimize etmek ve teknik yeteneklerini sergilemek amacıyla hazırlanmıştır.*
