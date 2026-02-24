@@ -1,4 +1,4 @@
-# 🎯 Job Radar v0.6.5
+# 🎯 Job Radar v0.6.7
 
 [![Python](https://img.shields.io/badge/Python-3.10+-blue?logo=python&logoColor=white)](https://www.python.org/)
 [![Status](https://img.shields.io/badge/Status-Active-success)](https://github.com/taylan1477/Job-Radar)
@@ -34,14 +34,15 @@ Projeyi özellikle şu kriterlere odaklı ilanları bulmak için geliştirdim:
 | **RSS** | WeWorkRemotely, Himalayas | Ücretsiz | ~125 ilan |
 | **Kariyer.net** | Playwright + Stealth | Ücretsiz | WAF engelli |
 
-## 🌟 Yenilikler (v0.6.5)
+## 🌟 Yenilikler (v0.6.7)
 
-Bu versiyonda kullanıcı deneyimi (UX) ve sistem kararlılığına odaklanıldı:
+Bu versiyonda projenin modüler mimarisi tamamlandı ve kod kalitesi standartları yükseltildi:
 
-- **Gelişmiş Görselleştirme:** Google Sheets'teki "Durum" sütununa göre tüm satırı otomatik renklendiren **Koşullu Biçimlendirme** sistemi eklendi (Kırmızı, Yeşil, Sarı, Emerald tonları).
-- **NLP Refaktörü:** Metin işleme ve dil tespiti mantığı `nlp_processor.py` ve `corpus.py` modülleriyle profesyonel düzeye taşındı.
-- **Genişletilmiş Durumlar:** "Süre Bitti" ve "Ulaşılmaz" (Vatandaşlık vb.) seçenekleriyle başvuru takibi hassaslaştırıldı.
-- **Windows Stabilite Fix:** Konsoldaki Türkçe karakter (`UnicodeEncodeError`) ve I/O çakışmaları modern `reconfigure` yöntemiyle çözüldü.
+- **Modüler Mimari:** Tüm modüller `src` altına taşınarak `core`, `clients` ve `utils` şeklinde profesyonelce gruplandırıldı.
+- **Root Temizliği:** Dokümantasyonlar `docs/`, testler `tests/` klasörlerine taşınarak proje kök dizini düzenlendi.
+- **Merkezi Loglama:** `src/utils/logger.py` ile tüm sistem genelinde standart ve Türkçe karakter uyumlu loglama sağlandı.
+- **Kod İyileştirmesi:** `main.py` ve diğer modüllerdeki Duplicate Code ve Shadowing uyarıları giderildi, `requirements.txt` güncellendi.
+- **Gelişmiş Görselleştirme:** Google Sheets'teki "Durum" sütununa göre dinamik satır renklendirme ve Smart Chips sistemi optimize edildi.
 
 ## 📂 Proje Yapısı
 
@@ -81,7 +82,6 @@ venv\Scripts\activate
 
 # 2. Paketler
 pip install -r requirements.txt
-pip install pydantic pytest pytest-mock gspread-formatting  # Ek gereksinimler
 
 # 3. Playwright tarayıcı
 playwright install chromium
@@ -196,7 +196,7 @@ Proje, genişletilebilir ve bakımı kolay bir yapı için modüler bir mimari �
 ## 📌 Proje Durumu
 
 ```
-Versiyon  : v0.6.5
+Versiyon  : v0.6.7
 Kaynaklar : LinkedIn + JSearch + RSS (+ Kariyer.net hazır)
 Skor      : NLP (TF-IDF) + Hybrid Regex + Pydantic Validation
 Yetenek   : Junior / Game Dev pozisyonları için optimize edildi

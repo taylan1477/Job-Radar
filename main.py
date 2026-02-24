@@ -1,25 +1,15 @@
 # main.py – Job Radar v0.6.5: Interaktif Cok Kaynakli Skor Pipeline
 
-import sys
-import io
 from src.clients.rss_sources import fetch_all_jobs as fetch_rss_jobs
 from src.clients.kariyer_scraper import fetch_all_kariyer_jobs
 from src.clients.jsearch_client import fetch_all_jsearch_jobs
 from src.clients.linkedin_scraper import fetch_all_linkedin_jobs
 from src.core.scorer import score_job
 from src.clients.sheets_client import append_jobs, clear_sheet, fix_sheet
+from src.utils.logger import setup_logger
 
-# Windows konsol encoding fix
-if sys.platform == "win32":
-    try:
-        sys.stdout.reconfigure(encoding='utf-8')
-        sys.stderr.reconfigure(encoding='utf-8')
-    except AttributeError:
-        # Fallback for older Python versions (<3.7)
-        import io
-        sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8", errors="replace")
-        sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding="utf-8", errors="replace")
-
+# Setup logger and fix Windows encoding
+logger = setup_logger()
 
 def print_job_summary(job):
     """Tek bir ilanin ozetini konsola yazdirir."""
@@ -61,9 +51,9 @@ def show_menu():
     print()
 
     while True:
-        choice = input("  Seciminiz (1-7): ").strip()
-        if choice in ("1", "2", "3", "4", "5", "6", "7"):
-            return choice
+        selection = input("  Seciminiz (1-7): ").strip()
+        if selection in ("1", "2", "3", "4", "5", "6", "7"):
+            return selection
         print("  Gecersiz secim, tekrar deneyin.")
 
 
@@ -89,22 +79,16 @@ def run(dry_run=False, clear=False, sources=None):
 
     # -- 1. Secilen kaynaklardan ilanlari cek --
     all_jobs = []
+    fetch_map = {
+        "linkedin": fetch_all_linkedin_jobs,
+        "kariyer": fetch_all_kariyer_jobs,
+        "jsearch": fetch_all_jsearch_jobs,
+        "rss": fetch_rss_jobs
+    }
 
-    if "linkedin" in sources:
-        linkedin_jobs = fetch_all_linkedin_jobs()
-        all_jobs.extend(linkedin_jobs)
-
-    if "kariyer" in sources:
-        kariyer_jobs = fetch_all_kariyer_jobs()
-        all_jobs.extend(kariyer_jobs)
-
-    if "jsearch" in sources:
-        jsearch_jobs = fetch_all_jsearch_jobs()
-        all_jobs.extend(jsearch_jobs)
-
-    if "rss" in sources:
-        rss_jobs = fetch_rss_jobs()
-        all_jobs.extend(rss_jobs)
+    for name, fetch_func in fetch_map.items():
+        if name in sources:
+            all_jobs.extend(fetch_func())
 
     if not all_jobs:
         print("[HATA] Hic ilan bulunamadi.")
@@ -174,21 +158,17 @@ def run(dry_run=False, clear=False, sources=None):
 
 
 if __name__ == "__main__":
-    choice = show_menu()
+    menu_choice = show_menu()
 
-    if choice == "1":
-        run(dry_run=False, clear=False)
-    elif choice == "2":
-        run(dry_run=False, clear=True)
-    elif choice == "3": 
-        run(dry_run=False, sources={"linkedin", "kariyer", "rss"})
-    elif choice == "4":
-        run(dry_run=False, sources={"jsearch"})
-    elif choice == "5":
-        run(dry_run=True, clear=False)
-    elif choice == "6":
-        print("\n[INFO] Tablo duzeltiliyor...\n")
-        fix_sheet()
-        print("\n[BITTI] Tamamlandi!\n")
-    elif choice == "7":
-        print("\nCikis yapiliyor...\n")
+    actions = {
+        "1": lambda: run(dry_run=False, clear=False),
+        "2": lambda: run(dry_run=False, clear=True),
+        "3": lambda: run(dry_run=False, sources={"linkedin", "kariyer", "rss"}),
+        "4": lambda: run(dry_run=False, sources={"jsearch"}),
+        "5": lambda: run(dry_run=True, clear=False),
+        "6": lambda: (print("\n[INFO] Tablo duzeltiliyor...\n"), fix_sheet(), print("\n[BITTI] Tamamlandi!\n")),
+        "7": lambda: print("\nCikis yapiliyor...\n")
+    }
+
+    if menu_choice in actions:
+        actions[menu_choice]()
