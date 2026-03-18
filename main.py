@@ -1,4 +1,4 @@
-# main.py – Job Radar v0.6.5: Interaktif Cok Kaynakli Skor Pipeline
+# main.py – Job Radar v0.6.7: Interaktif Cok Kaynakli Skor Pipeline
 
 from src.clients.rss_sources import fetch_all_jobs as fetch_rss_jobs
 from src.clients.kariyer_scraper import fetch_all_kariyer_jobs

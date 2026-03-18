@@ -457,21 +457,34 @@ def fix_sheet():
         # Eger Link bulunamadiysa varsayilan 6
         if col_map["Link"] == -1: col_map["Link"] = 6
         
-        # --- Durum haritasi (Link -> Durum) ---
+        # --- Durum haritasi (Link -> Durum, Title+Company -> Durum) ---
         durum_map = {}
+        tc_map = {}
         durum_idx = col_map["Durum"]
         link_idx = col_map["Link"]
+        title_idx = col_map["Baslik"]
+        comp_idx = col_map["Firma"]
         
-        if durum_idx != -1 and link_idx != -1:
+        if durum_idx != -1:
             for row in all_data[1:]:
-                if len(row) > link_idx and len(row) > durum_idx:
-                    link_val = row[link_idx]
-                    durum_val = row[durum_idx]
-                    url = _extract_url(link_val)
-                    if url and durum_val.strip():
-                        # Status values mapping (eski text'leri yeni dropdown'a uydur)
-                        # or just keep as is, validation might complain but data stays
-                        durum_map[url] = durum_val.strip()
+                if len(row) > durum_idx:
+                    durum_val = row[durum_idx].strip()
+                    if durum_val:
+                        # 1. URL Map
+                        if link_idx != -1 and len(row) > link_idx:
+                            url = _extract_url(row[link_idx])
+                            if url:
+                                durum_map[url] = durum_val
+                                # Clean URL map (query params ignore)
+                                base_url = url.split("?")[0]
+                                durum_map[base_url] = durum_val
+                                
+                        # 2. Title + Company Map
+                        if title_idx != -1 and comp_idx != -1 and len(row) > max(title_idx, comp_idx):
+                            t = row[title_idx].strip().lower()
+                            c = row[comp_idx].strip().lower()
+                            if t:
+                                tc_map[f"{t}|{c}"] = durum_val
                         
         print(f"  [INFO] {len(durum_map)} durum kaydı hafızaya alındı.")
 
@@ -519,10 +532,17 @@ def fix_sheet():
             raw_date = get_val("Tarih")
             new_date = _normalize_date(raw_date)
             
-            # Durum
+            # Durum kurtarma
             status = ""
+            base_url = url.split("?")[0] if url else ""
+            tc_key = f"{title.strip().lower()}|{company.strip().lower()}"
+            
             if url in durum_map:
                 status = durum_map[url]
+            elif base_url and base_url in durum_map:
+                status = durum_map[base_url]
+            elif tc_key in tc_map:
+                status = tc_map[tc_key]
             
             new_row = [
                 title,
