@@ -1,4 +1,4 @@
-# scorer.py – Ilan Skorlama Modulu v0.6 (Refactored)
+# scorer.py – Ilan Skorlama Modulu v0.7 (Genisletilmis 7 Alan Modeli)
 
 import re
 from src.utils.config import (
@@ -23,20 +23,17 @@ def is_restricted(text):
 
 
 def _count_keyword_hits(text, keywords):
-    """Metinde kac keyword eslestirdigini sayar (Fallback yontemi)."""
+    """Metinde kac keyword eslestirdigini sayar."""
     count = 0
     for kw in keywords:
         kw_lower = kw.lower()
         if " " in kw_lower:
-            # Cok kelimeli: substring
             if kw_lower in text:
                 count += 1
         elif len(kw_lower) >= 4:
-            # Tek kelime, 4+ karakter: substring
             if kw_lower in text:
                 count += 1
         else:
-            # Kisa kelime: word boundary (c#, c++, go)
             if re.search(r'\b' + re.escape(kw_lower) + r'\b', text):
                 count += 1
     return count
@@ -44,31 +41,47 @@ def _count_keyword_hits(text, keywords):
 
 def detect_field(text, use_tfidf=True):
     """
-    Hibrit Alan Tespiti (Öncelikli + TF-IDF + Keyword):
-    1. Kritik Keyword Kontrolü.
-    2. TF-IDF ile dene.
+    Genisletilmis 7 Alan Tespiti (Oncelikli + TF-IDF + Keyword):
+    1. Kritik Oncelikli Rol Kontrolu.
+    2. TF-IDF ile tahmin.
     3. Keyword Hit Count ile dene.
     """
     text = normalize_text(text)
 
-    # --- 1. Kritik Oncelikli Keywordler (Override) ---
-    if re.search(r'\b(game dev|game design|game program|unity|unreal|godot|oyun gelis|oyun tasarim)\w*', text):
+    # --- 1. Kritik Oncelikli Roller (Override) ---
+    # 1. GameDev (1 numara tercih)
+    if re.search(r'\b(game dev|game design|game program|unity|unreal|godot|oyun gelis|oyun tasarim|gameplay)\w*', text):
         return "gamedev"
-    
-    # Diger kesinlesmis alanlar
-    if "flutter" in text or "react native" in text or "ios developer" in text or "android developer" in text:
-        return "mobile"
-    if "frontend" in text or "front-end" in text:
-        return "frontend"
-    if "backend" in text or "back-end" in text:
-        return "backend"
+
+    # 2. Savunma & Simulasyon
+    if re.search(r'\b(simülasyon|simulation|askeri simülasyon|taktik simülasyon|c4isr|harp oyunu|sistem entegrasyon|ara katman|middleware dev|rti dds|dis/hla)\w*', text):
+        return "savunma_simülasyon"
+
+    # 3. Sistem & Network
+    if re.search(r'\b(sistem yöneticisi|sysadmin|system administrator|noc mühendisi|noc engineer|network operations center|ağ otomasyonu)\w*', text):
+        return "sistem_network"
+
+    # 4. Veri & BI
+    if re.search(r'\b(veritabanı yöneticisi|database administrator|iş zekası|bi developer|etl developer|web scraping mühendisi|veri madenciliği)\w*', text):
+        return "veri_bi"
+
+    # 5. Endustriyel & Surec Otomasyonu
+    if re.search(r'\b(erp uzmanı|erp geliştiricisi|sap danışmanı|dynamics 365|endüstriyel otomasyon|scada|süreç otomasyonu|process automation|rpa developer|wms geliştiricisi|depo yönetim)\w*', text):
+        return "endüstriyel_otomasyon"
+
+    # 6. Yazilim (Frontend/Backend/Mobil/SDET)
+    if any(k in text for k in ["backend", "frontend", "fullstack", "full stack", "flutter", "react native", "android developer", "ios developer", "software engineer", "yazılım mühendisi"]):
+        return "yazılım"
 
     # --- 2. Yontem: TF-IDF ---
     if use_tfidf:
-        detector = FieldDetector()
-        detected = detector.predict(text)
-        if detected:
-            return detected
+        try:
+            detector = FieldDetector()
+            detected = detector.predict(text)
+            if detected and detected in FIELD_SCORES:
+                return detected
+        except Exception:
+            pass
 
     # --- 3. Yontem: Keyword Hit Count (Yedek) ---
     best_field = "diğer"
@@ -114,7 +127,8 @@ def detect_location(text):
 
     # 4. Diger sehirler
     for location, keywords in LOCATION_KEYWORDS.items():
-        if location in ["ankara", "remote", "hybrid_ankara"]: continue
+        if location in ["ankara", "remote", "hybrid_ankara"]:
+            continue
         for kw in keywords:
             if kw.lower() in text:
                 return location
@@ -158,7 +172,7 @@ def detect_level(text):
                 return "mid"
             elif min_year < 2: 
                 return "junior"
-        except:
+        except Exception:
             pass
             
     return "bilinmiyor"
@@ -168,15 +182,7 @@ def calculate_score(field, location, level, source=""):
     """
     Agirlikli toplam skor hesaplar. LinkedIn ilanlarina +1 ekler.
     """
-    field_score = FIELD_SCORES.get(field, 0)
-    
-    # Eger sozlukte yoksa (TF-IDF ile yeni gelenler)
-    if field_score == 0:
-        if field in ["frontend", "backend", "full stack"]:
-             field_score = 3 
-        else:
-             field_score = 1
-            
+    field_score = FIELD_SCORES.get(field, 1)
     location_score = LOCATION_SCORES.get(location, 0)
     level_score = LEVEL_SCORES.get(level, 0)
 
@@ -186,7 +192,7 @@ def calculate_score(field, location, level, source=""):
         + level_score * LEVEL_WEIGHT
     )
     
-    if source and "linkedin" in source.lower():
+    if source and "linkedin" in str(source).lower():
         total += 1.0
 
     return round(total, 2)
@@ -210,27 +216,21 @@ def score_job(job):
     # Dil tespiti (Himalayas vb. icin)
     detected_lang = detect_language(full_text)
     if detected_lang and detected_lang not in ["en", "tr"]:
-        try:
-             # Kullanici gorsun diye sadece DEAD olanlari yazdiralim
-             title_sanitized = job.get('title', '').encode('utf-8', 'ignore').decode('utf-8')
-             print(f"  [DİL TESPİTİ] {detected_lang} -> DEAD: {title_sanitized}")
-        except:
-             pass
         restricted = True
         job["restricted_reason"] = f"Language: {detected_lang}"
         location = "dead"
+    else:
+        location = detect_location(full_text)
     
     # --- 1. Alan, Lokasyon, Level Tespiti ---
     field = detect_field(full_text)
-    location = detect_location(full_text)
     level = detect_level(full_text)
     
     # --- 2. Skorlama ---
     if restricted:
         total_score = -10.0
-        # Dil yuzunden restrict edildiyse, location'i dead yap (yukaridaki detect_location ezmis olabilir)
         if job.get("restricted_reason", "").startswith("Language:"):
-             location = "dead"
+            location = "dead"
     else:
         total_score = calculate_score(field, location, level, source=job.get("source", ""))
 

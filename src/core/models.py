@@ -4,15 +4,11 @@ from pydantic import BaseModel, Field, field_validator
 
 class JobField(str, Enum):
     GAMEDEV = "gamedev"
-    CSHARP = "c#"
-    PYTHON = "python"
-    CPP = "c++"
-    MOBILE = "mobile"
-    JAVA = "java"
-    CV = "cv"
-    BACKEND = "backend"
-    FRONTEND = "frontend"
     SOFTWARE = "yazılım"
+    DEFENSE_SIMULATION = "savunma_simülasyon"
+    SYSTEM_NETWORK = "sistem_network"
+    DATA_BI = "veri_bi"
+    INDUSTRIAL_AUTOMATION = "endüstriyel_otomasyon"
     OTHER = "diğer"
 
 class JobLocation(str, Enum):
@@ -49,15 +45,17 @@ class Job(BaseModel):
     @field_validator('title', 'company')
     @classmethod
     def not_empty(cls, v: str) -> str:
-        if not v.strip():
-            raise ValueError('Must not be empty')
+        if not v or not v.strip():
+            return "Bilinmiyor"
         return v.strip()
 
-class ScoredJob(Job):
-    """Represents a job listing after being processed and scored."""
+class ScoredJob(BaseModel):
+    """Represents a processed and scored job listing."""
+    job: Job
     detected_field: JobField
     detected_location: JobLocation
     detected_level: JobLevel
     total_score: float
     is_restricted: bool = False
     restricted_reason: Optional[str] = None
+    applied_weights: Optional[dict] = Field(default_factory=dict)

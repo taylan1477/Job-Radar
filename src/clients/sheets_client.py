@@ -162,9 +162,10 @@ def clear_sheet():
             return True
 
         row_count = len(records)
-        if row_count > 1:
-            worksheet.delete_rows(2, row_count)
-            print(f"  [OK] {row_count - 1} satir silindi. Sheet temizlendi.")
+        # Google Sheets dondurulmus (frozen) 1. satir varken tum satirlarin delete_rows ile silinmesine
+        # 'Cannot delete all non-frozen rows' hatasi verir. Bu yuzden veri araligini temizliyoruz.
+        worksheet.batch_clear([f"A2:I{row_count}"])
+        print(f"  [OK] {row_count - 1} satir verisi temizlendi. Sheet hazirlandi.")
         return True
 
     except Exception as e:

@@ -2,7 +2,7 @@
 # Bu dosya NLP modelleri için kullanılan geniş metin veri setlerini içerir.
 
 # ──────────────────────────────────────────────
-# TF-IDF Corpus – Gelismis Alan Tespiti (Scorer v2)
+# TF-IDF Corpus – Genisletilmis 7 Alan Modeli
 # ──────────────────────────────────────────────
 EXPANDED_FIELD_CORPUS = {
     "gamedev": """
@@ -16,65 +16,54 @@ EXPANDED_FIELD_CORPUS = {
         render pipeline graphics programming animation rigging skinning
         multiplayer networking photon mirror fishnet
         virtual reality vr augmented reality ar mixed reality xr
-        oculus quest vive hololens
+        oculus quest vive hololens technical artist
     """,
-    "c#": """
-        c# developer .net developer .net core asp.net mvc web api
-        entity framework dapper linq wpf winforms uwp xamarin maui blazor
-        microservices dependency injection solid principles design patterns
-        azure cloud functions service bus
-        c# engineer backend developer software engineer
+    "savunma_simülasyon": """
+        simülasyon mühendisi simulation engineer modelleme simülasyon askeri simülasyon
+        taktik simülasyon c4isr harp oyunu radar simülasyon uçuş simülatörü
+        sistem entegrasyon mühendisi system integration ara katman middleware dev
+        gömülü sistem entegrasyon arayüz dds rti dds open dds dis hla high level architecture
+        savunma sanayii aselsan havelsan rokesan tusaş tai ssb milli savunma
+        real time avionics telemetri sensör füzyonu donanım yazılım entegrasyon
     """,
-    "python": """
-        python developer django flask fastapi tornado aiohttp
-        pandas numpy scikit-learn pytorch tensorflow keras
-        data science machine learning deep learning ai artificial intelligence
-        nlp computer vision data engineer etl pipeline airflow
-        celery redis rabbitmq postgresql sqlalchemy
-        automation scripting web scraping beautifulsoup selenium scrapy
-        yapay zeka makine öğrenmesi veri bilimi
+    "yazılım": """
+        software engineer yazılım mühendisi software developer yazılım geliştirici
+        backend developer frontend developer full stack fullstack web developer
+        api development rest graphql grpc microservices web api web services
+        mobile developer mobil geliştirici android ios flutter react native swift kotlin
+        test engineer test otomasyon sdet qa quality assurance test mühendisi
+        javascript typescript react vue angular nodejs python c# java go golang
+        clean code solid design patterns unit test integration test
     """,
-    "c++": """
-        c++ developer cpp engineer embedded systems real-time low latency
-        high performance computing hpc multithreading concurrency
-        pointers memory management stl boost qt framework
-        driver development kernel module firmware
-        automotive aerospace defense finance trading systems
-        image processing signal processing
+    "sistem_network": """
+        sistem yöneticisi system administrator sysadmin noc mühendisi network operations center
+        network engineer ağ mühendisi it operasyon uzmanı ağ otomasyonu network automation
+        veri merkezi data center sunucu yönetimi server management linux administrator
+        windows server active directory vmware esxi hyper v proxmox
+        cisco switch router firewall vpn routing switching tcp ip dns dhcp
+        site reliability engineer sre infrastructure altyapı monitoring zabbix nagios prometheus grafana
+        bash scripting powershell ansible devops cloud aws azure
     """,
-    "mobile": """
-        mobile developer android ios cross-platform native
-        kotlin java swift objective-c flutter dart react native
-        xcode android studio gradle cocoapods
-        mobile ui ux material design cupertino
-        mobil uygulama geliştirici mobil mühendis
+    "veri_bi": """
+        veritabanı yöneticisi dba database administrator sql server postgresql oracle mysql
+        database tuning indexleme backup restore replikasyon cluster
+        iş zekası bi developer business intelligence etl developer veri ambarı data warehouse
+        power bi tableau qlik ssas ssis ssrs talend databricks snowflake
+        veri madenciliği data mining web scraping crawler spider selenium scrapy
+        veri analisti data analyst büyük veri big data hadoop spark
     """,
-    "java": """
-        java developer spring boot spring mvc hibernate jpa
-        jakarta ee j2ee enterprise application
-        microservices rest api soap maven gradle
-        kafka elasticsearch docker kubernetes
-        backend engineer server side distributed systems
+    "endüstriyel_otomasyon": """
+        erp geliştiricisi erp uzmanı sap abap dynamics 365 erp danışmanı canias logo netsis
+        endüstriyel otomasyon mühendisi scada plc siemens tia portal s7 omron hmi
+        süreç otomasyonu process automation rpa uipath blue prism power automate
+        wms depo yönetim sistemleri depo otomasyonu lojistik yazılımları barkod rfid
+        ürün mühendisi product engineer donanım yazılım test prototip üretim hattı
+        streaming video mühendisi ffmpeg video encoding canlı yayın vod mam medya arşiv
     """,
-    "cv": """
-        computer vision image processing opencv yolo
-        object detection face recognition segmentation tracking
-        lidar point cloud slam photogrammetry
-        deep learning cnn rnn gan transformer
-        görüntü işleme bilgisayarlı görü
-    """,
-    "frontend": """
-        frontend developer web developer ui developer javascript typescript
-        react vue angular svelte next.js nuxt.js
-        html css sass less tailwind bootstrap
-        redux mobx context api webpack vite
-        responsive design accessibility wcag
-    """,
-    "backend": """
-        backend developer server side api development database design
-        sql nosql redis memcached caching message queue
-        system architecture scalability security authentication authorization
-        oauth jwt rest graphql grpc
-        nodejs go golang ruby php laravel
+    "diğer": """
+        uygulama destek mühendisi application support app support l2 l3 helpdesk
+        bt iş analisti it business analyst sistem analisti gereksinim analizi
+        saha entegrasyon mühendisi field engineer teknik destek troubleshooting
+        genel teknik operasyon müşteri sahası donanım kurulumu
     """
 }
