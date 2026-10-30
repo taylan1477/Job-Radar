@@ -74,8 +74,8 @@ def _parse_jsearch_job(raw_job):
     location_str = ", ".join(location_parts)
     if is_remote:
         location_str = f"Remote - {location_str}" if location_str else "Remote"
-
-    description = raw_job.get("job_description", "")[:500]  # Ilk 500 karakter
+    raw_desc = raw_job.get("job_description")
+    description = (raw_desc if raw_desc else "")[:500]  # Ilk 500 karakter
 
     summary = f"{location_str}. {description}"
 

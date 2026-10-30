@@ -164,9 +164,9 @@ def detect_level(text):
     return "bilinmiyor"
 
 
-def calculate_score(field, location, level):
+def calculate_score(field, location, level, source=""):
     """
-    Agirlikli toplam skor hesaplar.
+    Agirlikli toplam skor hesaplar. LinkedIn ilanlarina +1 ekler.
     """
     field_score = FIELD_SCORES.get(field, 0)
     
@@ -185,6 +185,9 @@ def calculate_score(field, location, level):
         + location_score * LOCATION_WEIGHT
         + level_score * LEVEL_WEIGHT
     )
+    
+    if source and "linkedin" in source.lower():
+        total += 1.0
 
     return round(total, 2)
 
@@ -229,7 +232,7 @@ def score_job(job):
         if job.get("restricted_reason", "").startswith("Language:"):
              location = "dead"
     else:
-        total_score = calculate_score(field, location, level)
+        total_score = calculate_score(field, location, level, source=job.get("source", ""))
 
     job["field"] = field
     job["location"] = location

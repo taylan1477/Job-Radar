@@ -1,0 +1,645 @@
+{
+  "nodes": [
+    {
+      "id": "readme_job_radar_project",
+      "label": "Job Radar Project",
+      "file_type": "document",
+      "source_file": "C:\\Projeler\\PycharmProjects\\job-radar\\README.md",
+      "source_location": "L1",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "rationale": null
+    },
+    {
+      "id": "readme_multi_source_aggregation",
+      "label": "Multi-Source Job Aggregation",
+      "file_type": "concept",
+      "source_file": "C:\\Projeler\\PycharmProjects\\job-radar\\README.md",
+      "source_location": "L15",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "rationale": "Aggregates job listings across LinkedIn, JSearch API, RSS feeds, and Kariyer.net to provide wide coverage."
+    },
+    {
+      "id": "readme_nlp_scoring_engine",
+      "label": "NLP-Powered Job Scoring",
+      "file_type": "concept",
+      "source_file": "C:\\Projeler\\PycharmProjects\\job-radar\\README.md",
+      "source_location": "L16",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "rationale": "Uses TF-IDF vectorization and regex pattern matching to evaluate job postings by tech stack, location, and seniority."
+    },
+    {
+      "id": "readme_sheets_integration",
+      "label": "Smart Google Sheets Integration",
+      "file_type": "concept",
+      "source_file": "C:\\Projeler\\PycharmProjects\\job-radar\\README.md",
+      "source_location": "L17",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "rationale": "Synchronizes processed job opportunities with Google Sheets featuring conditional formatting, status-based row coloring, and smart dropdown chips."
+    },
+    {
+      "id": "readme_scoring_formula",
+      "label": "Weighted Scoring Formula",
+      "file_type": "concept",
+      "source_file": "C:\\Projeler\\PycharmProjects\\job-radar\\README.md",
+      "source_location": "L112",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "rationale": "Formula: Total = (Field * 0.3) + (Location * 0.4) + (Level * 0.3), heavily prioritizing Ankara/Remote junior game development positions."
+    },
+    {
+      "id": "readme_roadmap",
+      "label": "Job Radar Development Roadmap",
+      "file_type": "concept",
+      "source_file": "C:\\Projeler\\PycharmProjects\\job-radar\\README.md",
+      "source_location": "L158",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "rationale": "Roadmap detailing progression from v0.7 application accelerators to v1.0 autonomous assistant."
+    },
+    {
+      "id": "docs_presentation_guide_document",
+      "label": "Job Application Presentation Guide",
+      "file_type": "document",
+      "source_file": "C:\\Projeler\\PycharmProjects\\job-radar\\docs\\presentation_guide.txt",
+      "source_location": "L1",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "rationale": "Practical guide for presenting the Clean Code Showcase and engineering decisions to tech recruiters at Sezzle and Fintech firms."
+    },
+    {
+      "id": "docs_presentation_guide_design_decisions",
+      "label": "Clean Code Engineering Decisions",
+      "file_type": "concept",
+      "source_file": "C:\\Projeler\\PycharmProjects\\job-radar\\docs\\presentation_guide.txt",
+      "source_location": "L16",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "rationale": "Emphasizes runtime validation via Pydantic, service encapsulation for testability, and Pytest coverage for regression prevention."
+    },
+    {
+      "id": "docs_technical_showcase_sezzle_case_study",
+      "label": "Technical Case Study: Job Radar Scoring Engine",
+      "file_type": "document",
+      "source_file": "C:\\Projeler\\PycharmProjects\\job-radar\\docs\\technical_showcase_sezzle.md",
+      "source_location": "L1",
+      "source_url": null,
+      "captured_at": null,
+      "author": "Taylan Özgür Özdemir",
+      "contributor": null,
+      "rationale": "Showcases refactored scoring engine and Clean Code practices for Junior Software Engineer role at Sezzle."
+    },
+    {
+      "id": "docs_technical_showcase_sezzle_domain_modeling",
+      "label": "Domain Modeling Specification",
+      "file_type": "concept",
+      "source_file": "C:\\Projeler\\PycharmProjects\\job-radar\\docs\\technical_showcase_sezzle.md",
+      "source_location": "L17",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "rationale": "Defines JobField, JobLocation, JobLevel enums, Job raw model, and ScoredJob model with field validators."
+    },
+    {
+      "id": "docs_technical_showcase_sezzle_scoring_service_impl",
+      "label": "Scoring Service Architecture Showcase",
+      "file_type": "concept",
+      "source_file": "C:\\Projeler\\PycharmProjects\\job-radar\\docs\\technical_showcase_sezzle.md",
+      "source_location": "L88",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "rationale": "Encapsulates restriction checks, language detection, fast path keyword matching, NLP context inference, and seniority detection."
+    },
+    {
+      "id": "docs_technical_showcase_sezzle_qa_testing",
+      "label": "Quality Assurance & Unit Testing Showcase",
+      "file_type": "concept",
+      "source_file": "C:\\Projeler\\PycharmProjects\\job-radar\\docs\\technical_showcase_sezzle.md",
+      "source_location": "L220",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "rationale": "Unit test suite with Pytest validating standard categorization, restriction enforcement, and seniority regex."
+    },
+    {
+      "id": "excel_dump_data_summary",
+      "label": "Excel Job Listings Dump",
+      "file_type": "document",
+      "source_file": "C:\\Projeler\\PycharmProjects\\job-radar\\excel_dump.txt",
+      "source_location": "L1",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "rationale": null
+    },
+    {
+      "id": "job_radar1_sheet_ilanlar",
+      "label": "Job Radar Spreadsheet (İlanlar)",
+      "file_type": "document",
+      "source_file": "C:\\Projeler\\PycharmProjects\\job-radar\\graphify-out\\converted\\Job Radar1_be49ddb9.md",
+      "source_location": "L3",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "rationale": null
+    },
+    {
+      "id": "job_radar1_schema",
+      "label": "Job Radar Spreadsheet Schema",
+      "file_type": "concept",
+      "source_file": "C:\\Projeler\\PycharmProjects\\job-radar\\graphify-out\\converted\\Job Radar1_be49ddb9.md",
+      "source_location": "L4",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "rationale": "Schema comprising Başlık, Firma, Alan, Lokasyon, Level, Skor, Link, Tarih, and Durum columns."
+    },
+    {
+      "id": "requirements_spec",
+      "label": "Python Dependencies Specification",
+      "file_type": "document",
+      "source_file": "C:\\Projeler\\PycharmProjects\\job-radar\\requirements.txt",
+      "source_location": "L1",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "rationale": null
+    },
+    {
+      "id": "docs_technical_showcase_sezzle_pdf_doc",
+      "label": "Technical Case Study PDF: Job Radar Scoring Engine",
+      "file_type": "document",
+      "source_file": "C:\\Projeler\\PycharmProjects\\job-radar\\docs\\technical_showcase_sezzle.pdf",
+      "source_location": "L1",
+      "source_url": null,
+      "captured_at": null,
+      "author": "Taylan Özgür Özdemir",
+      "contributor": null,
+      "rationale": null
+    }
+  ],
+  "edges": [
+    {
+      "source": "readme_job_radar_project",
+      "target": "main",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "C:\\Projeler\\PycharmProjects\\job-radar\\README.md",
+      "source_location": "L71",
+      "weight": 1.0
+    },
+    {
+      "source": "readme_job_radar_project",
+      "target": "readme_multi_source_aggregation",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "C:\\Projeler\\PycharmProjects\\job-radar\\README.md",
+      "source_location": "L15",
+      "weight": 1.0
+    },
+    {
+      "source": "readme_job_radar_project",
+      "target": "readme_nlp_scoring_engine",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "C:\\Projeler\\PycharmProjects\\job-radar\\README.md",
+      "source_location": "L16",
+      "weight": 1.0
+    },
+    {
+      "source": "readme_job_radar_project",
+      "target": "readme_sheets_integration",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "C:\\Projeler\\PycharmProjects\\job-radar\\README.md",
+      "source_location": "L17",
+      "weight": 1.0
+    },
+    {
+      "source": "readme_multi_source_aggregation",
+      "target": "src_clients_linkedin_scraper",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "C:\\Projeler\\PycharmProjects\\job-radar\\README.md",
+      "source_location": "L60",
+      "weight": 1.0
+    },
+    {
+      "source": "readme_multi_source_aggregation",
+      "target": "src_clients_jsearch_client",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "C:\\Projeler\\PycharmProjects\\job-radar\\README.md",
+      "source_location": "L58",
+      "weight": 1.0
+    },
+    {
+      "source": "readme_multi_source_aggregation",
+      "target": "src_clients_rss_sources",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "C:\\Projeler\\PycharmProjects\\job-radar\\README.md",
+      "source_location": "L61",
+      "weight": 1.0
+    },
+    {
+      "source": "readme_multi_source_aggregation",
+      "target": "src_clients_kariyer_scraper",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "C:\\Projeler\\PycharmProjects\\job-radar\\README.md",
+      "source_location": "L59",
+      "weight": 1.0
+    },
+    {
+      "source": "readme_nlp_scoring_engine",
+      "target": "src_core_scorer",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "C:\\Projeler\\PycharmProjects\\job-radar\\README.md",
+      "source_location": "L55",
+      "weight": 1.0
+    },
+    {
+      "source": "readme_nlp_scoring_engine",
+      "target": "src_core_nlp_processor",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "C:\\Projeler\\PycharmProjects\\job-radar\\README.md",
+      "source_location": "L54",
+      "weight": 1.0
+    },
+    {
+      "source": "readme_nlp_scoring_engine",
+      "target": "src_core_scoring_service",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "C:\\Projeler\\PycharmProjects\\job-radar\\README.md",
+      "source_location": "L56",
+      "weight": 1.0
+    },
+    {
+      "source": "readme_sheets_integration",
+      "target": "src_clients_sheets_client",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "C:\\Projeler\\PycharmProjects\\job-radar\\README.md",
+      "source_location": "L62",
+      "weight": 1.0
+    },
+    {
+      "source": "readme_scoring_formula",
+      "target": "src_core_scorer_calculate_score",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "C:\\Projeler\\PycharmProjects\\job-radar\\README.md",
+      "source_location": "L112",
+      "weight": 1.0
+    },
+    {
+      "source": "readme_scoring_formula",
+      "target": "src_core_scoring_service_scoringservice_calculate_sum",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "C:\\Projeler\\PycharmProjects\\job-radar\\README.md",
+      "source_location": "L112",
+      "weight": 1.0
+    },
+    {
+      "source": "readme_job_radar_project",
+      "target": "requirements_spec",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "C:\\Projeler\\PycharmProjects\\job-radar\\README.md",
+      "source_location": "L72",
+      "weight": 1.0
+    },
+    {
+      "source": "readme_roadmap",
+      "target": "readme_job_radar_project",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "C:\\Projeler\\PycharmProjects\\job-radar\\README.md",
+      "source_location": "L158",
+      "weight": 1.0
+    },
+    {
+      "source": "docs_presentation_guide_document",
+      "target": "docs_presentation_guide_design_decisions",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "C:\\Projeler\\PycharmProjects\\job-radar\\docs\\presentation_guide.txt",
+      "source_location": "L16",
+      "weight": 1.0
+    },
+    {
+      "source": "docs_presentation_guide_document",
+      "target": "src_core_scoring_service",
+      "relation": "cites",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "C:\\Projeler\\PycharmProjects\\job-radar\\docs\\presentation_guide.txt",
+      "source_location": "L12",
+      "weight": 1.0
+    },
+    {
+      "source": "docs_presentation_guide_document",
+      "target": "src_core_models",
+      "relation": "cites",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "C:\\Projeler\\PycharmProjects\\job-radar\\docs\\presentation_guide.txt",
+      "source_location": "L13",
+      "weight": 1.0
+    },
+    {
+      "source": "docs_presentation_guide_document",
+      "target": "tests_test_scoring_service",
+      "relation": "cites",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "C:\\Projeler\\PycharmProjects\\job-radar\\docs\\presentation_guide.txt",
+      "source_location": "L14",
+      "weight": 1.0
+    },
+    {
+      "source": "docs_presentation_guide_document",
+      "target": "docs_technical_showcase_sezzle_case_study",
+      "relation": "references",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "C:\\Projeler\\PycharmProjects\\job-radar\\docs\\presentation_guide.txt",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "docs_technical_showcase_sezzle_case_study",
+      "target": "docs_technical_showcase_sezzle_domain_modeling",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "C:\\Projeler\\PycharmProjects\\job-radar\\docs\\technical_showcase_sezzle.md",
+      "source_location": "L17",
+      "weight": 1.0
+    },
+    {
+      "source": "docs_technical_showcase_sezzle_case_study",
+      "target": "docs_technical_showcase_sezzle_scoring_service_impl",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "C:\\Projeler\\PycharmProjects\\job-radar\\docs\\technical_showcase_sezzle.md",
+      "source_location": "L88",
+      "weight": 1.0
+    },
+    {
+      "source": "docs_technical_showcase_sezzle_case_study",
+      "target": "docs_technical_showcase_sezzle_qa_testing",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "C:\\Projeler\\PycharmProjects\\job-radar\\docs\\technical_showcase_sezzle.md",
+      "source_location": "L220",
+      "weight": 1.0
+    },
+    {
+      "source": "docs_technical_showcase_sezzle_domain_modeling",
+      "target": "src_core_models",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "C:\\Projeler\\PycharmProjects\\job-radar\\docs\\technical_showcase_sezzle.md",
+      "source_location": "L17",
+      "weight": 1.0
+    },
+    {
+      "source": "docs_technical_showcase_sezzle_scoring_service_impl",
+      "target": "src_core_scoring_service",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "C:\\Projeler\\PycharmProjects\\job-radar\\docs\\technical_showcase_sezzle.md",
+      "source_location": "L88",
+      "weight": 1.0
+    },
+    {
+      "source": "docs_technical_showcase_sezzle_scoring_service_impl",
+      "target": "src_core_nlp_processor",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "C:\\Projeler\\PycharmProjects\\job-radar\\docs\\technical_showcase_sezzle.md",
+      "source_location": "L97",
+      "weight": 1.0
+    },
+    {
+      "source": "docs_technical_showcase_sezzle_scoring_service_impl",
+      "target": "src_utils_config",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "C:\\Projeler\\PycharmProjects\\job-radar\\docs\\technical_showcase_sezzle.md",
+      "source_location": "L98",
+      "weight": 1.0
+    },
+    {
+      "source": "docs_technical_showcase_sezzle_qa_testing",
+      "target": "tests_test_scoring_service",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "C:\\Projeler\\PycharmProjects\\job-radar\\docs\\technical_showcase_sezzle.md",
+      "source_location": "L220",
+      "weight": 1.0
+    },
+    {
+      "source": "excel_dump_data_summary",
+      "target": "src_clients_sheets_client",
+      "relation": "shares_data_with",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "C:\\Projeler\\PycharmProjects\\job-radar\\excel_dump.txt",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "excel_dump_data_summary",
+      "target": "job_radar1_sheet_ilanlar",
+      "relation": "semantically_similar_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "C:\\Projeler\\PycharmProjects\\job-radar\\excel_dump.txt",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "job_radar1_sheet_ilanlar",
+      "target": "job_radar1_schema",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "C:\\Projeler\\PycharmProjects\\job-radar\\graphify-out\\converted\\Job Radar1_be49ddb9.md",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "job_radar1_sheet_ilanlar",
+      "target": "src_clients_sheets_client",
+      "relation": "shares_data_with",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "C:\\Projeler\\PycharmProjects\\job-radar\\graphify-out\\converted\\Job Radar1_be49ddb9.md",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "job_radar1_schema",
+      "target": "src_core_models_scoredjob",
+      "relation": "implements",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "C:\\Projeler\\PycharmProjects\\job-radar\\graphify-out\\converted\\Job Radar1_be49ddb9.md",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "requirements_spec",
+      "target": "src_core_models",
+      "relation": "references",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "C:\\Projeler\\PycharmProjects\\job-radar\\requirements.txt",
+      "source_location": "L12",
+      "weight": 1.0
+    },
+    {
+      "source": "requirements_spec",
+      "target": "src_core_nlp_processor",
+      "relation": "references",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "C:\\Projeler\\PycharmProjects\\job-radar\\requirements.txt",
+      "source_location": "L8",
+      "weight": 1.0
+    },
+    {
+      "source": "requirements_spec",
+      "target": "src_clients_sheets_client",
+      "relation": "references",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "C:\\Projeler\\PycharmProjects\\job-radar\\requirements.txt",
+      "source_location": "L2",
+      "weight": 1.0
+    },
+    {
+      "source": "requirements_spec",
+      "target": "src_clients_linkedin_scraper",
+      "relation": "references",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "C:\\Projeler\\PycharmProjects\\job-radar\\requirements.txt",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "requirements_spec",
+      "target": "src_clients_rss_sources",
+      "relation": "references",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "C:\\Projeler\\PycharmProjects\\job-radar\\requirements.txt",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "docs_technical_showcase_sezzle_pdf_doc",
+      "target": "docs_technical_showcase_sezzle_case_study",
+      "relation": "semantically_similar_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "C:\\Projeler\\PycharmProjects\\job-radar\\docs\\technical_showcase_sezzle.pdf",
+      "source_location": "L1",
+      "weight": 1.0
+    }
+  ],
+  "hyperedges": [
+    {
+      "id": "job_scoring_pipeline_architecture",
+      "label": "Job Scoring Pipeline Architecture",
+      "nodes": [
+        "readme_nlp_scoring_engine",
+        "src_core_nlp_processor",
+        "src_core_scorer",
+        "src_core_scoring_service",
+        "docs_technical_showcase_sezzle_scoring_service_impl"
+      ],
+      "relation": "participate_in",
+      "confidence": "EXTRACTED",
+      "confidence_score": 0.95,
+      "source_file": "C:\\Projeler\\PycharmProjects\\job-radar\\README.md"
+    },
+    {
+      "id": "sezzle_showcase_suite",
+      "label": "Sezzle Clean Code Application Portfolio",
+      "nodes": [
+        "docs_presentation_guide_document",
+        "docs_technical_showcase_sezzle_case_study",
+        "docs_technical_showcase_sezzle_pdf_doc",
+        "src_core_scoring_service",
+        "src_core_models",
+        "tests_test_scoring_service"
+      ],
+      "relation": "form",
+      "confidence": "EXTRACTED",
+      "confidence_score": 0.95,
+      "source_file": "C:\\Projeler\\PycharmProjects\\job-radar\\docs\\technical_showcase_sezzle.md"
+    }
+  ],
+  "input_tokens": 0,
+  "output_tokens": 0
+}

@@ -21,6 +21,7 @@
 ## 🎯 Hedef ve Kapsam
 
 Projeyi özellikle şu kriterlere odaklı ilanları bulmak için geliştirdim:
+
 - **Odak:** GameDev (Unity, Unreal, C#, C++) & Yazılım Geliştirme.
 - **Lokasyon:** Ankara, Remote veya Hibrit fırsatları.
 - **Verimlilik:** Günlük iş tarama ve takip süresini manuel süreçlerden **15 dakikaya** indirgemek.
@@ -28,7 +29,7 @@ Projeyi özellikle şu kriterlere odaklı ilanları bulmak için geliştirdim:
 ## 📡 Veri Kaynakları
 
 | Kaynak | Yöntem | API Kullanımı | Tipik Sonuç |
-|--------|--------|----------|-------------|
+| -------- | -------- | ---------- | ------------- |
 | **LinkedIn** | Playwright scraping | Ücretsiz | ~170 ilan |
 | **JSearch** | REST API (RapidAPI) | 5 call/tarama | ~40 ilan |
 | **RSS** | WeWorkRemotely, Himalayas | Ücretsiz | ~125 ilan |
@@ -114,7 +115,7 @@ Toplam = (Alan × 0.3) + (Lokasyon × 0.4) + (Level × 0.3)
 ```
 
 | Alan | Puan | | Lokasyon | Puan | | Level | Puan |
-|------|------|-|----------|------|-|-------|------|
+| ------ | ------ | - | ---------- | ------ | - | ------- | ------ |
 | gamedev | 5 | | ankara | 5 | | junior | 5 |
 | c# | 4 | | remote | 5 | | entry | 5 |
 | c++ | 4 | | hybrid_ankara | 5 | | mid | 2 |
@@ -129,9 +130,10 @@ Toplam = (Alan × 0.3) + (Lokasyon × 0.4) + (Level × 0.3)
 ## 🔧 Tablo Otomasyonu (Menü 6)
 
 Sheet'te yapısal sorunlar veya format bozuklukları olduğunda çalıştırılır:
-1.  **Format Düzeltme:** Tarihleri `YYYY-MM-DD` yapar, skorları sayıya çevirir.
-2.  **Otomatik Renklendirme:** Duruma göre satırları (Reddedildi=Kırmızı, Favori=Sarı vb.) boyar.
-3.  **Akıllı Çip Ekleme:** "Durum" sütununa `Favori, Başvuruldu, Reddedildi, Görüşmede, Süre Bitti, Ulaşılmaz` seçeneklerini ekler.
+
+1. **Format Düzeltme:** Tarihleri `YYYY-MM-DD` yapar, skorları sayıya çevirir.
+2. **Otomatik Renklendirme:** Duruma göre satırları (Reddedildi=Kırmızı, Favori=Sarı vb.) boyar.
+3. **Akıllı Çip Ekleme:** "Durum" sütununa `Favori, Başvuruldu, Reddedildi, Görüşmede, Süre Bitti, Ulaşılmaz` seçeneklerini ekler.
 
 ---
 
@@ -157,37 +159,37 @@ Proje, genişletilebilir ve bakımı kolay bir yapı için modüler bir mimari �
 
 ## 🗺 Geliştirme Yol Haritası (Roadmap)
 
-### v0.7 — Başvuru Hızlandırıcılar (Aktif Geliştirme)
+### v0.7 — Başvuru Hazırlığı & AI Asistanı
 
 | Özellik | Açıklama | Zorluk | Öncelik |
-|---------|----------|--------|---------|
-| **Quick-Apply Link** | İlanın direkt başvuru sayfasına giden akıllı link üretimi | ⭐⭐ (2/5) | Orta |
-| **Discord Bot** | Yüksek skorlu (>4.0) ilanlar için anlık bildirim sistemi | ⭐⭐⭐ (3/5) | Orta |
-| **Cover Letter Gen** | İlan metnine özel ChatGPT tabanlı ön yazı oluşturma | ⭐⭐⭐ (3/5) | Yüksek |
-| **Cold DM Gen** | İlgili recruiter için LinkedIn DM taslağı hazırlama | ⭐⭐ (2/5) | Yüksek |
+| --------- | ---------- | -------- | --------- |
+| **Quick-Apply & İK Mail Parser** | İlan metninden direkt başvuru linki ve İK e-postalarını çekme | ⭐⭐ (2/5) | Yüksek |
+| **CV Profile Engine** | Yerel yapılandırılmış profil (cv_profile.yaml) ile aday verisi yönetimi | ⭐⭐ (2/5) | Yüksek |
+| **Cover Letter Gen** | İlan gereksinimlerine özel LLM tabanlı kişiselleştirilmiş ön yazı üretimi | ⭐⭐⭐ (3/5) | Yüksek |
+| **Cold DM & Mail Gen** | İlgili recruiter için dinamik e-posta/DM taslağı hazırlama | ⭐⭐ (2/5) | Yüksek |
 
-### v0.8 — Analiz & Gelişmiş Filtreleme
-
-| Özellik | Açıklama | Zorluk | Öncelik |
-|---------|----------|--------|---------|
-| **Şirket Kara Liste** | Belirli şirketlerin ilanlarını otomatik gizleme/puan kırma | ⭐ (1/5) | Orta |
-| **Duplicate Tespit** | Farklı platformlardaki aynı ilanları akıllıca gruplama | ⭐⭐⭐ (3/5) | Düşük |
-| **Skill Gap Analizi** | Mevcut CV ile ilan arasındaki eksik yetenekleri listeleme | ⭐⭐⭐⭐ (4/5) | Yüksek |
-| **Streamlit Dashboard** | Başvuru süreçlerini izlemek için görsel arayüz | ⭐⭐⭐ (3/5) | Düşük |
-
-### v0.9 — Mülakat Hazırlığı & Market Analizi
-| Özellik | Açıklama | Zorluk | Öncelik |
-|---------|----------|--------|---------|
-| **Interview Prep** | İlan requirementlarına göre teknik mülakat sorusu üretimi | ⭐⭐ (2/5) | Orta |
-| **Easy Apply Helper** | LinkedIn Easy Apply için CV auto-fill asistanı | ⭐⭐⭐⭐ (4/5) | Düşük |
-| **Maaş Tahmini** | İlan metninden veya benzer ilanlardan maaş skalası tahmini | ⭐⭐⭐ (3/5) | Orta |
-| **Market Analytics** | Sektörel trend raporları (Hangi tech daha popüler vb.) | ⭐⭐⭐ (3/5) | Düşük |
-
-### v1.0 — Tam Otonom Asistan
+### v0.8 — Çift Kanallı Otomatik Başvuru (Auto-Apply)
 
 | Özellik | Açıklama | Zorluk | Öncelik |
-|---------|----------|--------|---------|
-| **End-to-End Pipe** | Tara → Skorla → Başvur → Takip et → Bildir (Tam Otonom) | ⭐⭐⭐⭐⭐ (5/5) | Kritik |
+| --------- | ---------- | -------- | --------- |
+| **LinkedIn Easy Apply Botu** | Playwright ile form doldurma, CV yükleme ve soru yanıtlama | ⭐⭐⭐⭐ (4/5) | Kritik |
+| **Otomatik E-Posta Başvurusu** | İK e-postalarına dinamik cover letter ve CV PDF ekli otomatik başvuru | ⭐⭐ (2/5) | Yüksek |
+| **Şirket Kara Liste** | Belirli şirketlerin ilanlarını otomatik gizleme/puan kırma | ⭐ (1/5) | Düşük |
+| **Rate Limiter & Safety** | İnsan benzeri bekleme süreleri ve günlük başvuru kotası | ⭐⭐ (2/5) | Yüksek |
+
+### v0.9 — Geri Dönüş & Sonuç Takibi (Feedback Loop)
+
+| Özellik | Açıklama | Zorluk | Öncelik |
+| --------- | ---------- | -------- | --------- |
+| **Gmail API Entegrasyonu** | Gelen kutusundaki şirket ve başvuru yanıtlarını otomatik tarama | ⭐⭐⭐ (3/5) | Yüksek |
+| **Hibrit E-Posta Sınıflandırıcı** | Regex + LLM ile ret/mülakat/görüşme durumlarını tespit etme | ⭐⭐⭐ (3/5) | Yüksek |
+| **Google Sheets Otomatik Senkron** | Gelen yanıtlara göre tablodaki 'Durum' sütununu otomatik güncelleme | ⭐⭐ (2/5) | Yüksek |
+
+### v1.0 — Tam Otonom Asistan (End-to-End)
+
+| Özellik | Açıklama | Zorluk | Öncelik |
+| --------- | ---------- | -------- | --------- |
+| **End-to-End Pipeline** | Tara → Skorla → Başvur (Easy Apply / Mail) → Sonuçları Oku (Gmail) → Güncelle | ⭐⭐⭐⭐⭐ (5/5) | Kritik |
 | **A/B Test Engine** | Hangi ön yazı/başvuru metodunun daha çok dönüt aldığı analizi | ⭐⭐⭐ (3/5) | Düşük |
 | **Multi-User / DB** | Yerel dosyadan PostgreSQL/Cloud veritabanına geçiş | ⭐⭐⭐⭐ (4/5) | Düşük |
 
@@ -204,6 +206,6 @@ Yetenek   : Junior / Game Dev pozisyonları için optimize edildi
 
 ### 🧠 Akıllı Filtreleme Detayları
 
-1.  **Dil Bariyeri:** Sistem İngilizce (`en`) ve Türkçe (`tr`) harici dillerdeki ilanları otomatik tespit eder ve lokasyonu **"dead"** yapar (-10 Puan).
-2.  **Öncelik Kuralları:** Ankara, GameDev ve Junior fırsatları için özel regex + TF-IDF takviyesi ile puanlama yapılır.
-3.  **Otomasyon:** İlanlar çekilip tabloya yazıldıktan hemen sonra **Tabloyu Düzelt** fonksiyonu otomatik çalışır.
+1. **Dil Bariyeri:** Sistem İngilizce (`en`) ve Türkçe (`tr`) harici dillerdeki ilanları otomatik tespit eder ve lokasyonu **"dead"** yapar (-10 Puan).
+2. **Öncelik Kuralları:** Ankara, GameDev ve Junior fırsatları için özel regex + TF-IDF takviyesi ile puanlama yapılır.
+3. **Otomasyon:** İlanlar çekilip tabloya yazıldıktan hemen sonra **Tabloyu Düzelt** fonksiyonu otomatik çalışır.

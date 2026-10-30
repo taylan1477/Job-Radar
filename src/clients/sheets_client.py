@@ -522,10 +522,13 @@ def fix_sheet():
             new_field = detect_field(full_text)
             new_location = detect_location(full_text)
             new_level = detect_level(full_text)
-            new_score = calculate_score(new_field, new_location, new_level)
             
             link_raw = get_val("Link")
             url = _extract_url(link_raw)
+            
+            detected_source = "linkedin" if (url and "linkedin" in url.lower()) else ""
+            new_score = calculate_score(new_field, new_location, new_level, source=detected_source)
+            
             new_link = _make_hyperlink(url)
             
             # Tarih
