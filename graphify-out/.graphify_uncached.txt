@@ -1,7 +1,0 @@
-C:\Projeler\PycharmProjects\job-radar\README.md
-C:\Projeler\PycharmProjects\job-radar\docs\presentation_guide.txt
-C:\Projeler\PycharmProjects\job-radar\docs\technical_showcase_sezzle.md
-C:\Projeler\PycharmProjects\job-radar\excel_dump.txt
-C:\Projeler\PycharmProjects\job-radar\graphify-out\converted\Job Radar1_be49ddb9.md
-C:\Projeler\PycharmProjects\job-radar\requirements.txt
-C:\Projeler\PycharmProjects\job-radar\docs\technical_showcase_sezzle.pdf
