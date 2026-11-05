@@ -64,10 +64,20 @@ preferences:
   military_service: "Muaf / Tamamlandı"
   driver_license: "B"
 
+spoken_languages:
+  turkish: "Anadili (Native)"
+  english: "Profesyonel / İleri Seviye (Professional working proficiency)"
+  german: "Başlangıç (Basic / Elementary)"
+  chinese: "Yok / Bilmiyor (None / 0)"
+  other: "Yok / Bilmiyor (None / 0)"
+
 common_answers:
   salary_expectation: "Görüşmede belirtilecek (Negotiable / Piyasa standartları)"
   english_level: "Profesyonel / İleri Seviye (Professional working proficiency)"
   german_level: "Başlangıç (Basic)"
+  chinese_level: "Yok (None)"
   remote_experience: "Evet, uzaktan çalışma ve dağıtık ekip deneyimim mevcut."
   citizenship: "Türkiye Cumhuriyeti (Turkish Citizen)"
   authorized_to_work_in_turkey: "Evet"
+  sponsorship_required: "Hayır (No)"
+  willing_to_relocate: "Hayır (No)"

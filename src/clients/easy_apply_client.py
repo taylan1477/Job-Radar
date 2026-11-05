@@ -1,5 +1,6 @@
 import time
 import os
+import re
 import json
 import logging
 from pathlib import Path
@@ -204,6 +205,14 @@ class LinkedInEasyApplyClient:
                     if next_btn:
                         next_btn.click()
                         time.sleep(2)
+                        # Olası form doğrulama uyarılarını kontrol et ve logla
+                        errors = [
+                            e.inner_text().strip()
+                            for e in dialog.locator(".artdeco-inline-feedback--error, [data-test-form-element-error-messages]").all()
+                            if e.is_visible() and e.inner_text().strip()
+                        ]
+                        if errors:
+                            logger.info(f"  [UYARI] Form adımı doğrulama uyarısı: {'; '.join(errors)}")
                     else:
                         break
 
@@ -213,6 +222,43 @@ class LinkedInEasyApplyClient:
                 return {"success": False, "reason": str(e)}
             finally:
                 browser.close()
+
+    def _extract_label(self, dialog: Locator, el: Locator) -> str:
+        """Bir form elemanının (input, select, radio) sorusunu/etiketini DOM hiyerarşisinden tespit eder."""
+        try:
+            # 1. aria-label
+            aria = (el.get_attribute("aria-label") or "").strip()
+            if aria:
+                return aria
+
+            # 2. Associated <label for="id">
+            el_id = el.get_attribute("id") or ""
+            if el_id:
+                lbl = dialog.locator(f"label[for='{el_id}']").first
+                if lbl.count() > 0 and lbl.is_visible():
+                    txt = lbl.inner_text().strip()
+                    if txt:
+                        return txt
+
+            # 3. Kapsayıcı (container) içindeki label, legend veya başlık span'ı
+            parent_txt = el.evaluate("""
+                e => {
+                    const container = e.closest('.fb-dash-form-element, .jobs-easy-apply-form-section__grouping, .jobs-easy-apply-form-element, fieldset, div.mb4');
+                    if (!container) return '';
+                    const lbl = container.querySelector('label, legend, span.fb-form-element-label, span.t-14, span.visually-hidden');
+                    return lbl ? lbl.innerText.trim() : '';
+                }
+            """)
+            if parent_txt and parent_txt.strip():
+                return parent_txt.strip()
+
+            # 4. placeholder
+            ph = (el.get_attribute("placeholder") or "").strip()
+            if ph:
+                return ph
+        except Exception:
+            pass
+        return ""
 
     def _fill_step_inputs(self, dialog: Locator):
         """Mevcut form adımındaki boş input, radio ve select kutularını profil cevaplarıyla doldurur."""
@@ -227,7 +273,7 @@ class LinkedInEasyApplyClient:
                     except Exception:
                         pass
 
-            # 2. Radio Butonları (Evet/Hayır veya seçenekli)
+            # 2. Radio Butonları (Evet/Hayır veya seçenekli sorular)
             radios = dialog.locator("input[type='radio']").all()
             radio_groups = {}
             for r in radios:
@@ -236,12 +282,122 @@ class LinkedInEasyApplyClient:
 
             for name, group in radio_groups.items():
                 if not any(r.is_checked() for r in group):
-                    # Label veya parent wrapper'a tıklayarak React state'ini tetikle
-                    first_inp = group[0]
-                    inp_id = first_inp.get_attribute("id")
+                    first_r = group[0]
+                    question = self._extract_label(dialog, first_r)
+
+                    # Grup içindeki tüm radio seçeneklerinin etiketlerini topla
+                    radio_options = []
+                    for r in group:
+                        r_id = r.get_attribute("id") or ""
+                        r_lbl = ""
+                        if r_id:
+                            lbl = dialog.locator(f"label[for='{r_id}']").first
+                            if lbl.count() > 0:
+                                r_lbl = lbl.inner_text().strip()
+                        if not r_lbl:
+                            r_lbl = (r.get_attribute("value") or "").strip()
+                        radio_options.append(r_lbl)
+
+                    ans = self.generator.answer_form_question(question, radio_options) if question else "Evet"
+
                     clicked = False
-                    if inp_id:
-                        lbl = dialog.locator(f"label[for='{inp_id}']").first
+                    for idx, r in enumerate(group):
+                        opt_lbl = radio_options[idx] if idx < len(radio_options) else ""
+                        if ans.lower() in opt_lbl.lower() or opt_lbl.lower() in ans.lower():
+                            r_id = r.get_attribute("id")
+                            if r_id:
+                                lbl = dialog.locator(f"label[for='{r_id}']").first
+                                if lbl.is_visible():
+                                    try:
+                                        lbl.click()
+                                        clicked = True
+                                        break
+                                    except Exception:
+                                        pass
+                            if not clicked:
+                                try:
+                                    r.locator("..").click()
+                                    clicked = True
+                                    break
+                                except Exception:
+                                    pass
+
+                    if not clicked:
+                        # Fallback olarak ilk seçeneği veya wrapper'ı tıkla
+                        try:
+                            group[0].locator("..").click()
+                        except Exception:
+                            group[0].evaluate("el => { el.checked = true; el.dispatchEvent(new Event('change', {bubbles: true})); }")
+
+            # 3. Metin, Sayı ve Textarea kutuları
+            inputs = dialog.locator("input[type='text'], input[type='number'], textarea").all()
+            for inp in inputs:
+                if inp.is_visible():
+                    val = inp.input_value().strip()
+                    if not val:
+                        label = self._extract_label(dialog, inp)
+                        inp_type = inp.get_attribute("type") or "text"
+                        answer = self.generator.answer_form_question(label)
+
+                        # Sayısal alan ise (input type=number veya yıl sorusu) sadece rakam doldur
+                        if inp_type == "number":
+                            digits = re.findall(r'\d+', str(answer))
+                            val_to_fill = digits[0] if digits else "0"
+                        else:
+                            val_to_fill = str(answer)
+
+                        inp.fill(val_to_fill)
+                        try:
+                            inp.evaluate("el => { el.dispatchEvent(new Event('input', {bubbles: true})); el.dispatchEvent(new Event('change', {bubbles: true})); }")
+                        except Exception:
+                            pass
+
+            # 4. Dropdown / Select kutuları
+            selects = dialog.locator("select").all()
+            for sel in selects:
+                if sel.is_visible():
+                    label = self._extract_label(dialog, sel)
+                    raw_options = [o.inner_text().strip() for o in sel.locator("option").all() if o.inner_text().strip()]
+                    valid_options = [
+                        o for o in raw_options
+                        if not any(ph in o.lower() for ph in ["seçiniz", "seçin", "select an option", "choose", "belirleyin", "lütfen"])
+                    ]
+                    options_to_use = valid_options if valid_options else raw_options
+
+                    if options_to_use:
+                        ans = self.generator.answer_form_question(label, options_to_use)
+                        selected = False
+                        try:
+                            sel.select_option(label=ans)
+                            selected = True
+                        except Exception:
+                            for opt in options_to_use:
+                                if ans.lower() in opt.lower() or opt.lower() in ans.lower():
+                                    try:
+                                        sel.select_option(label=opt)
+                                        selected = True
+                                        break
+                                    except Exception:
+                                        pass
+                        if not selected and options_to_use:
+                            try:
+                                sel.select_option(label=options_to_use[0])
+                            except Exception:
+                                pass
+
+                        try:
+                            sel.evaluate("el => el.dispatchEvent(new Event('change', {bubbles: true}))")
+                        except Exception:
+                            pass
+
+            # 5. Checkbox (Onay / Şartlar kutuları)
+            checkboxes = dialog.locator("input[type='checkbox']").all()
+            for cb in checkboxes:
+                if cb.is_visible() and not cb.is_checked():
+                    cb_id = cb.get_attribute("id") or ""
+                    clicked = False
+                    if cb_id:
+                        lbl = dialog.locator(f"label[for='{cb_id}']").first
                         if lbl.is_visible():
                             try:
                                 lbl.click()
@@ -250,31 +406,9 @@ class LinkedInEasyApplyClient:
                                 pass
                     if not clicked:
                         try:
-                            first_inp.locator("..").click()
+                            cb.check(force=True)
                         except Exception:
-                            first_inp.evaluate("el => { el.checked = true; el.dispatchEvent(new Event('change', {bubbles: true})); }")
-
-            # 3. Metin, Sayı ve Textarea kutuları
-            inputs = dialog.locator("input[type='text'], input[type='number'], textarea").all()
-            for inp in inputs:
-                if inp.is_visible():
-                    val = inp.input_value().strip()
-                    if not val:
-                        label = inp.get_attribute("aria-label") or ""
-                        answer = self.generator.answer_form_question(label)
-                        inp.fill(str(answer))
-
-            # 4. Dropdown / Select kutuları
-            selects = dialog.locator("select").all()
-            for sel in selects:
-                if sel.is_visible():
-                    options = [o.inner_text().strip() for o in sel.locator("option").all() if o.inner_text().strip()]
-                    if options:
-                        ans = self.generator.answer_form_question("select_question", options)
-                        try:
-                            sel.select_option(label=ans)
-                        except Exception:
-                            pass
+                            cb.evaluate("el => { el.checked = true; el.dispatchEvent(new Event('change', {bubbles: true})); }")
 
         except Exception as e:
             logger.debug(f"Input doldurma uyarısı: {e}")
