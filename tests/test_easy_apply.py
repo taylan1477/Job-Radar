@@ -32,6 +32,20 @@ def test_answer_form_question_chinese_language():
     assert ans_years == "1"
 
 
+def test_salary_expectation_questions():
+    """Ücret / Maaş beklentisi soruları (Asla 'Evet' olmamalı, 35000 TL veya döviz olmalı)."""
+    gen = ApplicationGenerator()
+    assert gen.answer_form_question("Ücret beklentiniz nedir?") == "35000"
+    assert gen.answer_form_question("Maaş beklentiniz nedir?") == "35000"
+    assert gen.answer_form_question("Expected salary (monthly)") == "35000"
+    assert gen.answer_form_question("Expected annual salary (USD)") == "25000"
+    assert gen.answer_form_question("Hourly wage expectation") == "200"
+
+    # Dropdown seçenekleri ile
+    opts = ["Select an option", "20.000 TL - 30.000 TL", "30.000 TL - 40.000 TL", "40.000 TL - 50.000 TL"]
+    assert gen.answer_form_question("Ücret beklentisi aralığı", opts) == "30.000 TL - 40.000 TL"
+
+
 def test_user_specified_skills_years():
     """Kullanıcı Talebi: SQL: 3, .NET Core: 1, C#: 3, Asla 0 yıl tecrübe yok."""
     gen = ApplicationGenerator()

@@ -76,7 +76,10 @@ spoken_languages:
   other: "Yok / Bilmiyor (None / 0)"
 
 common_answers:
-  salary_expectation: "Görüşmede belirtilecek (Negotiable / Piyasa standartları)"
+  salary_expectation: "35000"
+  salary_expectation_try: 35000
+  salary_expectation_usd: 1500
+  salary_expectation_text: "35000"
   english_level: "Profesyonel / İleri Seviye (Professional working proficiency)"
   german_level: "Başlangıç (Basic)"
   chinese_level: "Yok (None)"

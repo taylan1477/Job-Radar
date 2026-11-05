@@ -258,6 +258,40 @@ class ApplicationGenerator:
         if any(w in q_lower for w in ["telefon", "phone number", "mobile", "cep no"]):
             return self.profile.get("personal_info", {}).get("phone", "+90 555 555 5555")
 
+        # Maaş ve Ücret Beklentisi (Salary / Compensation)
+        if any(w in q_lower for w in ["ücret", "ucret", "maaş", "maas", "salary", "compensation", "wage", "pay rate"]):
+            # Yıllık Maaş Sorusu
+            if any(w in q_lower for w in ["yıllık", "annual", "yearly"]):
+                if any(w in q_lower for w in ["usd", "$", "eur", "€", "dolar"]):
+                    return "25000"
+                if valid_options:
+                    return self._match_option(valid_options, ["420000", "400000", "450000", "350000", "300000"])
+                return "420000"
+
+            # Saatlik Ücret Sorusu
+            if any(w in q_lower for w in ["saatlik", "hourly", "per hour", "hour"]):
+                if any(w in q_lower for w in ["usd", "$", "eur", "€", "dolar"]):
+                    return "25"
+                if valid_options:
+                    return self._match_option(valid_options, ["200", "250", "150"])
+                return "200"
+
+            # Global / Döviz (USD/EUR) Aylık Maaş
+            if any(w in q_lower for w in ["usd", "$", "eur", "€", "dolar"]):
+                if valid_options:
+                    return self._match_option(valid_options, ["1500", "2000", "1200", "1000"])
+                return "1500"
+
+            # Standart Türkiye Aylık Maaş Beklentisi (35.000 TL)
+            salary_val = str(answers.get("salary_expectation", "35000"))
+            if valid_options:
+                return self._match_option(
+                    valid_options,
+                    ["35000", "35.000", "35k", "30.000 tl -", "30.000 -", "30000 - 40000", "30.000 - 40.000", "35.000 - 45.000", "30.000", "40.000"],
+                    default_index=0
+                )
+            return salary_val
+
         if any(w in q_lower for w in ["sponsor", "vize", "visa"]):
             if valid_options:
                 return self._match_option(valid_options, ["hayır", "no", "ihtiyacım yok", "not required"])
@@ -345,6 +379,7 @@ class ApplicationGenerator:
             - Vize / Sponsorluk: İhtiyacı yok (Sponsorship required: No).
             - Askerlik: Muaf / Tamamlandı.
             - Ehliyet: B sınıfı.
+            - Maaş / Ücret Beklentisi: 35.000 TL (Aylık Net) veya 1.500 USD (Döviz).
             
             Soru: "{q_clean}"
             Seçenekler: {valid_options if valid_options else 'Açık uçlu metin veya sayı'}
@@ -352,9 +387,10 @@ class ApplicationGenerator:
             Kurallar:
             1. Eğer Seçenekler listesi verilmişse, MUTLAKA listedeki seçeneklerden birini BİREBİR harfiyen seçip döndür.
             2. ÖNEMLİ KURAL: Hiçbir deneyim yılı veya 'Kaç yıl deneyiminiz var?' sorusuna ASLA '0' deme! Bildiği konularda '3', bilmediği konularda '1' seç.
-            3. Eğer soru bir dil veya bilinmeyen teknoloji yetkinlik seviyesi soruyorsa (sayı değilse), 'Yok', 'None' veya 'Hayır' yönündeki en düşük seçeneği seç.
-            4. Eğer sayı soruluyorsa sadece rakam döndür (örn: 3 veya 1).
-            5. Asla açıklama, tırnak işareti, markdown formatı veya fazladan kelime ekleme. Sadece cevabı ver.
+            3. Eğer soru maaş/ücret beklentisi ise '35000' veya seçeneklerdeki 30.000-40.000 TL aralığını seç. ASLA 'Evet' deme.
+            4. Eğer soru bir dil veya bilinmeyen teknoloji yetkinlik seviyesi soruyorsa (sayı değilse), 'Yok', 'None' veya 'Hayır' yönündeki en düşük seçeneği seç.
+            5. Eğer sayı soruluyorsa sadece rakam döndür (örn: 35000, 3 veya 1).
+            6. Asla açıklama, tırnak işareti, markdown formatı veya fazladan kelime ekleme. Sadece cevabı ver.
             """
             try:
                 res = self.client.models.generate_content(
