@@ -356,6 +356,24 @@ class LinkedInEasyApplyClient:
             selects = dialog.locator("select").all()
             for sel in selects:
                 if sel.is_visible():
+                    # Zaten geçerli bir seçim yapılmış mı kontrol et (LinkedIn'in otomatik seçtiği Turkey (+90) gibi alanları koru)
+                    selected_text = ""
+                    try:
+                        selected_text = sel.evaluate("el => el.options && el.selectedIndex >= 0 ? el.options[el.selectedIndex].text.trim() : ''")
+                    except Exception:
+                        pass
+                    selected_val = (sel.input_value() or "").strip()
+
+                    is_placeholder = (
+                        not selected_val or 
+                        not selected_text or
+                        any(ph in selected_text.lower() for ph in ["seçiniz", "seçin", "select an option", "choose", "belirleyin", "lütfen", "--", "select..."])
+                    )
+
+                    # Eğer zaten geçerli ve dolu bir seçim varsa dokunma (Andorra gibi yanlış atamaları önler)
+                    if not is_placeholder:
+                        continue
+
                     label = self._extract_label(dialog, sel)
                     raw_options = [o.inner_text().strip() for o in sel.locator("option").all() if o.inner_text().strip()]
                     valid_options = [

@@ -190,8 +190,28 @@ class ApplicationGenerator:
             return "Anadili (Native)"
 
         # -------------------------------------------------------------
-        # 2. Vize, İkamet, Taşınma ve Yasal İzinler
+        # 2. Vize, İkamet, Taşınma, İletişim ve Yasal İzinler
         # -------------------------------------------------------------
+        # Telefon Ülke Kodu (Phone Country Code) - Asla Andorra vb. seçilmemeli
+        if any(w in q_lower for w in ["ülke kodu", "country code", "phone code", "phone country", "dialing code"]):
+            if valid_options:
+                return self._match_option(
+                    valid_options,
+                    ["turkey (+90)", "türkiye (+90)", "+90", "turkey", "türkiye"],
+                    default_index=0
+                )
+            return "Turkey (+90)"
+
+        # Ülke / Vatandaşlık (Country / Citizenship)
+        if any(w in q_lower for w in ["vatandaş", "citizen", "residence country", "yaşadığınız ülke"]):
+            if valid_options:
+                return self._match_option(valid_options, ["turkey", "türkiye"])
+            return "Türkiye"
+
+        # Telefon Numarası
+        if any(w in q_lower for w in ["telefon", "phone number", "mobile", "cep no"]):
+            return self.profile.get("personal_info", {}).get("phone", "+90 555 555 5555")
+
         if any(w in q_lower for w in ["sponsor", "vize", "visa"]):
             if valid_options:
                 return self._match_option(valid_options, ["hayır", "no", "ihtiyacım yok", "not required"])

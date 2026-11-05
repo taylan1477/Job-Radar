@@ -48,3 +48,16 @@ def test_answer_form_question_known_languages_and_skills():
     opts_spons = ["Yes", "No"]
     assert gen.answer_form_question("Will you now or in the future require visa sponsorship?", opts_spons) == "No"
 
+    # Telefon Ülke Kodu (Asla Andorra (+376) seçmemeli, Turkey (+90) seçmeli)
+    country_codes = [
+        "Select an option",
+        "Andorra (+376)",
+        "United Arab Emirates (+971)",
+        "Afghanistan (+93)",
+        "Turkey (+90)",
+        "United States (+1)"
+    ]
+    ans_code = gen.answer_form_question("Phone country code", country_codes)
+    assert ans_code == "Turkey (+90)"
+    assert ans_code != "Andorra (+376)"
+

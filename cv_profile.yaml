@@ -12,6 +12,7 @@ personal_info:
   phone: "+90 555 555 5555"
   city: "Ankara"
   country: "Türkiye"
+  phone_country_code: "Turkey (+90)"
   linkedin: "https://www.linkedin.com/in/taylanozdemir"
   github: "https://github.com/taylan1477"
   portfolio: "https://github.com/taylan1477/Job-Radar"
