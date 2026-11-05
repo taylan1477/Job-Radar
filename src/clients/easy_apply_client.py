@@ -343,13 +343,12 @@ class LinkedInEasyApplyClient:
                         if inp_type == "number":
                             digits = re.findall(r'\d+', str(answer))
                             val_to_fill = digits[0] if digits else "1"
-                            # Kullanıcı Kuralı: Hiçbir deneyim yılı sorusuna "0" verilmesin (min 1)
-                            if val_to_fill == "0":
-                                val_to_fill = "1"
                         else:
                             val_to_fill = str(answer)
-                            if val_to_fill == "0" and any(w in label.lower() for w in ["yıl", "year", "deneyim", "experience", "tecrübe"]):
-                                val_to_fill = "1"
+
+                        # Kullanıcı Kuralı: Hiçbir yetkinlik/deneyim sorusuna ASLA "0" girilemez! (min 1)
+                        if val_to_fill == "0":
+                            val_to_fill = "1"
 
                         inp.fill(val_to_fill)
                         try:
@@ -413,25 +412,51 @@ class LinkedInEasyApplyClient:
                         except Exception:
                             pass
 
-            # 5. Checkbox (Onay / Şartlar kutuları)
+            # 5. Checkbox (Onay / Şartlar ve Şirket Takip kutuları)
+            follow_companies = self.generator.profile.get("preferences", {}).get("follow_companies_on_apply", False)
             checkboxes = dialog.locator("input[type='checkbox']").all()
             for cb in checkboxes:
-                if cb.is_visible() and not cb.is_checked():
-                    cb_id = cb.get_attribute("id") or ""
-                    clicked = False
-                    if cb_id:
-                        lbl = dialog.locator(f"label[for='{cb_id}']").first
-                        if lbl.is_visible():
+                if not cb.is_visible():
+                    continue
+                cb_label = self._extract_label(dialog, cb).lower()
+                is_follow_cb = any(w in cb_label for w in ["takip et", "takip edin", "follow", "haber almak için", "stay up to date"])
+
+                if is_follow_cb:
+                    # Şirket takip kutusu: Kullanıcı feed'ini temiz tutmak için varsayılan olarak tiki kaldır (uncheck)
+                    if not follow_companies and cb.is_checked():
+                        cb_id = cb.get_attribute("id") or ""
+                        clicked = False
+                        if cb_id:
+                            lbl = dialog.locator(f"label[for='{cb_id}']").first
+                            if lbl.is_visible():
+                                try:
+                                    lbl.click()
+                                    clicked = True
+                                except Exception:
+                                    pass
+                        if not clicked:
                             try:
-                                lbl.click()
-                                clicked = True
+                                cb.uncheck(force=True)
                             except Exception:
-                                pass
-                    if not clicked:
-                        try:
-                            cb.check(force=True)
-                        except Exception:
-                            cb.evaluate("el => { el.checked = true; el.dispatchEvent(new Event('change', {bubbles: true})); }")
+                                cb.evaluate("el => { el.checked = false; el.dispatchEvent(new Event('change', {bubbles: true})); }")
+                else:
+                    # Şartlar, Gizlilik ve İzin kutuları: Başvurunun ilerlemesi için işaretle (check)
+                    if not cb.is_checked():
+                        cb_id = cb.get_attribute("id") or ""
+                        clicked = False
+                        if cb_id:
+                            lbl = dialog.locator(f"label[for='{cb_id}']").first
+                            if lbl.is_visible():
+                                try:
+                                    lbl.click()
+                                    clicked = True
+                                except Exception:
+                                    pass
+                        if not clicked:
+                            try:
+                                cb.check(force=True)
+                            except Exception:
+                                cb.evaluate("el => { el.checked = true; el.dispatchEvent(new Event('change', {bubbles: true})); }")
 
         except Exception as e:
             logger.debug(f"Input doldurma uyarısı: {e}")

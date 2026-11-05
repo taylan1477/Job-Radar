@@ -32,6 +32,14 @@ def test_answer_form_question_chinese_language():
     assert ans_years == "1"
 
 
+def test_user_specified_skills_years():
+    """Kullanıcı Talebi: SQL: 3, .NET Core: 1, C#: 3, Asla 0 yıl tecrübe yok."""
+    gen = ApplicationGenerator()
+    assert gen.answer_form_question("SQL ile kaç yıllık iş deneyiminiz var?") == "3"
+    assert gen.answer_form_question(".NET Core ile kaç yıllık iş deneyiminiz var?") == "1"
+    assert gen.answer_form_question("C# ile kaç yıllık iş deneyiminiz var?") == "3"
+
+
 def test_experience_years_rule_no_zero():
     """Kullanıcı Kuralı: 'Kaç yıl deneyiminiz var?' sorusuna asla '0' denmez. Varsa '3', Yoksa '1' denir."""
     gen = ApplicationGenerator()

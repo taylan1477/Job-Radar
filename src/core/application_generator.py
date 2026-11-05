@@ -143,8 +143,30 @@ class ApplicationGenerator:
         ]
 
         if is_years_question:
-            has_known_skill = any(skill in q_lower for skill in known_skills)
-            target_val = "3" if has_known_skill else "1"
+            # 1. Öncelikli ve Spesifik Teknoloji Eşleştirmeleri
+            if any(w in q_lower for w in [".net core", "asp.net core", ".net", "dotnet", "asp.net"]):
+                target_val = str(exp.get("dotnet", 1))
+            elif any(w in q_lower for w in ["c#", "csharp"]):
+                target_val = str(exp.get("csharp", 3))
+            elif any(w in q_lower for w in ["sql", "database", "veritabanı", "mysql", "postgresql", "mssql", "oracle"]):
+                target_val = str(exp.get("sql", 3))
+            elif any(w in q_lower for w in ["unity", "unreal", "game", "oyun"]):
+                target_val = str(exp.get("unity", 3))
+            elif any(w in q_lower for w in ["python"]):
+                target_val = str(exp.get("python", 3))
+            elif any(w in q_lower for w in ["c++", "cpp"]):
+                target_val = str(exp.get("cpp", 3))
+            elif any(w in q_lower for w in ["yazılım", "software", "backend", "developer", "mühendis"]):
+                target_val = str(exp.get("software_general", 3))
+            elif any(skill in q_lower for skill in known_skills):
+                target_val = "3"
+            else:
+                target_val = "1"
+
+            # Kullanıcı Kuralı: Asla 0 yıl tecrübe denemez!
+            if target_val == "0":
+                target_val = "1"
+
             if valid_options:
                 return self._match_option(
                     valid_options,

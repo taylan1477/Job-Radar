@@ -53,6 +53,8 @@ experience_years:
   gamedev: 3
   software_general: 3
   csharp: 3
+  dotnet: 1
+  sql: 3
   python: 3
   cpp: 3
   unity: 3
@@ -61,6 +63,7 @@ preferences:
   work_type: ["Remote", "Hybrid", "On-site"]
   preferred_cities: ["Ankara", "Remote"]
   willing_to_relocate: false
+  follow_companies_on_apply: false
   notice_period: "Hemen başlayabilir (Immediately available)"
   military_service: "Muaf / Tamamlandı"
   driver_license: "B"
