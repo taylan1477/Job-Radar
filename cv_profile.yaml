@@ -1,0 +1,73 @@
+# ==============================================================================
+# Job Radar – Aday CV ve Başvuru Profili (cv_profile.yaml)
+# ==============================================================================
+# Bu dosya, AI destekli ön yazı (Cover Letter) üretimi, e-posta başvuruları
+# ve LinkedIn Easy Apply form sorularının otomatik yanıtlanması için kullanılır.
+# Kendi bilgilerinize göre bu dosyayı güncelleyebilirsiniz.
+# ==============================================================================
+
+personal_info:
+  full_name: "Taylan Özgür Özdemir"
+  email: "taylan147701@gmail.com"
+  phone: "+90 555 555 5555"
+  city: "Ankara"
+  country: "Türkiye"
+  linkedin: "https://www.linkedin.com/in/taylanozdemir"
+  github: "https://github.com/taylan1477"
+  portfolio: "https://github.com/taylan1477/Job-Radar"
+
+summary: >
+  GameDev (Unity, Unreal, C#, C++) ve Yazılım Geliştirme (Python, C#, Backend, Fullstack, 
+  Simülasyon, Otomasyon) alanlarında uzmanlaşmış, Clean Code ve SOLID standartlarına bağlı 
+  yazılım mühendisi. Kendi iş arama ve veri madenciliği otomasyon sistemlerini geliştiren, 
+  hızlı problem çözen ve yapay zeka araçlarını etkin kullanan sonuç odaklı profesyonel.
+
+primary_roles:
+  - "Game Developer (Unity / Unreal Engine)"
+  - "Software Engineer / Backend Developer (C# / .NET / Python)"
+  - "Simülasyon & Sistem Entegrasyon Mühendisi"
+  - "Otomasyon & Veri Madenciliği Mühendisi"
+
+skills:
+  languages:
+    - "C#"
+    - "C++"
+    - "Python"
+    - "JavaScript/TypeScript"
+    - "SQL"
+  engines_and_frameworks:
+    - "Unity Engine (3D/2D, Physics, Multiplayer, Gameplay)"
+    - "Unreal Engine (Blueprints, C++)"
+    - ".NET / ASP.NET Core"
+    - "Playwright / Selenium"
+    - "Pydantic / Pytest / Scikit-learn"
+  infrastructure_and_tools:
+    - "Git / GitHub"
+    - "Linux / Windows Server"
+    - "Google Sheets API / REST APIs"
+    - "Docker"
+    - "CI/CD"
+
+experience_years:
+  gamedev: 2
+  software_general: 3
+  csharp: 3
+  python: 3
+  cpp: 2
+  unity: 2
+
+preferences:
+  work_type: ["Remote", "Hybrid", "On-site"]
+  preferred_cities: ["Ankara", "Remote"]
+  willing_to_relocate: false
+  notice_period: "Hemen başlayabilir (Immediately available)"
+  military_service: "Muaf / Tamamlandı"
+  driver_license: "B"
+
+common_answers:
+  salary_expectation: "Görüşmede belirtilecek (Negotiable / Piyasa standartları)"
+  english_level: "Profesyonel / İleri Seviye (Professional working proficiency)"
+  german_level: "Başlangıç (Basic)"
+  remote_experience: "Evet, uzaktan çalışma ve dağıtık ekip deneyimim mevcut."
+  citizenship: "Türkiye Cumhuriyeti (Turkish Citizen)"
+  authorized_to_work_in_turkey: "Evet"

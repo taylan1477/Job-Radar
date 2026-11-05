@@ -13,7 +13,8 @@ def test_process_job_gamedev_senior(service):
         company="Dream Studios",
         location="Ankara",
         summary="A senior position for someone with 5+ years of experience in Unity and C#.",
-        description="Looking for high quality clean code and leadership."
+        description="Looking for high quality clean code and leadership.",
+        link="https://www.linkedin.com/jobs/view/12345"
     )
     
     result = service.process_job(job)

@@ -3,6 +3,9 @@
 import os
 from pathlib import Path
 import yaml
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # ──────────────────────────────────────────────
 # Google Sheets Ayarlari
@@ -133,3 +136,19 @@ _searches = _rules.get("searches", {})
 LINKEDIN_SEARCHES = _searches.get("linkedin", [])
 JSEARCH_QUERIES = _searches.get("jsearch", [])
 KARIYER_SEARCHES = _searches.get("kariyer", [])
+
+# ──────────────────────────────────────────────
+# Tam Otonom Başvuru & Gmail Konfigürasyonu
+# ──────────────────────────────────────────────
+GMAIL_USER = os.getenv("GMAIL_USER", "taylan147701@gmail.com")
+GMAIL_APP_PASSWORD = os.getenv("GMAIL_APP_PASSWORD", "")
+
+# CV Dosya Yolu (Önce kök dizindeki cv.pdf, yoksa docs altındaki kontrol edilir)
+CV_PATH = Path("cv.pdf") if Path("cv.pdf").exists() else Path("docs/CV_2027_Short.pdf")
+
+# Başvuru Güvenlik ve Skor Limitleri
+MIN_APPLICATION_SCORE = float(os.getenv("MIN_APPLICATION_SCORE", "2.5"))
+MAX_APPLICATION_SCORE = float(os.getenv("MAX_APPLICATION_SCORE", "10.0"))
+MAX_APPLICATIONS_PER_RUN = int(os.getenv("MAX_APPLICATIONS_PER_RUN", "15"))
+APPLICATION_DELAY_RANGE = (15, 40)  # Human-like saniye aralığı
+

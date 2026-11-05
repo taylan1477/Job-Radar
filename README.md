@@ -1,4 +1,4 @@
-# 🎯 Job Radar v0.6.7
+# 🎯 Job Radar v0.7
 
 [![Python](https://img.shields.io/badge/Python-3.10+-blue?logo=python&logoColor=white)](https://www.python.org/)
 [![Status](https://img.shields.io/badge/Status-Active-success)](https://github.com/taylan1477/Job-Radar)
@@ -198,7 +198,7 @@ Proje, genişletilebilir ve bakımı kolay bir yapı için modüler bir mimari �
 ## 📌 Proje Durumu
 
 ```
-Versiyon  : v0.6.7
+Versiyon  : v0.7
 Kaynaklar : LinkedIn + JSearch + RSS (+ Kariyer.net hazır)
 Skor      : NLP (TF-IDF) + Hybrid Regex + Pydantic Validation
 Yetenek   : Junior / Game Dev pozisyonları için optimize edildi

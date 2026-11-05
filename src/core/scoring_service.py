@@ -54,7 +54,11 @@ class ScoringService:
             if reason and "Unsupported Language" in reason:
                 location = JobLocation.DEAD
         else:
-            total_score = self._calculate_score(field, location, level)
+            source_val = getattr(job, "source", "") or ""
+            link_val = getattr(job, "link", "") or ""
+            if not source_val and link_val and "linkedin" in str(link_val).lower():
+                source_val = "linkedin"
+            total_score = self._calculate_score(field, location, level, source=source_val)
 
         return ScoredJob(
             job=job,
@@ -194,7 +198,7 @@ class ScoringService:
 
         return JobLevel.UNKNOWN
 
-    def _calculate_score(self, field: JobField, location: JobLocation, level: JobLevel) -> float:
+    def _calculate_score(self, field: JobField, location: JobLocation, level: JobLevel, source: str = "") -> float:
         """Calculates final weighted score based on defined weights."""
         field_score = self.cfg.FIELD_SCORES.get(field.value, 1)
         location_score = self.cfg.LOCATION_SCORES.get(location.value, 0)
@@ -205,6 +209,10 @@ class ScoringService:
             location_score * self.cfg.LOCATION_WEIGHT +
             level_score * self.cfg.LEVEL_WEIGHT
         )
+        if source and "linkedin" in str(source).lower():
+            total += 1.0
+        else:
+            total -= 1.0
         return round(total, 2)
 
     def _count_hits(self, text: str, keywords: list) -> int:

@@ -586,3 +586,113 @@ def fix_sheet():
         import traceback
         traceback.print_exc()
         return False
+
+
+def get_eligible_jobs_for_application(min_score: float = 2.5, max_score: float = 10.0):
+    """
+    Başvuru yapılmaya uygun ilanları Google Sheets'ten çeker:
+    - Durum sütunu boş veya henüz başvurulmamış olanlar
+    - Skor >= min_score olanlar
+    """
+    worksheet = _get_sheet()
+    if not worksheet:
+        return []
+
+    try:
+        rows = worksheet.get_all_values(value_render_option="FORMULA")
+        if len(rows) <= 1:
+            return []
+
+        eligible_jobs = []
+        already_applied_statuses = {"başvuruldu", "mülakat", "görüşmede", "işe alındı", "reddedildi", "süre bitti", "ulaşılamaz"}
+
+        for i, row in enumerate(rows[1:], start=2):
+            if len(row) < 7:
+                continue
+
+            title = str(row[0]).strip() if len(row) > 0 and row[0] is not None else ""
+            company = str(row[1]).strip() if len(row) > 1 and row[1] is not None else ""
+            field = str(row[2]).strip() if len(row) > 2 and row[2] is not None else ""
+            location = str(row[3]).strip() if len(row) > 3 and row[3] is not None else ""
+            level = str(row[4]).strip() if len(row) > 4 and row[4] is not None else ""
+            
+            raw_score = row[5] if len(row) > 5 else 0
+            if isinstance(raw_score, (int, float)):
+                score = float(raw_score)
+            else:
+                try:
+                    score = float(str(raw_score).strip().replace(",", "."))
+                except (ValueError, TypeError):
+                    score = 0.0
+
+            raw_link = str(row[6]).strip() if len(row) > 6 and row[6] is not None else ""
+            link = _extract_url(raw_link)
+            status = str(row[8]).strip() if len(row) > 8 and row[8] is not None else ""
+
+            # Henüz başvurulmamış ve skoru eşik üstü olanlar
+            if status.lower() not in already_applied_statuses and (min_score <= score <= max_score):
+                eligible_jobs.append({
+                    "row_idx": i,
+                    "title": title,
+                    "company": company,
+                    "field": field,
+                    "location": location,
+                    "level": level,
+                    "score": score,
+                    "link": link,
+                    "status": status
+                })
+
+        return eligible_jobs
+
+    except Exception as e:
+        print(f"[HATA] Başvuruya uygun ilanlar okunamadı: {e}")
+        return []
+
+
+def update_job_status(row_idx: int, status: str) -> bool:
+    """Belirtilen satırdaki ilanın 'Durum' (I sütunu) hücresini günceller."""
+    worksheet = _get_sheet()
+    if not worksheet:
+        return False
+
+    try:
+        cell_a1 = f"I{row_idx}"
+        worksheet.update(cell_a1, [[status]], value_input_option="USER_ENTERED")
+        return True
+    except Exception as e:
+        print(f"[HATA] Durum güncellenemedi (Satır {row_idx}): {e}")
+        return False
+
+
+def get_applied_jobs():
+    """Daha önce başvurulmuş veya süreçte olan ilanları (şirket ve satır indeksiyle) döndürür."""
+    worksheet = _get_sheet()
+    if not worksheet:
+        return []
+
+    try:
+        rows = worksheet.get_all_values(value_render_option="FORMULA")
+        if len(rows) <= 1:
+            return []
+
+        active_jobs = []
+        for i, row in enumerate(rows[1:], start=2):
+            if len(row) < 9:
+                continue
+            title = str(row[0]).strip() if len(row) > 0 and row[0] is not None else ""
+            company = str(row[1]).strip() if len(row) > 1 and row[1] is not None else ""
+            status = str(row[8]).strip() if len(row) > 8 and row[8] is not None else ""
+
+            if status:
+                active_jobs.append({
+                    "row_idx": i,
+                    "title": title,
+                    "company": company,
+                    "status": status
+                })
+
+        return active_jobs
+    except Exception as e:
+        print(f"[HATA] Başvurulmuş ilanlar okunamadı: {e}")
+        return []
