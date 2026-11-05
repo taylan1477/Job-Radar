@@ -27,9 +27,33 @@ def test_answer_form_question_chinese_language():
     ans_tr = gen.answer_form_question("Çince dil bilginiz nedir?", opts_tr)
     assert ans_tr == "Yok"
 
-    # Çince deneyim yılı (sayısal)
+    # Çince deneyim yılı (Kullanıcı Kuralı: Asla 0 verilmez, deneyim yoksa 1)
     ans_years = gen.answer_form_question("How many years of work experience do you have with Chinese?")
-    assert ans_years == "0"
+    assert ans_years == "1"
+
+
+def test_experience_years_rule_no_zero():
+    """Kullanıcı Kuralı: 'Kaç yıl deneyiminiz var?' sorusuna asla '0' denmez. Varsa '3', Yoksa '1' denir."""
+    gen = ApplicationGenerator()
+
+    # 1. Deneyim olan alanlar -> "3"
+    assert gen.answer_form_question("How many years of Unity experience do you have?") == "3"
+    assert gen.answer_form_question("Kaç yıl C# tecrübeniz var?") == "3"
+    assert gen.answer_form_question("Python deneyim yılı?") == "3"
+    assert gen.answer_form_question("Kaç yıl yazılım geliştirme deneyiminiz var?") == "3"
+
+    # 2. Deneyim olmayan alanlar -> "1" (asla "0" olmamalı)
+    assert gen.answer_form_question("How many years of Java experience do you have?") == "1"
+    assert gen.answer_form_question("Kaç yıl Flutter deneyiminiz var?") == "1"
+    assert gen.answer_form_question("How many years of work experience do you have with Chinese?") == "1"
+    assert gen.answer_form_question("Kaç yıl Ruby on Rails tecrübeniz var?") == "1"
+
+    # 3. Seçenekli (dropdown) deneyim yılı sorularında eşleşme
+    year_options = ["Select an option", "0", "1", "2", "3", "4+"]
+    # Varsa -> "3"
+    assert gen.answer_form_question("Years of experience with Unity", year_options) == "3"
+    # Yoksa -> "1" (asla "0" seçilmez)
+    assert gen.answer_form_question("Years of experience with Rust", year_options) == "1"
 
 
 def test_answer_form_question_known_languages_and_skills():
@@ -40,8 +64,8 @@ def test_answer_form_question_known_languages_and_skills():
     ans_en = gen.answer_form_question("English proficiency", opts_en)
     assert ans_en == "Professional working"
 
-    # Unity / C#
-    assert gen.answer_form_question("How many years of Unity experience do you have?") == "2"
+    # Unity / C# (Deneyim varsa 3)
+    assert gen.answer_form_question("How many years of Unity experience do you have?") == "3"
     assert gen.answer_form_question("Kaç yıl C# tecrübeniz var?") == "3"
 
     # Vize sponsorluğu

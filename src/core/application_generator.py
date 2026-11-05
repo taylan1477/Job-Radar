@@ -126,18 +126,44 @@ class ApplicationGenerator:
                 valid_options = [o.strip() for o in options if o.strip()]
 
         # -------------------------------------------------------------
-        # 1. Konuşma Dilleri (Spoken Languages)
+        # DENEYİM YILI KURALI (Kullanıcı Kuralı: Asla '0' yok! Varsa '3', Yoksa '1')
         # -------------------------------------------------------------
-        # A) Çince / Mandarin (Aday bilmiyor -> 0 yıl / Yok / None / Hayır)
+        is_years_question = (
+            any(ph in q_lower for ph in ["kaç yıl", "how many years", "deneyim yılı", "years of experience", "yıl deneyim", "years of work experience", "tecrübe yılı", "year of experience"])
+            or (any(w in q_lower for w in ["yıl", "year"]) and any(w in q_lower for w in ["deneyim", "experience", "tecrübe"]))
+        )
+
+        known_skills = [
+            "unity", "unreal", "game", "oyun", "c#", "csharp", ".net", "dotnet",
+            "python", "c++", "cpp", "sql", "database", "veritabanı", "yazılım",
+            "software", "backend", "developer", "mühendis", "engineer", "git",
+            "github", "linux", "docker", "rest", "api", "ingilizce", "english",
+            "javascript", "typescript", "frontend", "web", "simülasyon", "simulation",
+            "otomasyon", "automation", "selenium", "playwright"
+        ]
+
+        if is_years_question:
+            has_known_skill = any(skill in q_lower for skill in known_skills)
+            target_val = "3" if has_known_skill else "1"
+            if valid_options:
+                return self._match_option(
+                    valid_options,
+                    [target_val, "3", "2", "1"],
+                    default_index=0
+                )
+            return target_val
+
+        # -------------------------------------------------------------
+        # 1. Konuşma Dilleri (Spoken Languages) - Yeterlilik Seviyesi
+        # -------------------------------------------------------------
+        # A) Çince / Mandarin (Aday bilmiyor -> Yok / None / Hayır / 1 yıl)
         if any(w in q_lower for w in ["çince", "chinese", "mandarin", "zh-cn"]):
             if valid_options:
                 return self._match_option(
                     valid_options, 
-                    ["none", "yok", "bilmiyorum", "hayır", "no", "not applicable", "başlangıç", "elementary", "basic", "temel", "0"],
+                    ["none", "yok", "bilmiyorum", "hayır", "no", "not applicable", "başlangıç", "elementary", "basic", "temel", "1"],
                     default_index=len(valid_options) - 1
                 )
-            if any(w in q_lower for w in ["yıl", "year", "deneyim", "experience", "kaç"]):
-                return "0"
             if any(w in q_lower for w in ["biliyor", "speak", "fluent", "yetkin"]):
                 return "Hayır"
             return "Yok"
@@ -148,11 +174,9 @@ class ApplicationGenerator:
             if valid_options:
                 return self._match_option(
                     valid_options,
-                    ["none", "yok", "bilmiyorum", "hayır", "no", "başlangıç", "elementary", "basic", "0"],
+                    ["none", "yok", "bilmiyorum", "hayır", "no", "başlangıç", "elementary", "basic", "1"],
                     default_index=len(valid_options) - 1
                 )
-            if any(w in q_lower for w in ["yıl", "year", "deneyim", "experience", "kaç"]):
-                return "0"
             return "Yok"
 
         # C) İngilizce (Aday: İleri Düzey / Professional Working C1)
@@ -294,8 +318,8 @@ class ApplicationGenerator:
             - Meslek: Game Developer & Yazılım Mühendisi
             - Konum: Ankara, Türkiye (Uzaktan çalışmaya açık, şehir değiştirmeye kapalı)
             - Konuşma Dilleri: Türkçe (Anadili), İngilizce (İleri Düzey C1 / Professional Working), Almanca (Başlangıç A1-A2).
-              DİKKAT: Aday Çince, Fransızca, İspanyolca, Rusça veya diğer yabancı dilleri BİLMEMEKTEDİR (Deneyim: 0 yıl, Seviye: Yok / None).
-            - Teknik Yetkinlikler: Unity (2 yıl), C# (3 yıl), Python (3 yıl), C++ (2 yıl), SQL (2 yıl), Genel Yazılım (3 yıl).
+              DİKKAT: Aday Çince, Fransızca, İspanyolca, Rusça veya diğer yabancı dilleri BİLMEMEKTEDİR (Seviye: Yok / None).
+            - Teknik Yetkinlikler: Unity (3 yıl), C# (3 yıl), Python (3 yıl), C++ (3 yıl), SQL (3 yıl), Genel Yazılım (3 yıl).
             - Vize / Sponsorluk: İhtiyacı yok (Sponsorship required: No).
             - Askerlik: Muaf / Tamamlandı.
             - Ehliyet: B sınıfı.
@@ -305,9 +329,10 @@ class ApplicationGenerator:
             
             Kurallar:
             1. Eğer Seçenekler listesi verilmişse, MUTLAKA listedeki seçeneklerden birini BİREBİR harfiyen seçip döndür.
-            2. Eğer soru bir dil veya bilinmeyen teknoloji soruyorsa ve adayın profilinde yoksa, '0', 'Yok', 'None' veya 'Hayır' yönündeki en düşük seçeneği seç.
-            3. Eğer sayı soruluyorsa sadece rakam döndür (örn: 3 veya 0).
-            4. Asla açıklama, tırnak işareti, markdown formatı veya fazladan kelime ekleme. Sadece cevabı ver.
+            2. ÖNEMLİ KURAL: Hiçbir deneyim yılı veya 'Kaç yıl deneyiminiz var?' sorusuna ASLA '0' deme! Bildiği konularda '3', bilmediği konularda '1' seç.
+            3. Eğer soru bir dil veya bilinmeyen teknoloji yetkinlik seviyesi soruyorsa (sayı değilse), 'Yok', 'None' veya 'Hayır' yönündeki en düşük seçeneği seç.
+            4. Eğer sayı soruluyorsa sadece rakam döndür (örn: 3 veya 1).
+            5. Asla açıklama, tırnak işareti, markdown formatı veya fazladan kelime ekleme. Sadece cevabı ver.
             """
             try:
                 res = self.client.models.generate_content(
@@ -330,7 +355,7 @@ class ApplicationGenerator:
             return self._match_option(valid_options, ["evet", "yes", "true"], default_index=0)
 
         if any(w in q_lower for w in ["kaç yıl", "how many years", "deneyim yılı", "years of experience"]):
-            return "0"
+            return "1"
 
         return "Evet"
 

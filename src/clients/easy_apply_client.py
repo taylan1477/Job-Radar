@@ -342,9 +342,14 @@ class LinkedInEasyApplyClient:
                         # Sayısal alan ise (input type=number veya yıl sorusu) sadece rakam doldur
                         if inp_type == "number":
                             digits = re.findall(r'\d+', str(answer))
-                            val_to_fill = digits[0] if digits else "0"
+                            val_to_fill = digits[0] if digits else "1"
+                            # Kullanıcı Kuralı: Hiçbir deneyim yılı sorusuna "0" verilmesin (min 1)
+                            if val_to_fill == "0":
+                                val_to_fill = "1"
                         else:
                             val_to_fill = str(answer)
+                            if val_to_fill == "0" and any(w in label.lower() for w in ["yıl", "year", "deneyim", "experience", "tecrübe"]):
+                                val_to_fill = "1"
 
                         inp.fill(val_to_fill)
                         try:
