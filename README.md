@@ -1,175 +1,177 @@
-# 🎯 Job Radar v0.9
+# 🎯 Job Radar v1.0 — Otonom İş Arama, Başvuru ve Takip Sistemi
 
-[![Python](https://img.shields.io/badge/Python-3.10+-blue?logo=python&logoColor=white)](https://www.python.org/)
-[![Playwright](https://img.shields.io/badge/Playwright-Chromium-green?logo=playwright)](https://playwright.dev/)
-[![Gemini API](https://img.shields.io/badge/Google%20Gemini-AI%20Powered-orange?logo=google)](https://ai.google.dev/)
-[![Status](https://img.shields.io/badge/Status-Active-success)](https://github.com/taylan1477/Job-Radar)
+[![Python](https://img.shields.io/badge/Python-3.10+-3776AB?logo=python&logoColor=white)](https://www.python.org/)
+[![Playwright](https://img.shields.io/badge/Playwright-Automation-45ba4b?logo=playwright&logoColor=white)](https://playwright.dev/)
+[![Gemini AI](https://img.shields.io/badge/Gemini%20AI-2.5%20Flash-8E75C2?logo=google&logoColor=white)](https://ai.google.dev/)
+[![Tests](https://img.shields.io/badge/Tests-26%20Passed-success)](tests/)
+[![Status](https://img.shields.io/badge/Status-Active-brightgreen)](https://github.com/taylan1477/Job-Radar)
 [![License](https://img.shields.io/badge/License-MIT-yellow)](LICENSE)
-[![Clean Code](https://img.shields.io/badge/Clean%20Code-Showcase-blueviolet)](src/utils/showcase.py)
+[![Clean Code](https://img.shields.io/badge/Clean%20Code-SOLID%20Standards-blueviolet)](src/core/scoring_service.py)
 
-**Job Radar**, yazılım ve GameDev odaklı iş ilanlarını **4 farklı kaynaktan** (LinkedIn, JSearch, RSS, Kariyer.net) toplayan, hibrit **NLP + kural tabanlı skorlama** motoruyla filtreleyen, Google Sheets üzerinde canlı takip eden ve **LinkedIn Easy Apply** ile **İK E-Posta** kanallarından uçtan uca **otonom başvuru & geri dönüş takibi** yapan yeni nesil bir kariyer otomasyon sistemidir.
+**Job Radar**, yazılım ve GameDev odaklı iş ilanlarını çoklu kaynaklardan otomatik olarak toplayan, NLP ve kural tabanlı algoritmalarla skorlayan, Google Sheets üzerinde canlı bir dashboard sunan ve **LinkedIn Easy Apply** ile **İK E-posta kanalları** üzerinden uçtan uca **otonom başvuru ve sonuç takibi** gerçekleştiren yeni nesil bir kariyer otomasyon pipeline'ıdır.
 
-> [!TIP]
-> Bu proje yalnızca bir iş arama aracı değil; **Clean Code**, **SOLID prensipleri**, **Savunmacı Programlama (Defensive Engineering)** ve **Headless/Interactive Tarayıcı Otomasyonu** standartlarını sergileyen kapsamlı bir mühendislik çalışmasıdır.
+> [!IMPORTANT]
+> Bu proje; yalnızca bir veri madenciliği aracı değil, aynı zamanda **Playwright tabanlı Web Otomasyonu**, **Gemini LLM Entegrasyonu**, **SOLID Prensipleri**, **Clean Code** ve **Savunmacı Mühendislik (Defensive Engineering)** standartlarını sergileyen kapsamlı bir sistemdir.
 
 ---
 
 ## 🚀 Öne Çıkan Yetenekler
 
-### 1. 📡 Çok Kaynaklı İlan Madenciliği (Multi-Source Scraping)
-* **LinkedIn Scraper:** Playwright ile dinamik DOM taraması, oturumsuz hızlı scraping ve Easy Apply etiket tespiti.
-* **JSearch API:** RapidAPI REST istemcisi ile küresel yazılım fırsatları.
-* **RSS Feeds:** WeWorkRemotely ve Himalayas üzerinden remote ilan taraması.
-* **Kariyer.net Scraper:** Yerel pazar için stealth modunda Playwright entegrasyonu.
+```
+  [Veri Toplama] ───► [NLP Skorlama] ───► [Google Sheets] ───► [Otonom Başvuru] ───► [Gmail Takip]
+   LinkedIn / API      TF-IDF + Regex       Smart Chips         Easy Apply / Mail      IMAP + AI Analiz
+```
 
-### 2. 🎯 Hibrit NLP Skorlama & Platform Ağırlığı
-* **NLP & Regex Motoru:** `TF-IDF` ve anlamsal kelime analiziyle ilanları teknoloji alanı, lokasyon ve seviyeye (Junior/Mid/Senior) göre puanlar.
-* **Platform Önceliği:** Doğrudan Easy Apply imkanı sunan LinkedIn ilanlarına `+1.0` bonus, harici kariyer portallarına (kariyer.net, aggregators vb.) otomatik `-1.0` ceza uygulanır.
-* **Dil & Vize Bariyeri:** Yabancı dildeki (İngilizce/Türkçe harici) veya vize kısıtlı ilanlar tespit edilerek elenir.
+- **Çok Kaynaklı Veri Madenciliği (Multi-Source Aggregation):**
+  - **LinkedIn:** Playwright ile stealth modda dinamik web kazıma (~170+ ilan).
+  - **JSearch (RapidAPI):** Global aggregator REST API entegrasyonu (~40+ ilan).
+  - **RSS Feeds:** WeWorkRemotely ve Himalayas akışları (~125+ ilan).
+  - **Kariyer.net:** WAF uyumlu Playwright kazıma altyapısı.
+- **Hibrit Skorlama Motoru (NLP + Heuristic Scoring):**
+  - Alan (GameDev, C#, Python, C++ vb.), lokasyon (Ankara, Remote, Hibrit) ve tecrübe seviyesine (Junior, Mid, Senior) göre ağırlıklı puanlama.
+  - **Dil Bariyeri Kontrolü:** Türkçe ve İngilizce dışındaki ilanları anında eleyen dil tespit filtresi.
+  - **Platform Önceliği:** LinkedIn ilanlarına `+1.0` bonus, harici panolara `-1.0` puan kesintisi.
+- **Google Sheets Canlı Yönetim Paneli:**
+  - Otomatik formül eşitleme, koşullu satır renklendirme ve açılır menülü **Smart Chips** (`Favori, Başvuruldu, Reddedildi, Görüşmede, Süre Bitti, Ulaşılmaz`).
+- **Otonom Çift Kanallı Başvuru Motoru (Auto-Apply Pipeline):**
+  - **LinkedIn Easy Apply Botu:** Oturumu korunan Chromium ile formları adayın profiline göre otomatik doldurma, CV yükleme ve adım adım ilerleme.
+  - **E-Posta İK Başvurusu:** İlan metninden çıkarılan İK iletişim adreslerine Gemini ile üretilmiş kişiselleştirilmiş Cover Letter ve PDF CV ile otomatik başvuru.
+  - **Human-in-the-Loop:** Güvenlik kotası (oturum başına maks 15 başvuru) ve son adımda kullanıcı onay mekanizması.
+- **Geri Dönüş & Sonuç Takibi (Feedback Loop):**
+  - Gmail IMAP üzerinden gelen kutusunu tarama.
+  - Gelen şirket e-postalarını Regex + LLM ile sınıflandırma (`Mülakat/Görüşme`, `Reddedildi`, `Alındı`) ve Sheets tablosundaki durumları otomatik senkronize etme.
 
-### 3. 🤖 LinkedIn Easy Apply Otomasyonu (Playwright)
-* **Kalıcı Oturum:** `linkedin_state.json` ile tek seferlik giriş ve güvenli cookie oturum yönetimi.
-* **Dinamik DOM Çıkarımı:** Obfuscated (karmaşık) LinkedIn CSS sınıflarına takılmayan semantik etiketleme (`_extract_label`).
-* **Akıllı Form Yanıtlayıcı:**
-  * **Yetkinlik Yılları (Sıfır Engeli):** Bilinen yetkinliklerde (SQL: 3, C#: 3, Unity: 3, Python: 3, .NET Core: 1) tam değer; profil dışı yabancı konularda `1`. **Asla 0 girilmez.**
-  * **Maaş Beklentisi:** Sayısal format hatası ve `"Evet"` yanıtını önleyen otomatik `35000` (TL) ve döviz optimizasyonu.
-  * **Yabancı Dil Soruları:** Çince, Fransızca vb. bilmediği dillerde otomatik `"None"` / `"Yok"` seçimi.
-  * **Ülke Kodu Koruması:** LinkedIn'in seçtiği `Turkey (+90)` değerini korur, alfabetik Andorra gibi hatalı seçimleri engeller.
-* **Feed Temizleme (Follow Uncheck):** Şirketlerin takipçi kazanmak için varsayılan seçtiği *"Sayfasından haber almak için takip edin"* kutucuğunun tikini otomatik kaldırarak LinkedIn ana sayfanızın çöplüğe dönmesini engeller.
-* **Human-in-the-Loop & Kota:** Oturum başına maks 15 başvuru güvenlik kotası ve son gönderme adımında kullanıcı onayı.
+---
 
-### 4. ✉️ İK E-Posta Başvuru Motoru
-* İlan detaylarından İK e-postalarını otomatik regex ve NLP ile ayıklar.
-* Google Gemini API ile pozisyona ve adayın profiline özel kişiselleştirilmiş **Cover Letter (Ön Yazı)** üretir.
-* SMTP üzerinden CV (`cv.pdf`) ekli e-postayı onayınızla iletir.
+## 🧠 Akıllı Form Yanıtlama ve Başvuru Kuralları
 
-### 5. 📬 Gmail IMAP Entegrasyonu & Geri Dönüş Takibi
-* Gelen kutusundaki şirket geri bildirimlerini periyodik olarak tarar.
-* **Hibrit E-posta Sınıflandırıcı:** Gemini LLM ve regex kuralları ile ret (`Reddedildi`), mülakat daveti (`Görüşmede`) veya otomatik yanıtları sınıflandırır.
-* Google Sheets tablosundaki ilgili ilanın **Durum** sütununu anlık günceller.
+LinkedIn Easy Apply botu, aday profilindeki (`cv_profile.yaml`) parametreleri ve sektör dinamiklerini gözeterek savunmacı kurallarla çalışır:
 
-### 6. 📊 Dinamik Google Sheets Yönetimi
-* Koşullu biçimlendirme ile başvuru durumuna göre satır renklendirme (Reddedildi=Kırmızı, Görüşmede=Yeşil, Başvuruldu=Mavi vb.).
-* Google Sheets **Smart Chips (Akıllı Açılır Menü)** ve otomatik tarih/format doğrulama.
+1. **Deneyim Yılında "Asla 0 Yok" Kuralı:**
+   - Adayın bildiği alanlarda (Unity, C#, Python, SQL vb.) otomatik olarak **`3`**,
+   - .NET Core / ASP.NET alanında özel talep doğrultusunda **`1`**,
+   - Adayın bilmediği / listelenmeyen teknolojilerde (Java, Flutter, Rust vb.) asla 0 değil, minimum **`1`** yıl girilir.
+2. **Yabancı Dil Bariyeri:**
+   - Profilde bulunmayan dillerde (Çince, Fransızca, İspanyolca vb.) açılır menülerde *"None / Yok / Bilmiyorum"* veya en düşük temel seviye seçilir.
+3. **Maaş Beklentisi Optimizasyonu:**
+   - Ücret ve maaş sorularına metin hatalarını engelleyecek şekilde net **`35000`** (35.000 TL) girilir.
+   - Aralık menülerinde `30.000 - 40.000 TL` bandı seçilir; dövizli ilanlarda aylık `$1500`, yıllık `$25000` atanır.
+4. **Feed Koruması (Şirket Takibini Kaldırma):**
+   - LinkedIn'in varsayılan olarak seçili getirdiği *"Sayfasından haber almak için ... şirketini takip edin"* kutucuğu otomatik olarak kaldırılır (`uncheck`); adayın akışı yüzlerce şirketin reklamıyla kirlenmez.
+   - Zorunlu sözleşme, gizlilik ve onay kutucukları eksiksiz işaretlenir.
+5. **Dinamik DOM & Etiket Çıkarımı:**
+   - Form elemanlarının etiketleri `aria-label`, `<label for="...">`, parent `fb-dash-form-element` ve `<legend>` katmanlarından okunarak hiçbir soru yanıtsız bırakılmaz.
 
 ---
 
 ## 📂 Proje Mimarisi
 
-```text
+```
 job-radar/
 ├── src/
-│   ├── core/                       # Çekirdek İş Mantığı & AI Modelleri
-│   │   ├── application_generator.py # Form soruları yanıtlama, Cover Letter & LLM motoru
-│   │   ├── email_classifier.py      # Ret/Mülakat e-postası sınıflandırma servisi
-│   │   ├── models.py                # Pydantic veri modelleri ve Enum tipleri
-│   │   ├── nlp_processor.py         # Metin temizleme, dil tespiti ve TF-IDF
-│   │   ├── scorer.py                # Regex + NLP tabanlı ilan puanlama algoritması
-│   │   └── scoring_service.py       # Puanlama servis katmanı (Clean Code Showcase)
-│   ├── clients/                    # Dış Servisler, Botlar ve Entegrasyonlar
-│   │   ├── easy_apply_client.py     # LinkedIn Easy Apply Playwright otomasyon istemcisi
-│   │   ├── email_client.py          # SMTP üzerinden CV ekli e-posta başvuru istemcisi
-│   │   ├── gmail_tracker.py         # IMAP ile Gmail gelen kutusu takipçisi
-│   │   ├── jsearch_client.py        # JSearch REST API istemcisi
-│   │   ├── kariyer_scraper.py       # Kariyer.net Playwright scraper
-│   │   ├── linkedin_scraper.py      # LinkedIn Playwright scraper
-│   │   ├── rss_sources.py           # WeWorkRemotely & Himalayas RSS istemcisi
-│   │   └── sheets_client.py         # Google Sheets API (gspread) okuma/yazma/onarma
-│   └── utils/                      # Yardımcı Araçlar ve Yapılandırma
-│       ├── config.py                # Puan katsayıları, dosya yolları ve ortam değişkenleri
-│       ├── corpus.py                # NLP stop-words ve kelime havuzu
-│       ├── logger.py                # Merkezi ve renkli loglama altyapısı
-│       ├── text_norm.py             # Türkçe karakter ve Unicode metin normalizasyonu
-│       ├── analyze_keywords.py      # İlan metinleri kelime frekans analizörü
-│       └── showcase.py              # SOLID ve Clean Code sunum aracı
-├── tests/                          # Kapsamlı Pytest Birim Test Paketi (26 test)
-│   ├── test_easy_apply.py           # Form yanıtlama, dil, maaş ve deneyim testleri
-│   ├── test_email_classifier.py     # E-posta sınıflandırma testleri
-│   ├── test_email_client.py         # E-posta gönderim ve ek testleri
-│   ├── test_scorer.py               # Platform bonus/ceza ve puan testleri
-│   └── ...
-├── docs/                           # Proje sunumları ve yardımcı belgeler
-├── cv_profile.yaml                 # Aday CV profili, yetkinlik yılları, dil ve maaş tercihleri
-├── cv.pdf                          # Başvurularda otomatik eklenen güncel özgeçmiş
-├── main.py                         # Merkezi terminal orkestrasyon arayüzü
+│   ├── core/                       # Çekirdek İş Mantığı & Modeller
+│   │   ├── application_generator.py # Gemini LLM Cover Letter & Easy Apply soru yanıtlayıcı
+│   │   ├── email_classifier.py     # E-posta yanıtlarını (Ret/Mülakat) analiz eden motor
+│   │   ├── models.py               # Pydantic veri şemaları (Job, Score, Status)
+│   │   ├── nlp_processor.py        # TF-IDF, metin temizleme ve dil tespiti
+│   │   ├── scorer.py               # Hibrit skorlama algoritması (Regex + NLP)
+│   │   └── scoring_service.py      # Servis katmanı ve bağımlılık yönetimi
+│   ├── clients/                    # Harici Entegrasyonlar ve Botlar
+│   │   ├── easy_apply_client.py    # Playwright LinkedIn Easy Apply otomasyon istemcisi
+│   │   ├── email_client.py         # SMTP/IMAP E-posta başvuru ve gelen kutusu istemcisi
+│   │   ├── jsearch_client.py       # RapidAPI JSearch REST istemcisi
+│   │   ├── kariyer_scraper.py      # Kariyer.net Playwright scraper
+│   │   ├── linkedin_scraper.py     # LinkedIn Playwright stealth scraper
+│   │   ├── rss_sources.py          # WeWorkRemotely & Himalayas RSS okuyucu
+│   │   └── sheets_client.py        # Google Sheets API & Smart Chips yöneticisi
+│   └── utils/                      # Yapılandırma ve Yardımcı Araçlar
+│       ├── config.py               # Ortam değişkenleri ve katsayılar
+│       ├── corpus.py               # NLP durak kelimeler ve anahtar kelime havuzu
+│       ├── logger.py               # Türkçe uyumlu merkezi loglama sistemi
+│       ├── text_norm.py            # Türkçe karakter (İ/ı, Ş/ş) normalizasyonu
+│       └── showcase.py             # Mimari ve SOLID prensipleri sunum aracı
+├── tests/                          # 26 Adet Pytest Birim Testi
+├── docs/                           # CV ve Dokümantasyon Dosyaları
+├── cv_profile.yaml                 # Aday yetkinlik, dil, maaş ve başvuru profili
+├── linkedin_state.json             # Oturum çerezleri (Gitignore korumalı)
+├── main.py                         # İnteraktif CLI konsol arayüzü
 ├── requirements.txt                # Python bağımlılıkları
-└── README.md                       # Proje dokümantasyonu
+└── README.md
 ```
 
 ---
 
-## 🖥 Kurulum
+## ⚙️ Kurulum
 
-### 1. Gereksinimler
-* Python 3.10 veya üzeri
-* Google Cloud Console Servis Hesabı (`credentials.json` - Google Sheets API erişimi için)
-* Google Gemini API Anahtarı (Opsiyonel ancak AI ön yazı ve akıllı sınıflandırma için önerilir)
-
-### 2. Adım Adım Kurulum
+### 1. Depoyu Klonlayın ve Sanal Ortam Oluşturun
 
 ```bash
-# 1. Depoyu klonlayın
 git clone https://github.com/taylan1477/Job-Radar.git
 cd Job-Radar
 
-# 2. Sanal ortamı oluşturun ve aktif edin
+# Sanal ortam
 python -m venv venv
 # Windows:
 venv\Scripts\activate
 # Linux/macOS:
 source venv/bin/activate
+```
 
-# 3. Bağımlılıkları yükleyin
+### 2. Bağımlılıkları ve Tarayıcı Motorunu Yükleyin
+
+```bash
 pip install -r requirements.txt
-
-# 4. Playwright Chromium tarayıcısını kurun
 playwright install chromium
 ```
 
-### 3. Yapılandırma (`.env` & `cv_profile.yaml`)
+### 3. Çevre Değişkenlerini Tanımlayın (`.env`)
 
-Proje kök dizininde `.env` dosyasını oluşturun:
+Proje kök dizininde bir `.env` dosyası oluşturun:
 
 ```env
-# Google Sheets
-SPREADSHEET_ID=your_google_sheet_id_here
+# Google Sheets Entegrasyonu
+GOOGLE_SHEETS_CREDENTIALS_FILE=credentials.json
+GOOGLE_SHEET_NAME=Job Radar
 
-# AI / LLM
-GEMINI_API_KEY=your_gemini_api_key_here
+# Gemini AI (Ön yazı üretimi ve soru yanıtlama için)
+GEMINI_API_KEY=your_gemini_api_key
 
-# E-Posta Başvurusu & IMAP Takip (Opsiyonel)
+# JSearch API (Opsiyonel)
+RAPIDAPI_KEY=your_rapidapi_key
+
+# E-Posta Başvurusu ve Yanıt Takibi (Gmail App Password)
 EMAIL_USER=your_email@gmail.com
-EMAIL_PASS=your_app_specific_password_here
-IMAP_SERVER=imap.gmail.com
+EMAIL_PASS=your_gmail_app_password
 SMTP_SERVER=smtp.gmail.com
+SMTP_PORT=587
+IMAP_SERVER=imap.gmail.com
 ```
 
-Özgeçmiş bilgilerinizi ve başvuru tercihlerinizi [`cv_profile.yaml`](file:///c:/Projeler/PycharmProjects/job-radar/cv_profile.yaml) dosyasından düzenleyin:
-* Yetkinlik deneyim yılları (SQL: 3, C#: 3, .NET Core: 1 vb.)
-* Maaş beklentisi (`salary_expectation: "35000"`)
-* Konuşma dilleri ve vize/ikamet tercihleri
+### 4. Aday Profilinizi Düzenleyin (`cv_profile.yaml`)
+
+Kendi yetkinliklerinizi, deneyim yıllarınızı, konuşma dillerinizi ve maaş beklentinizi [`cv_profile.yaml`](cv_profile.yaml) dosyasından yapılandırın. CV dosyanızı proje kök dizinine `cv.pdf` olarak ekleyin.
 
 ---
 
-## ▶️ Kullanım & Menü Yapısı
+## ▶️ Kullanım (İnteraktif Konsol Menüsü)
 
-Uygulamayı başlatmak için:
+Uygulamayı başlatın:
 
 ```bash
 python main.py
 ```
 
-Merkezi terminal arayüzü sizi karşılar:
+Açılan konsol menüsü:
 
 ```text
 =======================================================
-  Job Radar v0.9 - Otonom Başvuru & Takip Sistemi
+  Job Radar v1.0 - Otonom Başvuru & Takip Sistemi
 =======================================================
 
   [TARAMA & VERİ]
   1. Tam çalıştır (Tüm kaynakları tara -> Sheets'e yaz)
   2. Temiz çalıştır (SİL + Tüm kaynakları tara)
-  3. API'siz çalıştır (LinkedIn + RSS, JSearch yok)
+  3. API'siz çalıştır (LinkedIn + RSS, JSearch yok) ✨ (Önerilen)
   4. Sadece API (JSearch)
   5. Dry Run (Konsola yazdır, Sheets'e yazma)
   6. Tabloyu Düzelt (Başlık/Sütun/Tarih/Smart Chips)
@@ -181,63 +183,69 @@ Merkezi terminal arayüzü sizi karşılar:
   10. Çıkış
 ```
 
-### 🌟 Önerilen İş Akışı
+### 🎯 Adım Adım Otonom Başvuru Akışı:
 
-1. **LinkedIn Girişi (Menü 7):** İlk çalıştırmada açılan Chromium penceresinde LinkedIn hesabınıza giriş yapın. Oturumunuz `linkedin_state.json` olarak şifreli kaydedilir; bir daha şifre sormaz.
-2. **İlanları Tarayın (Menü 3):** API harcamadan LinkedIn ve RSS kaynaklarından yüzlerce güncel ilanı çeker ve Sheets tablonuza işler.
-3. **Otonom Başvuru (Menü 8):**
-   * Skor aralığını belirleyin (Örn: `2.5 - 10.0`).
-   * Kanal seçin (1: Tümü, 2: Sadece LinkedIn Easy Apply, 3: Sadece E-Posta).
-   * Bot formları profilinize göre eksiksiz doldurur, şirketi takip etme tikini kaldırır ve son adımda ekranı size gösterip onayınızı alarak başvuruyu gönderir.
-4. **Sonuç Takibi (Menü 9):** Gün sonunda Gmail gelen kutunuzu tarayarak gelen ret veya mülakat e-postalarını tespit eder ve tablodaki durumları otomatik günceller.
-
----
-
-## 📊 Skorlama Algoritması
-
-Puanlama sistemi adayın kariyer hedeflerine göre ağırlıklandırılmıştır:
-
-$$\text{Toplam Skor} = (\text{Alan} \times 0.3) + (\text{Lokasyon} \times 0.4) + (\text{Level} \times 0.3) + \text{Platform Bonusu/Cezası}$$
-
-| Alan | Puan | Lokasyon | Puan | Seviye (Level) | Puan | Platform Faktörü | Puan |
-| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| **gamedev** | +5.0 | **ankara** | +5.0 | **junior / entry**| +5.0 | **LinkedIn İlanı** | **+1.0** |
-| **c# / unity**| +4.0 | **remote** | +5.0 | **mid** | +2.0 | **Harici Platform** | **-1.0** |
-| **c++ / python**| +4.0 | **hybrid_ankara**| +5.0 | **senior** | -10.0 | **Dil Bariyeri** | -10.0 |
-| **yazılım** | +2.0 | **türkiye** | +3.0 | **lead / manager**| -15.0 | | |
+1. **İlk Kurulumda Oturum Açma (Menü 7):**
+   - Açılan Chromium penceresinde LinkedIn hesabınıza bir defaya mahsus manuel giriş yapın. Çerezler `linkedin_state.json` içine güvenle kaydedilir; sonraki tüm başvurular bu oturum üzerinden bot engeline takılmadan çalışır.
+2. **Başvuru Pipeline'ı (Menü 8):**
+   - Hedef Skor Aralığını girin (örn: `2.5 - 10.0` veya `3.0 - 5.0`).
+   - Kanal Seçimi yapın (`1. Tümü`, `2. Sadece LinkedIn Easy Apply`, `3. Sadece E-Posta`).
+   - Human-in-the-Loop modunda formların dolduruluşunu tarayıcıda canlı inceleyip `E/H` onayı ile gönderin.
+3. **Gmail Yanıt Takibi (Menü 9):**
+   - Şirketlerden gelen ret, mülakat daveti veya alındı e-postalarını tarayarak Google Sheets üzerindeki Durum sütununu otomatik güncelleyin.
 
 ---
 
-## 🧪 Testler ve Kod Kalitesi
+## 📊 Skorlama Matrisi
 
-Proje, 26 adet kapsamlı Pytest birim testi ile korunmaktadır. Form soru yanıtlayıcı, dil bariyeri, maaş optimizasyonu ve platform skorlama mantığı sürekli test edilir:
+```text
+Toplam Skor = (Alan Puanı × 0.3) + (Lokasyon Puanı × 0.4) + (Level Puanı × 0.3) + Platform Bonusu
+```
+
+| Alan | Puan | | Lokasyon | Puan | | Level | Puan |
+| :--- | :---: | - | :--- | :---: | - | :--- | :---: |
+| **gamedev** | 5 | | **ankara** | 5 | | **junior** | 5 |
+| **c#** | 4 | | **remote** | 5 | | **entry** | 5 |
+| **c++** | 4 | | **hybrid_ankara** | 5 | | **mid** | 2 |
+| **python** | 4 | | **türkiye** | 3 | | **senior** | -10 |
+| **mobile** | 3 | | **istanbul** | 3 | | **lead** | -15 |
+| **yazılım** | 2 | | **avrupa** | 1 | | **bilinmiyor**| 0 |
+| **LinkedIn Bonusu** | **+1.0** | | **Harici İlan Cezası** | **-1.0** | | **Yabancı Dil Bariyeri** | **-10 (Dead)** |
+
+---
+
+## 🧪 Testler
+
+Sistemdeki tüm algoritmalar, soru yanıtlayıcılar ve güvenlik bariyerleri Pytest ile doğrulanmaktadır:
 
 ```bash
 python -m pytest tests/
 ```
 
 ```text
-tests\test_easy_apply.py ......          [ 23%]
-tests\test_email_classifier.py .....     [ 42%]
-tests\test_email_client.py ...           [ 53%]
-tests\test_lang.py .                     [ 57%]
-tests\test_scorer.py ..                  [ 65%]
-tests\test_scoring_service.py .........  [100%]
-====================== 26 passed in 3.27s ======================
+tests/test_easy_apply.py ......                                [ 23%]
+tests/test_email_classifier.py .....                           [ 42%]
+tests/test_email_client.py ...                                 [ 53%]
+tests/test_lang.py .                                           [ 57%]
+tests/test_scorer.py ..                                        [ 65%]
+tests/test_scoring_service.py .........                        [100%]
+
+============================= 26 passed in 3.27s =============================
 ```
 
 ---
 
-## 🗺 Geliştirme Yol Haritası (Roadmap)
+## 🛠 Kullanılan Teknolojiler
 
-- [x] **v0.7: Veri Madenciliği & NLP Skorlama** (LinkedIn, JSearch, RSS, Google Sheets Entegrasyonu)
-- [x] **v0.8: LinkedIn Easy Apply & Çift Kanallı Başvuru** (Playwright session, dinamik form doldurma, güvenlik kotası)
-- [x] **v0.9: Feedback Loop & AI Destekli Geri Dönüş Takibi** (Gmail IMAP sync, Gemini LLM ret/mülakat sınıflandırma)
-- [ ] **v1.0: End-to-End Headless Daemon** (Zamanlanmış otonom tarama, A/B Cover Letter başarı analizi ve Cloud Dashboard)
+- **Programlama:** Python 3.10+ (Type Hinting, Dataclasses)
+- **Web Otomasyonu:** Playwright (Chromium Stealth, Multi-step Form Handling)
+- **Yapay Zeka (LLM):** Google Gemini 2.5 Flash (`google-genai` SDK)
+- **NLP & Metin Analizi:** Scikit-learn (TF-IDF), Regular Expressions, Pandas
+- **Entegrasyonlar:** Google Sheets API (`gspread`), Gmail IMAP / SMTP
+- **Veri Doğrulama & Test:** Pydantic v2, Pytest
 
 ---
 
 ## 📄 Lisans
 
-Bu proje [MIT Lisansı](LICENSE) kapsamında açık kaynak olarak sunulmuştur.
-Kişisel kariyer otomasyonu ve portfolyo sunumu amacıyla geliştirilmiştir.
+Bu proje [MIT Lisansı](LICENSE) kapsamında lisanslanmıştır. Kendi iş arama süreçleriniz için serbestçe çatallayabilir ve geliştirebilirsiniz.
