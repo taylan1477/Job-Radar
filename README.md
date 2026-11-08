@@ -254,15 +254,33 @@ tests/test_scoring_service.py .........                             [100%]
 
 ---
 
-## 🗺 Gelecek Yol Haritası (Future Roadmap)
+## 🗺 Geliştirme Yol Haritası (Roadmap)
 
-Sisteme kazandırılması planlanan gelecek özellikler ve geliştirme hedefleri:
+### ✅ Tamamlanan Aşamalar (Completed Milestones)
+
+- [x] **v0.7 — Veri Madenciliği, NLP Skorlama & Google Sheets Dashboard**
+  - Çok kaynaklı veri toplama (LinkedIn Stealth Scraper, JSearch REST API, Kariyer.net, Himalayas & WeWorkRemotely RSS).
+  - Hibrit skorlama (TF-IDF + Regex), dil bariyeri filtreleme ve Google Sheets Smart Chips entegrasyonu.
+  - LLM destekli kişiselleştirilmiş Ön Yazı (Cover Letter) ve Soğuk E-Posta taslağı hazırlama motoru.
+- [x] **v0.8 — Çift Kanallı Otonom Başvuru & Dinamik CV Motoru**
+  - Playwright ile LinkedIn Easy Apply tam otonom form doldurma, soru yanıtlama ve güvenlik kotası.
+  - İlan metninden İK e-postalarını ayıklayarak dinamik ön yazı ve PDF CV ekli otomatik başvuru.
+  - **Dinamik CV Seçim & JIT PDF Derleyici:** Hibrit Karar Matrisi (Skor $\ge 4.0$ veya Harici $\rightarrow$ Mod 2 JIT tek sayfa A4 PDF; Standart Easy Apply $\rightarrow$ Mod 1 Katalog Eşleme).
+  - Kontrollü Yetkinlik Konumlandırması (Bilinen $\rightarrow$ *Proficient*, Talep Edilen $\rightarrow$ *Intermediate*).
+- [x] **v0.9 — Geri Dönüş & Sonuç Takibi (Feedback Loop)**
+  - Gmail IMAP gelen kutusu tarama ve şirket yanıtlarını çekme.
+  - Hibrit E-posta Sınıflandırıcı (Regex + Gemini LLM) ile Mülakat / Ret tespiti.
+  - Google Sheets tablosundaki durumları anlık olarak senkronize etme.
+
+---
+
+### 🚀 Gelecek Hedefler (Future Roadmap / v1.1+)
 
 | Özellik | Açıklama | Zorluk | Öncelik |
 | --------- | ---------- | -------- | --------- |
 | **Şirket Kara Liste (Blocklist)** | Belirli şirketlerin ilanlarını otomatik filtreleme, puan kırma veya başvurudan muaf tutma | ⭐ (1/5) | Orta |
 | **Telegram / Discord Bildirim Botu** | Yeni yüksek skorlu ilanları ve gelen mülakat davetlerini anlık mesajla bildirme | ⭐⭐ (2/5) | Yüksek |
-| **A/B Test & Yanıt Analitiği** | Farklı ön yazı (cover letter) tonlarının ve başvuru saatlerinin geri dönüş oranlarını analiz etme | ⭐⭐⭐ (3/5) | Orta |
+| **A/B Test & Yanıt Analitiği** | Farklı ön yazı tonlarının ve başvuru saatlerinin geri dönüş oranlarını analiz etme | ⭐⭐⭐ (3/5) | Orta |
 | **Çoklu Platform Otonom Başvuru** | LinkedIn Easy Apply'a ek olarak Kariyer.net ve Indeed için de otomatik başvuru desteği | ⭐⭐⭐⭐ (4/5) | Yüksek |
 | **Multi-User & Cloud Database** | Yerel dosya yapısından PostgreSQL / Supabase ve bulut mimarisine geçiş | ⭐⭐⭐⭐ (4/5) | Düşük |
 
