@@ -77,15 +77,17 @@ class LinkedInEasyApplyClient:
         """Kayıtlı oturum dosyasının varlığını kontrol eder."""
         return self.session_file.exists() and self.session_file.stat().st_size > 50
 
-    def apply_to_job(self, job_url: str, dry_run: bool = False, human_in_the_loop: bool = True) -> Dict[str, Any]:
+    def apply_to_job(self, job_url: str, dry_run: bool = False, human_in_the_loop: bool = True, cv_path: Optional[Path] = None) -> Dict[str, Any]:
         """
         Belirtilen LinkedIn ilanına Easy Apply ile başvurur.
         dry_run=True ise son 'Gönder (Submit)' butonuna basmadan önceki aşamada durur.
         human_in_the_loop=True ise son adıma gelindiğinde kullanıcı onayı ister.
+        cv_path: Özel/dinamik olarak seçilen CV dosyası yolu (belirtilmezse varsayılan CV kullanılır).
         """
         if not self.has_valid_session():
             return {"success": False, "reason": "LinkedIn oturumu (linkedin_state.json) bulunamadı. Lütfen önce giriş yapın."}
 
+        effective_cv = cv_path or self.cv_path
         headless_mode = not human_in_the_loop and not dry_run
 
         with sync_playwright() as p:
@@ -160,7 +162,7 @@ class LinkedInEasyApplyClient:
                     current_step += 1
 
                     # 1. Mevcut adımdaki alanları doldur (CV, sorular, seçenekler)
-                    self._fill_step_inputs(dialog)
+                    self._fill_step_inputs(dialog, cv_path=effective_cv)
                     time.sleep(1)
 
                     # 2. Gönder (Submit) butonu kontrolü
@@ -260,15 +262,16 @@ class LinkedInEasyApplyClient:
             pass
         return ""
 
-    def _fill_step_inputs(self, dialog: Locator):
+    def _fill_step_inputs(self, dialog: Locator, cv_path: Optional[Path] = None):
         """Mevcut form adımındaki boş input, radio ve select kutularını profil cevaplarıyla doldurur."""
+        target_cv = cv_path or self.cv_path
         try:
             # 1. CV Yükleme alanı varsa ve dosya mevcutsa yükle
             file_inputs = dialog.locator("input[type='file']").all()
-            if file_inputs and self.cv_path.exists():
+            if file_inputs and target_cv.exists():
                 for fi in file_inputs:
                     try:
-                        fi.set_input_files(str(self.cv_path))
+                        fi.set_input_files(str(target_cv))
                         time.sleep(1)
                     except Exception:
                         pass

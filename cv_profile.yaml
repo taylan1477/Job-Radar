@@ -68,6 +68,15 @@ preferences:
   military_service: "Muaf / Tamamlandı"
   driver_license: "B"
 
+cv_preferences:
+  mode: "hybrid" # "hybrid" (Otomatik: Skor >= 4.0 veya Harici -> Mod 2, diğerleri Mod 1)
+  catalog_path: "cv_suite/Humanized_CV/pdf"
+  tailored_output_dir: "cv_suite/generated"
+  language: "en" # Yalnızca İngilizce CV'ler
+  positioning_rules:
+    known_skills_level: "Proficient / Advanced"
+    unknown_skills_level: "Intermediate / Working Knowledge"
+
 spoken_languages:
   turkish: "Anadili (Native)"
   english: "Profesyonel / İleri Seviye (Professional working proficiency)"

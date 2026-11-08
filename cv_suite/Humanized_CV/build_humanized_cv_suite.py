@@ -454,7 +454,7 @@ cv_data = [
   <div class="entry">
     <div class="entry-header">
       <span class="entry-title">Aegis Forge: Tactical Terraforming Multiplayer Shooter</span>
-      <span class="entry-date"><a href="https://github.com/taylan1477">github.com/taylan1477/AegisForge</a></span>
+      <span class="entry-date"><a href="https://github.com/taylan1477">github.com/taylan1477</a></span>
     </div>
     <div class="project-tech">Unity, C#, DOTS, Job System, Burst Compiler, NativeArray, FishNet, Headless Linux</div>
     <ul>
@@ -479,7 +479,7 @@ cv_data = [
   <div class="entry">
     <div class="entry-header">
       <span class="entry-title">EvoluCat: 2D Metroidvania Platformer</span>
-      <span class="entry-date"><a href="https://github.com/taylan1477">github.com/taylan1477/EvoluCat</a></span>
+      <span class="entry-date"><a href="https://github.com/taylan1477">github.com/taylan1477</a></span>
     </div>
     <div class="project-tech">Unity 2D, C#, Finite State Machines, Physics2D</div>
     <ul>
@@ -565,7 +565,7 @@ cv_data = [
   <div class="entry">
     <div class="entry-header">
       <span class="entry-title">Aegis Forge: Taktiksel Arazi Dönüştürmeli Çok Oyunculu Nişancı Oyunu</span>
-      <span class="entry-date"><a href="https://github.com/taylan1477">github.com/taylan1477/AegisForge</a></span>
+      <span class="entry-date"><a href="https://github.com/taylan1477">github.com/taylan1477</a></span>
     </div>
     <div class="project-tech">Unity, C#, DOTS, Job System, Burst Compiler, NativeArray, FishNet, Linux Sunucu</div>
     <ul>
@@ -590,7 +590,7 @@ cv_data = [
   <div class="entry">
     <div class="entry-header">
       <span class="entry-title">EvoluCat: 2D Metroidvania Platform Oyunu</span>
-      <span class="entry-date"><a href="https://github.com/taylan1477">github.com/taylan1477/EvoluCat</a></span>
+      <span class="entry-date"><a href="https://github.com/taylan1477">github.com/taylan1477</a></span>
     </div>
     <div class="project-tech">Unity 2D, C#, Durum Makineleri (FSM), 2D Fizik</div>
     <ul>

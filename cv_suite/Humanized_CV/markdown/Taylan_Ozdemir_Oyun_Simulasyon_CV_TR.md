@@ -23,7 +23,7 @@ Temmuz 2025 – Ocak 2026 | Ankara, Türkiye
 ---
 
 ## PROJELER
-**Aegis Forge: Taktiksel Arazi Dönüştürmeli Çok Oyunculu Nişancı Oyunu** | [github.com/taylan1477](https://github.com/taylan1477/AegisForge)  
+**Aegis Forge: Taktiksel Arazi Dönüştürmeli Çok Oyunculu Nişancı Oyunu** | [github.com/taylan1477](https://github.com/taylan1477)  
 *Unity, C#, DOTS, Job System, Burst Compiler, NativeArray, FishNet, Linux Sunucu*  
 * Oyuncuların maç sırasında araziyi gerçek zamanlı olarak fiziksel olarak değiştirebildiği çok oyunculu bir oyun geliştirdi.
 * Arazideki 10.000'den fazla hücrenin yükseklik ve mesh değişimini Unity C# Job System ve Burst Compiler ile paralel hesaplattı.
@@ -34,7 +34,7 @@ Temmuz 2025 – Ocak 2026 | Ankara, Türkiye
 * Oyuncunun soru çözme başarısına göre kampüs gelir çarpanını artıran matematiksel bir idle oyun döngüsü kurdu.
 * Bölüm açma, bina seviyeleri ve kayıt dosyalarını ScriptableObject veri yapılarıyla organize etti.
 
-**EvoluCat: 2D Metroidvania Platform Oyunu** | [github.com/taylan1477](https://github.com/taylan1477/EvoluCat)  
+**EvoluCat: 2D Metroidvania Platform Oyunu** | [github.com/taylan1477](https://github.com/taylan1477)  
 *Unity 2D, C#, Durum Makineleri (FSM), 2D Fizik*  
 * Karakterin duvardan atlama, telekinezi ve bulmaca çözme hareketlerini Durum Makineleri (State Machine) ile kontrol etti.
 * Oyuncunun açtığı yetenekleri ve harita ilerlemesini saklayan çoklu yuvalı şifreli kayıt sistemi kurdu.

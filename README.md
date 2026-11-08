@@ -3,7 +3,7 @@
 [![Python](https://img.shields.io/badge/Python-3.10+-3776AB?logo=python&logoColor=white)](https://www.python.org/)
 [![Playwright](https://img.shields.io/badge/Playwright-Automation-45ba4b?logo=playwright&logoColor=white)](https://playwright.dev/)
 [![Gemini AI](https://img.shields.io/badge/Gemini%20AI-2.5%20Flash-8E75C2?logo=google&logoColor=white)](https://ai.google.dev/)
-[![Tests](https://img.shields.io/badge/Tests-26%20Passed-success)](tests/)
+[![Tests](https://img.shields.io/badge/Tests-34%20Passed-success)](tests/)
 [![Status](https://img.shields.io/badge/Status-Active-brightgreen)](https://github.com/taylan1477/Job-Radar)
 [![License](https://img.shields.io/badge/License-MIT-yellow)](LICENSE)
 [![Clean Code](https://img.shields.io/badge/Clean%20Code-SOLID%20Standards-blueviolet)](src/core/scoring_service.py)
@@ -33,6 +33,11 @@
   - **Platform Önceliği:** LinkedIn ilanlarına `+1.0` bonus, harici panolara `-1.0` puan kesintisi.
 - **Google Sheets Canlı Yönetim Paneli:**
   - Otomatik formül eşitleme, koşullu satır renklendirme ve açılır menülü **Smart Chips** (`Favori, Başvuruldu, Reddedildi, Görüşmede, Süre Bitti, Ulaşılmaz`).
+- **Dinamik CV Motoru & JIT Sıcak CV Boru Hattı (Dynamic CV Engine):**
+  - **Hibrit Karar Matrisi:**
+    - `Skor >= 4.0` (VIP İlanlar) veya **Harici / İK E-postaları**: Mod 2 tetiklenir; adayın 11 gerçek projesinden en uyumlu 3'ü seçilir, Playwright ile `< 0.8s` içinde ilana özel tek sayfa A4 PDF derlenir.
+    - `Skor < 4.0` (Standart LinkedIn Easy Apply): Mod 1 tetiklenir; `cv_suite/Humanized_CV/pdf/` altındaki 3 uzmanlaşmış katalog CV'sinden (`Game_Simulation`, `Software_Systems`, `Automation_AI`) en doğrusu 0ms gecikmeyle eşleştirilir.
+  - **Akıllı Yetkinlik Konumlandırma (Smart Skill Positioning):** Bilinen yetkinlikler *Proficient / Advanced*, ilanda aranan diğer araçlar *Intermediate / Working Knowledge* olarak konumlandırılır; abartısız ve dengeli bir sunum yapılır.
 - **Otonom Çift Kanallı Başvuru Motoru (Auto-Apply Pipeline):**
   - **LinkedIn Easy Apply Botu:** Oturumu korunan Chromium ile formları adayın profiline göre otomatik doldurma, CV yükleme ve adım adım ilerleme.
   - **E-Posta İK Başvurusu:** İlan metninden çıkarılan İK iletişim adreslerine Gemini ile üretilmiş kişiselleştirilmiş Cover Letter ve PDF CV ile otomatik başvuru.
@@ -71,6 +76,7 @@ job-radar/
 ├── src/
 │   ├── core/                       # Çekirdek İş Mantığı & Modeller
 │   │   ├── application_generator.py # Gemini LLM Cover Letter & Easy Apply soru yanıtlayıcı
+│   │   ├── cv_engine.py            # Dinamik CV seçici & Playwright JIT PDF derleyici
 │   │   ├── email_classifier.py     # E-posta yanıtlarını (Ret/Mülakat) analiz eden motor
 │   │   ├── models.py               # Pydantic veri şemaları (Job, Score, Status)
 │   │   ├── nlp_processor.py        # TF-IDF, metin temizleme ve dil tespiti
@@ -90,9 +96,10 @@ job-radar/
 │       ├── logger.py               # Türkçe uyumlu merkezi loglama sistemi
 │       ├── text_norm.py            # Türkçe karakter (İ/ı, Ş/ş) normalizasyonu
 │       └── showcase.py             # Mimari ve SOLID prensipleri sunum aracı
-├── tests/                          # 26 Adet Pytest Birim Testi
-├── docs/                           # CV ve Dokümantasyon Dosyaları
+├── tests/                          # 34 Adet Pytest Birim Testi
+├── cv_suite/                       # Katalog ve Üretilen Sıcak PDF CV'ler
 ├── cv_profile.yaml                 # Aday yetkinlik, dil, maaş ve başvuru profili
+├── master_profile.md               # 11 Projelik tek gerçek kaynak (Single Source of Truth)
 ├── linkedin_state.json             # Oturum çerezleri (Gitignore korumalı)
 ├── main.py                         # İnteraktif CLI konsol arayüzü
 ├── requirements.txt                # Python bağımlılıkları
@@ -223,14 +230,15 @@ python -m pytest tests/
 ```
 
 ```text
-tests/test_easy_apply.py ......                                [ 23%]
-tests/test_email_classifier.py .....                           [ 42%]
-tests/test_email_client.py ...                                 [ 53%]
-tests/test_lang.py .                                           [ 57%]
-tests/test_scorer.py ..                                        [ 65%]
-tests/test_scoring_service.py .........                        [100%]
+tests/test_cv_engine.py ........                                    [ 23%]
+tests/test_easy_apply.py ......                                     [ 41%]
+tests/test_email_classifier.py .....                                [ 55%]
+tests/test_email_client.py ...                                      [ 64%]
+tests/test_lang.py .                                                [ 67%]
+tests/test_scorer.py ..                                             [ 73%]
+tests/test_scoring_service.py .........                             [100%]
 
-============================= 26 passed in 3.27s =============================
+============================= 34 passed in 5.33s =============================
 ```
 
 ---

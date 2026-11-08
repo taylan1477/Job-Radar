@@ -19,6 +19,7 @@ from src.clients.email_client import EmailClient, extract_emails
 from src.clients.gmail_tracker import GmailTracker
 from src.core.email_classifier import EmailClassifier
 from src.core.application_generator import ApplicationGenerator
+from src.core.cv_engine import CVEngine
 from src.utils.config import (
     MIN_APPLICATION_SCORE, MAX_APPLICATION_SCORE, MAX_APPLICATIONS_PER_RUN,
     APPLICATION_DELAY_RANGE, CV_PATH, GMAIL_USER, GMAIL_APP_PASSWORD
@@ -258,6 +259,7 @@ def run_autonomous_applications():
     easy_client = LinkedInEasyApplyClient(cv_path=CV_PATH)
     email_client = EmailClient(cv_path=CV_PATH)
     generator = ApplicationGenerator()
+    cv_engine = CVEngine()
 
     successful_count = 0
 
@@ -267,6 +269,11 @@ def run_autonomous_applications():
         print(f"  Firma: {job['company']} | Alan: {job['field']} | Skor: {job['score']}")
         print(f"  Link: {job['link']}")
         print("-" * 60)
+
+        # Dinamik CV Çözümleme (Mod 1 Katalog veya Mod 2 Sıcak JIT PDF)
+        selected_cv, cv_mode, cv_reason = cv_engine.resolve_cv_for_job(job)
+        print(f"  [CV STRATEJİSİ] {cv_mode} -> {selected_cv.name}")
+        print(f"                  Gerekçe: {cv_reason}")
 
         link = job.get("link", "").lower()
         applied = False
@@ -278,7 +285,7 @@ def run_autonomous_applications():
                 continue
 
             print("  [İŞLEM] LinkedIn Easy Apply deneniyor...")
-            result = easy_client.apply_to_job(job["link"], dry_run=False, human_in_the_loop=True)
+            result = easy_client.apply_to_job(job["link"], dry_run=False, human_in_the_loop=True, cv_path=selected_cv)
 
             if result.get("success") and not result.get("dry_run"):
                 print(f"  [BAŞARILI] {result.get('message')}")
@@ -312,7 +319,8 @@ def run_autonomous_applications():
                     send_res = email_client.send_application(
                         to_email=to_email,
                         subject=app_data["subject"],
-                        body=app_data["body"]
+                        body=app_data["body"],
+                        attachment_path=selected_cv
                     )
                     if send_res.get("success"):
                         print(f"  [BAŞARILI] {send_res.get('message')}")

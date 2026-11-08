@@ -23,7 +23,7 @@ Jul 2025 – Jan 2026 | Ankara, Turkey
 ---
 
 ## PROJECTS
-**Aegis Forge: Tactical Terraforming Multiplayer Shooter** | [github.com/taylan1477](https://github.com/taylan1477/AegisForge)  
+**Aegis Forge: Tactical Terraforming Multiplayer Shooter** | [github.com/taylan1477](https://github.com/taylan1477)  
 *Unity, C#, DOTS, Job System, Burst Compiler, NativeArray, FishNet, Headless Linux*  
 * Built a multiplayer combat game where players reshape terrain in real time during matches.
 * Processed height and mesh deformation across 10,000+ tiles simultaneously using the Unity C# Job System and Burst Compiler.
@@ -34,7 +34,7 @@ Jul 2025 – Jan 2026 | Ankara, Turkey
 * Programmed an idle economy loop where player revenue multipliers depend on answering quiz questions correctly.
 * Structured building upgrade formulas, department research trees, and save data with ScriptableObject assets.
 
-**EvoluCat: 2D Metroidvania Platformer** | [github.com/taylan1477](https://github.com/taylan1477/EvoluCat)  
+**EvoluCat: 2D Metroidvania Platformer** | [github.com/taylan1477](https://github.com/taylan1477)  
 *Unity 2D, C#, Finite State Machines, Physics2D*  
 * Built responsive 2D movement controls, wall-jumps, and telekinesis puzzles using a Finite State Machine structure.
 * Implemented an encrypted multi-slot save system that stores player inventory, unlocked abilities, and map state.
