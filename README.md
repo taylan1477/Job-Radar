@@ -246,6 +246,44 @@ tests/test_scoring_service.py .........                        [100%]
 
 ---
 
+## 🗺 Geliştirme Yol Haritası (Roadmap)
+
+### v0.7 — Başvuru Hazırlığı & AI Asistanı
+
+| Özellik | Açıklama | Zorluk | Öncelik |
+| --------- | ---------- | -------- | --------- |
+| **Quick-Apply & İK Mail Parser** | İlan metninden direkt başvuru linki ve İK e-postalarını çekme | ⭐⭐ (2/5) | Yüksek |
+| **CV Profile Engine** | Yerel yapılandırılmış profil (cv_profile.yaml) ile aday verisi yönetimi | ⭐⭐ (2/5) | Yüksek |
+| **Cover Letter Gen** | İlan gereksinimlerine özel LLM tabanlı kişiselleştirilmiş ön yazı üretimi | ⭐⭐⭐ (3/5) | Yüksek |
+| **Cold DM & Mail Gen** | İlgili recruiter için dinamik e-posta/DM taslağı hazırlama | ⭐⭐ (2/5) | Yüksek |
+
+### v0.8 — Çift Kanallı Otomatik Başvuru (Auto-Apply)
+
+| Özellik | Açıklama | Zorluk | Öncelik |
+| --------- | ---------- | -------- | --------- |
+| **LinkedIn Easy Apply Botu** | Playwright ile form doldurma, CV yükleme ve soru yanıtlama | ⭐⭐⭐⭐ (4/5) | Kritik |
+| **Otomatik E-Posta Başvurusu** | İK e-postalarına dinamik cover letter ve CV PDF ekli otomatik başvuru | ⭐⭐ (2/5) | Yüksek |
+| **Şirket Kara Liste** | Belirli şirketlerin ilanlarını otomatik gizleme/puan kırma | ⭐ (1/5) | Düşük |
+| **Rate Limiter & Safety** | İnsan benzeri bekleme süreleri ve günlük başvuru kotası | ⭐⭐ (2/5) | Yüksek |
+
+### v0.9 — Geri Dönüş & Sonuç Takibi (Feedback Loop)
+
+| Özellik | Açıklama | Zorluk | Öncelik |
+| --------- | ---------- | -------- | --------- |
+| **Gmail API Entegrasyonu** | Gelen kutusundaki şirket ve başvuru yanıtlarını otomatik tarama | ⭐⭐⭐ (3/5) | Yüksek |
+| **Hibrit E-Posta Sınıflandırıcı** | Regex + LLM ile ret/mülakat/görüşme durumlarını tespit etme | ⭐⭐⭐ (3/5) | Yüksek |
+| **Google Sheets Otomatik Senkron** | Gelen yanıtlara göre tablodaki 'Durum' sütununu otomatik güncelleme | ⭐⭐ (2/5) | Yüksek |
+
+### v1.0 — Tam Otonom Asistan (End-to-End)
+
+| Özellik | Açıklama | Zorluk | Öncelik |
+| --------- | ---------- | -------- | --------- |
+| **End-to-End Pipeline** | Tara → Skorla → Başvur (Easy Apply / Mail) → Sonuçları Oku (Gmail) → Güncelle | ⭐⭐⭐⭐⭐ (5/5) | Kritik |
+| **A/B Test Engine** | Hangi ön yazı/başvuru metodunun daha çok dönüt aldığı analizi | ⭐⭐⭐ (3/5) | Düşük |
+| **Multi-User / DB** | Yerel dosyadan PostgreSQL/Cloud veritabanına geçiş | ⭐⭐⭐⭐ (4/5) | Düşük |
+
+---
+
 ## 📄 Lisans
 
 Bu proje [MIT Lisansı](LICENSE) kapsamında lisanslanmıştır. Kendi iş arama süreçleriniz için serbestçe çatallayabilir ve geliştirebilirsiniz.
